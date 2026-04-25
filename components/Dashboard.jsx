@@ -26,8 +26,8 @@ export default function Dashboard() {
   });
 
   const headerTitle = sector === 'ai-dc'
-    ? <>🏢 AI 데이터센터 <span>인프라 대시보드</span></>
-    : <>🔬 반도체 <span>밸류체인 대시보드</span></>;
+    ? <>🏢 AI 데이터센터 <span>인프라</span></>
+    : <>🔬 반도체 <span>밸류체인</span></>;
 
   const headerDesc = sector === 'ai-dc'
     ? 'AI 데이터센터 레이어별 구성 요소 · 시가총액 Top 10 기업 · 최신 뉴스 & 리포트'
