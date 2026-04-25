@@ -78,39 +78,169 @@ const FINNHUB_TICKERS = [
 ];
 
 // ── RSS 피드 목록 ─────────────────────────────────────────
+// category: null → AI 키워드 매칭으로 자동 분류
 const RSS_FEEDS = [
+  // ── 공식 블로그 ──
   {
     url: 'https://nvidianews.nvidia.com/rss',
     source: 'NVIDIA Newsroom',
-    tickers: ['NVDA'],
-    category: 'gpu',
+    tickers: ['NVDA'], category: 'gpu',
   },
   {
     url: 'https://aws.amazon.com/blogs/machine-learning/feed/',
     source: 'AWS ML Blog',
-    tickers: ['AMZN'],
-    category: 'hyperscaler',
+    tickers: ['AMZN'], category: 'hyperscaler',
   },
   {
     url: 'https://cloud.google.com/blog/rss.xml',
     source: 'Google Cloud Blog',
-    tickers: ['GOOGL'],
-    category: 'hyperscaler',
+    tickers: ['GOOGL'], category: 'hyperscaler',
   },
   {
     url: 'https://azure.microsoft.com/en-us/blog/feed/',
     source: 'Microsoft Azure Blog',
-    tickers: ['MSFT'],
-    category: 'hyperscaler',
+    tickers: ['MSFT'], category: 'hyperscaler',
+  },
+  {
+    url: 'https://engineering.fb.com/feed/',
+    source: 'Meta Engineering Blog',
+    tickers: ['META'], category: 'hyperscaler',
+  },
+  {
+    url: 'https://developer.nvidia.com/blog/feed/',
+    source: 'NVIDIA Developer Blog',
+    tickers: ['NVDA'], category: 'gpu',
+  },
+  {
+    url: 'https://newsroom.intel.com/feed/',
+    source: 'Intel Newsroom',
+    tickers: ['INTC'], category: 'gpu',
+  },
+  {
+    url: 'https://www.amd.com/en/newsroom/feed/',
+    source: 'AMD Newsroom',
+    tickers: ['AMD'], category: 'gpu',
+  },
+
+  // ── 기술 미디어 (중립적 분석) ──
+  {
+    url: 'https://www.theregister.com/data_centre/rss',
+    source: 'The Register',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://arstechnica.com/gadgets/feed/',
+    source: 'Ars Technica',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://www.tomshardware.com/feeds/all',
+    source: "Tom's Hardware",
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://www.anandtech.com/rss/',
+    source: 'AnandTech',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://www.datacenterknowledge.com/rss.xml',
+    source: 'Data Center Knowledge',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://www.hpcwire.com/feed/',
+    source: 'HPCwire',
+    tickers: [], category: null,
+  },
+
+  // ── 반도체 전문 ──
+  {
+    url: 'https://www.eetimes.com/feed/',
+    source: 'EE Times',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://www.semiconductordigest.com/feed/',
+    source: 'Semiconductor Digest',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://semiwiki.com/feed/',
+    source: 'SemiWiki',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://www.techpowerup.com/rss/news.xml',
+    source: 'TechPowerUp',
+    tickers: [], category: null,
+  },
+
+  // ── AI 연구·산업 ──
+  {
+    url: 'https://openai.com/news/rss.xml',
+    source: 'OpenAI News',
+    tickers: [], category: 'hyperscaler',
+  },
+  {
+    url: 'https://blogs.microsoft.com/ai/feed/',
+    source: 'Microsoft AI Blog',
+    tickers: ['MSFT'], category: 'hyperscaler',
+  },
+  {
+    url: 'https://www.trendforce.com/feed/',
+    source: 'TrendForce',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://www.digitimes.com/rss/rss.xml',
+    source: 'DigiTimes',
+    tickers: [], category: null,
   },
 ];
 
-// AI/데이터센터 관련 키워드 필터
+// ── category 자동 분류 (RSS source가 null일 때 키워드로 추정) ──
+const CATEGORY_HINTS = [
+  { keywords: ['gpu', 'cuda', 'nvidia', 'radeon', 'geforce', 'instinct', 'gaudi', 'tpu', 'asic', 'npu', 'accelerator', 'rubin', 'blackwell', 'hopper'], category: 'gpu' },
+  { keywords: ['hbm', 'dram', 'memory', 'nand', 'flash', 'ssd', 'hbm4', 'hbm3', 'lpddr'], category: 'memory' },
+  { keywords: ['server', 'rack', 'odm', 'supermicro', 'dell poweredge', 'proliant', 'gb200', 'nvl'], category: 'server' },
+  { keywords: ['storage', 'nvme', 'object storage', 'file system', 'nas', 'san'], category: 'storage' },
+  { keywords: ['infiniband', 'ethernet switch', 'networking', 'arista', 'roce', 'nvlink', 'interconnect', 'fabric'], category: 'ai-network' },
+  { keywords: ['transceiver', 'optical', 'photonics', 'fiber', '800g', '1.6t', 'cpo', 'vcsel'], category: 'optics' },
+  { keywords: ['hyperscaler', 'aws', 'azure', 'google cloud', 'oracle cloud', 'cloud ai', 'llm', 'openai', 'gemini', 'gpt', 'copilot', 'claude'], category: 'hyperscaler' },
+  { keywords: ['data center facility', 'colocation', 'colo', 'equinix', 'digital realty', 'datacenter reit'], category: 'facility' },
+  { keywords: ['ups', 'pdu', 'power supply', 'transformer', 'grid', 'vertiv', 'eaton', 'schneider', 'voltage'], category: 'power' },
+  { keywords: ['cooling', 'liquid cool', 'immersion', 'thermal', 'hvac', 'heat exchanger', 'crac', 'crah'], category: 'cooling' },
+  { keywords: ['construction', 'engineering', 'build', 'campus', 'hyperscale build'], category: 'construction' },
+  { keywords: ['nuclear', 'solar', 'wind', 'power plant', 'utility', 'ppa', 'smr', 'energy'], category: 'energy' },
+];
+
+function guessCategory(text) {
+  const lower = (text || '').toLowerCase();
+  for (const { keywords, category } of CATEGORY_HINTS) {
+    if (keywords.some(kw => lower.includes(kw))) return category;
+  }
+  return 'gpu'; // 기본값
+}
+
+// AI/데이터센터·반도체 관련 키워드 필터 (확장)
 const AI_KEYWORDS = [
-  'ai', 'artificial intelligence', 'datacenter', 'data center', 'gpu', 'hbm',
-  'inference', 'training', 'llm', 'machine learning', 'deep learning',
-  'nvidia', 'cloud', 'supercomputer', 'accelerator', 'chip', 'semiconductor',
-  'hyperscaler', 'transformer', 'workload', 'compute', 'generative',
+  // AI & ML
+  'ai', 'artificial intelligence', 'machine learning', 'deep learning',
+  'llm', 'large language model', 'generative', 'inference', 'training',
+  'transformer', 'neural', 'foundation model', 'chatgpt', 'gemini', 'gpt',
+  // 칩·반도체
+  'gpu', 'cpu', 'chip', 'semiconductor', 'wafer', 'fab', 'foundry',
+  'tsmc', 'nvidia', 'amd', 'intel', 'broadcom', 'qualcomm', 'arm',
+  'asic', 'npu', 'accelerator', 'hbm', 'dram', 'nand', 'memory',
+  // 데이터센터·클라우드
+  'datacenter', 'data center', 'hyperscaler', 'cloud', 'supercomputer',
+  'compute', 'workload', 'server', 'rack', 'colocation', 'colo',
+  // 전력·냉각
+  'cooling', 'liquid cool', 'immersion', 'power usage', 'pue',
+  'nuclear', 'smr', 'ppa', 'renewable energy',
+  // 네트워킹
+  'infiniband', 'nvlink', 'ethernet', 'transceiver', 'optical',
 ];
 
 function isAiRelated(text) {
@@ -195,18 +325,23 @@ async function fetchRssFeeds() {
                            body.match(/<description[^>]*>([\s\S]*?)<\/description>/i))?.[1]
                            ?.replace(/<[^>]+>/g, '').trim() ?? '';
 
-          if (!title || !isAiRelated(title + ' ' + desc)) continue;
+          const combined = title + ' ' + desc;
+          if (!title || !isAiRelated(combined)) continue;
 
-          const date = pubDate ? new Date(pubDate).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
-          const id   = `rss-${feed.source}-${Buffer.from(title).toString('base64').slice(0, 16)}`;
+          const date     = pubDate ? new Date(pubDate).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
+          const id       = `rss-${feed.source}-${Buffer.from(title).toString('base64').slice(0, 16)}`;
+          const category = feed.category ?? guessCategory(combined);
+          const cleanTitle = title
+            .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+            .replace(/&#\d+;/g, '').trim();
 
           results.push({
             id,
             tickers:  feed.tickers,
-            category: feed.category,
+            category,
             type:     'news',
-            title:    title.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>'),
-            summary:  desc.slice(0, 200) + (desc.length > 200 ? '…' : ''),
+            title:    cleanTitle,
+            summary:  desc.replace(/<[^>]+>/g, '').slice(0, 220) + (desc.length > 220 ? '…' : ''),
             date,
             source:   feed.source,
             url:      link,
@@ -261,12 +396,19 @@ export async function GET() {
     _cache   = result;
     _cacheTs = Date.now();
 
-    console.log(`[news] 수집 완료: Finnhub ${finnhubItems.length}개 + RSS ${rssItems.length}개 → 중복제거 후 ${result.length}개`);
+    // 소스별 통계
+    const bySource = {};
+    for (const item of rssItems) {
+      bySource[item.source] = (bySource[item.source] ?? 0) + 1;
+    }
+    console.log(`[news] 수집 완료: Finnhub ${finnhubItems.length}개 + RSS ${rssItems.length}개 (${Object.entries(bySource).map(([s,n])=>`${s}:${n}`).join(', ')}) → 중복제거 후 ${result.length}개`);
 
     return NextResponse.json(result, {
       headers: {
-        'X-Cache':   'MISS',
-        'X-Sources': `finnhub:${finnhubItems.length},rss:${rssItems.length}`,
+        'X-Cache':        'MISS',
+        'X-Finnhub-Count': String(finnhubItems.length),
+        'X-RSS-Count':     String(rssItems.length),
+        'X-Total':         String(result.length),
       },
     });
   } catch (err) {
