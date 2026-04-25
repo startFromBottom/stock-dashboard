@@ -4,33 +4,79 @@ import { ALL_COMPONENTS } from '@/data/companies';
 import CompanyPanel from './CompanyPanel';
 
 /* ─── Zone definitions ─── */
-// SVG 총 너비: 732 (= energy 88 + facility 644)
+// Layout constants
+// Total: W=734, H=515
+// Row1 (hyperscaler): h=56
+// Row2 (facility row): y=58, h=400
+//   Left column (energy): x=0, w=82
+//   Inner left (power): x=84, w=68  gap=2 from energy border
+//   Compute columns: x=154 ~ x=464  w=310  gap=2 from power
+//     gpu:      y=60, h=112
+//     memory:   y=174, h=96   gap=2
+//     server:   y=272, h=90   gap=2
+//     network row: y=364, h=92  gap=2
+//       ai-network: x=154, w=186
+//       optics:     x=342, w=124  gap=2
+//   Right column (storage): x=466, w=186  gap=2 from optics edge(466)
+//   Far right (cooling): x=654, w=78  gap=2
+// Row3 (construction): y=460, h=55
 const W = 734;
+const GAP = 4;  // uniform gap between all zones
+
+// Row1
+const R1_Y = 0, R1_H = 58;
+// Row2
+const R2_Y = R1_Y + R1_H;          // 58
+const R2_H = 400;
+// Row3
+const R3_Y = R2_Y + R2_H;          // 458
+const R3_H = 515 - R3_Y;           // 57
+
+// Row2 columns
+const ENERGY_X = 0, ENERGY_W = 82;
+const FAC_X = ENERGY_X + ENERGY_W, FAC_W = W - ENERGY_W;  // 82 ~ 734
+const POWER_X = FAC_X + GAP / 2, POWER_W = 68;            // 84
+const COMPUTE_X = POWER_X + POWER_W + GAP / 2;            // 154
+const STORAGE_X = 466, STORAGE_W = 186;
+const COOLING_X = STORAGE_X + STORAGE_W + GAP / 2;        // 654
+const COOLING_W = W - COOLING_X;                           // 80
+const COMPUTE_W = STORAGE_X - COMPUTE_X - GAP / 2;        // 310
+
+// Compute sub-rows (within Row2, y offset from R2_Y)
+const CY0 = R2_Y + GAP / 2;   // 60
+const GPU_H = 112, MEM_H = 96, SRV_H = 90, NET_H = 94;
+const MEM_Y = CY0 + GPU_H + GAP / 2;      // 174
+const SRV_Y = MEM_Y + MEM_H + GAP / 2;   // 272
+const NET_Y = SRV_Y + SRV_H + GAP / 2;   // 364
+// Networking split
+const AINET_W = 186, OPTICS_X = COMPUTE_X + AINET_W + GAP / 2;
+const OPTICS_W = COMPUTE_W - AINET_W - GAP / 2;  // ~120
+
 const ZONE_DEFS = [
   {
     id: 'hyperscaler',
     label: '☁️ 클라우드 플랫폼',
     layer: '☁️ 클라우드 / 하이퍼스케일러 레이어',
     role: 'AWS·Azure·GCP 등 퍼블릭 클라우드가 AI 인프라를 서비스로 제공. GPU 클러스터 운영·API 배포·사용량 과금까지 관리.',
-    x: 0, y: 0, w: W, h: 62,
+    x: 0, y: R1_Y, w: W, h: R1_H,
     rx: 0,
-    svgLabel: { x: W / 2, y: 34 },
+    svgLabel: { x: W / 2, y: R1_Y + R1_H / 2 },
   },
   {
     id: 'energy',
     label: '⚡ 에너지 공급',
     layer: '🏭 물리 인프라 레이어',
     role: '원전·태양광·풍력 등 전력을 데이터센터에 직접 공급. AI 가속기의 전력 수요 급증으로 장기 PPA 계약이 핵심 이슈.',
-    x: 0, y: 62, w: 88, h: 398,
+    x: ENERGY_X, y: R2_Y, w: ENERGY_W, h: R2_H,
     rx: 0,
-    svgLabel: { x: 44, y: 261, rotate: -90 },
+    svgLabel: { x: ENERGY_X + ENERGY_W / 2, y: R2_Y + R2_H / 2, rotate: -90 },
   },
   {
     id: 'facility',
     label: '🏢 데이터센터 시설',
     layer: '☁️ 클라우드 / 하이퍼스케일러 레이어',
     role: '코로케이션 부지·전력·냉각 인프라를 임대. 하이퍼스케일러와 기업이 직접 서버를 설치하거나 xScale 전용 캠퍼스 계약.',
-    x: 88, y: 62, w: 644, h: 398,
+    x: FAC_X, y: R2_Y, w: FAC_W, h: R2_H,
     rx: 0,
     fill: 'none',
     svgLabel: null,
@@ -40,81 +86,81 @@ const ZONE_DEFS = [
     label: '🔋 전력 인프라',
     layer: '🔋 전력 & 냉각 레이어',
     role: 'UPS·PDU·변압기로 안정적인 전력을 랙까지 공급. 랙당 수십 kW에서 100 kW+ AI 고밀도 환경에 맞춰 800 VDC 배전 방식 확산.',
-    x: 90, y: 64, w: 70, h: 394,
+    x: POWER_X, y: R2_Y + GAP / 2, w: POWER_W, h: R2_H - GAP,
     rx: 4,
-    svgLabel: { x: 125, y: 261, rotate: -90 },
+    svgLabel: { x: POWER_X + POWER_W / 2, y: R2_Y + R2_H / 2, rotate: -90 },
   },
   {
     id: 'gpu',
     label: '🖥️ AI 가속기/GPU',
     layer: '⚡ 컴퓨트 레이어',
     role: 'AI 모델 학습·추론의 핵심 연산 유닛. NVIDIA GPU·커스텀 ASIC(Broadcom·Marvell)이 수천 개씩 묶인 클러스터로 동작.',
-    x: 162, y: 64, w: 302, h: 110,
+    x: COMPUTE_X, y: CY0, w: COMPUTE_W, h: GPU_H,
     rx: 4,
-    svgLabel: { x: 313, y: 122 },
+    svgLabel: { x: COMPUTE_X + COMPUTE_W / 2, y: CY0 + GPU_H / 2 },
   },
   {
     id: 'memory',
     label: '💾 메모리 (HBM)',
     layer: '⚡ 컴퓨트 레이어',
     role: 'GPU 칩 위에 적층된 HBM이 초고속 데이터를 전달. 대형 모델 처리에 HBM 대역폭이 병목이 되므로 HBM4 세대 경쟁이 치열.',
-    x: 162, y: 176, w: 302, h: 96,
+    x: COMPUTE_X, y: MEM_Y, w: COMPUTE_W, h: MEM_H,
     rx: 4,
-    svgLabel: { x: 313, y: 227 },
+    svgLabel: { x: COMPUTE_X + COMPUTE_W / 2, y: MEM_Y + MEM_H / 2 },
   },
   {
     id: 'server',
     label: '🖧 서버',
     layer: '⚡ 컴퓨트 레이어',
     role: 'GPU·CPU·메모리를 묶는 AI 서버 섀시. ODM(Foxconn·Quanta)이 NVIDIA GB200 NVL 랙을 조립해 클라우드에 납품.',
-    x: 162, y: 274, w: 302, h: 90,
+    x: COMPUTE_X, y: SRV_Y, w: COMPUTE_W, h: SRV_H,
     rx: 4,
-    svgLabel: { x: 313, y: 322 },
+    svgLabel: { x: COMPUTE_X + COMPUTE_W / 2, y: SRV_Y + SRV_H / 2 },
   },
   {
     id: 'ai-network',
     label: '🔗 AI 네트워킹',
     layer: '🔗 네트워킹 레이어',
     role: 'GPU 수천 개를 InfiniBand·RoCE 이더넷으로 연결해 분산 학습 통신 병목을 최소화. Arista·NVIDIA Quantum이 핵심 장비.',
-    x: 162, y: 366, w: 180, h: 92,
+    x: COMPUTE_X, y: NET_Y, w: AINET_W, h: NET_H,
     rx: 4,
-    svgLabel: { x: 252, y: 415 },
+    svgLabel: { x: COMPUTE_X + AINET_W / 2, y: NET_Y + NET_H / 2 },
   },
   {
     id: 'optics',
     label: '💡 광트랜시버',
     layer: '🔗 네트워킹 레이어',
     role: '800G~1.6T 광모듈이 랙 간·데이터센터 간 초고속 광신호를 전송. CPO(Co-Packaged Optics) 기술로 전력 효율 대폭 향상.',
-    x: 344, y: 366, w: 120, h: 92,
+    x: OPTICS_X, y: NET_Y, w: OPTICS_W, h: NET_H,
     rx: 4,
-    svgLabel: { x: 404, y: 415 },
+    svgLabel: { x: OPTICS_X + OPTICS_W / 2, y: NET_Y + NET_H / 2 },
   },
   {
     id: 'storage',
     label: '🗄️ 스토리지',
     layer: '⚡ 컴퓨트 레이어',
     role: 'AI 학습 데이터셋·체크포인트·모델 가중치를 저장. 올플래시 NVMe(Pure·NetApp)와 고용량 HDD(Seagate·WD)가 병행.',
-    x: 466, y: 64, w: 186, h: 394,
+    x: STORAGE_X, y: R2_Y + GAP / 2, w: STORAGE_W, h: R2_H - GAP,
     rx: 4,
-    svgLabel: { x: 559, y: 261, rotate: -90 },
+    svgLabel: { x: STORAGE_X + STORAGE_W / 2, y: R2_Y + R2_H / 2, rotate: -90 },
   },
   {
     id: 'cooling',
     label: '❄️ 냉각 시스템',
     layer: '🔋 전력 & 냉각 레이어',
     role: '100 kW+ 랙 발열을 직접 액냉·액침냉각으로 처리. 공냉 대비 PUE를 획기적으로 낮춰 데이터센터 운영비 절감.',
-    x: 654, y: 64, w: 78, h: 394,
+    x: COOLING_X, y: R2_Y + GAP / 2, w: COOLING_W, h: R2_H - GAP,
     rx: 4,
-    svgLabel: { x: 693, y: 261, rotate: -90 },
+    svgLabel: { x: COOLING_X + COOLING_W / 2, y: R2_Y + R2_H / 2, rotate: -90 },
   },
   {
     id: 'construction',
     label: '🏗️ 건설/엔지니어링',
     layer: '🏭 물리 인프라 레이어',
     role: '데이터센터 부지 선정·설계·전기/기계 시공 전담. AI 붐으로 글로벌 착공 물량이 폭증해 수주 잔고가 사상 최고치.',
-    x: 88, y: 460, w: 644, h: 55,
+    x: FAC_X, y: R3_Y, w: FAC_W, h: R3_H,
     rx: 0,
-    svgLabel: { x: 88 + 644 / 2, y: 490 },
+    svgLabel: { x: FAC_X + FAC_W / 2, y: R3_Y + R3_H / 2 },
   },
 ];
 
@@ -158,6 +204,7 @@ export default function Illustration() {
         {/* ── SVG Canvas ── */}
         <div className="illust-svg">
           <svg viewBox={`0 0 ${W} 515`} xmlns="http://www.w3.org/2000/svg"
+            aria-label="AI 데이터센터 구성도"
             style={{ display: 'block', width: '100%', borderRadius: 12, background: '#080f1f' }}>
 
             <defs>
@@ -196,77 +243,140 @@ export default function Illustration() {
                       color={isActive ? c.bdA : c.bd} />
                   )}
 
-                  {z.id === 'gpu' && Array.from({ length: 12 }).map((_, i) => (
-                    <rect key={i}
-                      x={z.x + 10 + (i % 6) * 48} y={z.y + 20 + Math.floor(i / 6) * 50}
-                      width={38} height={36} rx={4}
-                      fill={isActive ? '#1f4a2a' : '#111f14'}
-                      stroke={isActive ? '#4ade80' : '#16a34a'}
-                      strokeWidth={0.8}
-                    />
-                  ))}
+                  {z.id === 'gpu' && (() => {
+                    // 2 rows × 6 cols chips, centered in zone with uniform 10px padding
+                    const PAD = 10;
+                    const cols = 6, rows = 2;
+                    const chipW = Math.floor((z.w - PAD * 2 - (cols - 1) * 4) / cols);
+                    const chipH = Math.floor((z.h - PAD * 2 - (rows - 1) * 6) / rows);
+                    return Array.from({ length: cols * rows }).map((_, i) => {
+                      const col = i % cols, row = Math.floor(i / cols);
+                      return (
+                        <rect key={i}
+                          x={z.x + PAD + col * (chipW + 4)}
+                          y={z.y + PAD + row * (chipH + 6)}
+                          width={chipW} height={chipH} rx={4}
+                          fill={isActive ? '#1f4a2a' : '#111f14'}
+                          stroke={isActive ? '#4ade80' : '#16a34a'}
+                          strokeWidth={0.8}
+                        />
+                      );
+                    });
+                  })()}
 
-                  {z.id === 'memory' && Array.from({ length: 16 }).map((_, i) => (
-                    <rect key={i}
-                      x={z.x + 8 + (i % 8) * 36} y={z.y + 18 + Math.floor(i / 8) * 42}
-                      width={28} height={32} rx={2}
-                      fill={isActive ? '#0e2a4a' : '#080f1a'}
-                      stroke={isActive ? '#38bdf8' : '#0369a1'}
-                      strokeWidth={0.8}
-                    />
-                  ))}
+                  {z.id === 'memory' && (() => {
+                    const PAD = 8;
+                    const cols = 8, rows = 2;
+                    const chipW = Math.floor((z.w - PAD * 2 - (cols - 1) * 3) / cols);
+                    const chipH = Math.floor((z.h - PAD * 2 - (rows - 1) * 6) / rows);
+                    return Array.from({ length: cols * rows }).map((_, i) => {
+                      const col = i % cols, row = Math.floor(i / cols);
+                      return (
+                        <rect key={i}
+                          x={z.x + PAD + col * (chipW + 3)}
+                          y={z.y + PAD + row * (chipH + 6)}
+                          width={chipW} height={chipH} rx={2}
+                          fill={isActive ? '#0e2a4a' : '#080f1a'}
+                          stroke={isActive ? '#38bdf8' : '#0369a1'}
+                          strokeWidth={0.8}
+                        />
+                      );
+                    });
+                  })()}
 
-                  {z.id === 'server' && Array.from({ length: 8 }).map((_, i) => (
-                    <rect key={i}
-                      x={z.x + 6 + (i % 4) * 72} y={z.y + 12 + Math.floor(i / 4) * 38}
-                      width={62} height={28} rx={3}
-                      fill={isActive ? '#1a0f30' : '#0d0818'}
-                      stroke={isActive ? '#a78bfa' : '#7c3aed'}
-                      strokeWidth={0.8}
-                    />
-                  ))}
+                  {z.id === 'server' && (() => {
+                    const PAD = 8;
+                    const cols = 4, rows = 2;
+                    const chipW = Math.floor((z.w - PAD * 2 - (cols - 1) * 6) / cols);
+                    const chipH = Math.floor((z.h - PAD * 2 - (rows - 1) * 8) / rows);
+                    return Array.from({ length: cols * rows }).map((_, i) => {
+                      const col = i % cols, row = Math.floor(i / cols);
+                      return (
+                        <rect key={i}
+                          x={z.x + PAD + col * (chipW + 6)}
+                          y={z.y + PAD + row * (chipH + 8)}
+                          width={chipW} height={chipH} rx={3}
+                          fill={isActive ? '#1a0f30' : '#0d0818'}
+                          stroke={isActive ? '#a78bfa' : '#7c3aed'}
+                          strokeWidth={0.8}
+                        />
+                      );
+                    });
+                  })()}
 
-                  {z.id === 'ai-network' && Array.from({ length: 6 }).map((_, i) => (
-                    <g key={i} transform={`translate(${z.x + 10 + (i % 3) * 56}, ${z.y + 14 + Math.floor(i / 3) * 38})`}>
-                      <rect width={46} height={26} rx={3}
-                        fill={isActive ? '#0f2a14' : '#091409'}
-                        stroke={isActive ? '#4ade80' : '#15803d'}
-                        strokeWidth={0.8} />
-                      {Array.from({ length: 8 }).map((_, p) => (
-                        <circle key={p} cx={5 + p * 5} cy={13} r={1.5}
-                          fill={isActive ? '#4ade80' : '#15803d'} opacity={0.7} />
-                      ))}
-                    </g>
-                  ))}
+                  {z.id === 'ai-network' && (() => {
+                    const PAD = 8;
+                    const cols = 3, rows = 2;
+                    const bW = Math.floor((z.w - PAD * 2 - (cols - 1) * 5) / cols);
+                    const bH = Math.floor((z.h - PAD * 2 - (rows - 1) * 6) / rows);
+                    return Array.from({ length: cols * rows }).map((_, i) => {
+                      const col = i % cols, row = Math.floor(i / cols);
+                      const bx = z.x + PAD + col * (bW + 5);
+                      const by = z.y + PAD + row * (bH + 6);
+                      return (
+                        <g key={i} transform={`translate(${bx}, ${by})`}>
+                          <rect width={bW} height={bH} rx={3}
+                            fill={isActive ? '#0f2a14' : '#091409'}
+                            stroke={isActive ? '#4ade80' : '#15803d'}
+                            strokeWidth={0.8} />
+                          {Array.from({ length: 7 }).map((_, p) => (
+                            <circle key={p} cx={5 + p * (bW - 8) / 6} cy={bH / 2} r={1.5}
+                              fill={isActive ? '#4ade80' : '#15803d'} opacity={0.7} />
+                          ))}
+                        </g>
+                      );
+                    });
+                  })()}
 
-                  {z.id === 'optics' && Array.from({ length: 4 }).map((_, i) => (
-                    <g key={i} transform={`translate(${z.x + 8 + (i % 2) * 54}, ${z.y + 12 + Math.floor(i / 2) * 36})`}>
-                      <rect width={46} height={26} rx={3}
-                        fill={isActive ? '#2a1f00' : '#110c00'}
-                        stroke={isActive ? '#facc15' : '#ca8a04'}
-                        strokeWidth={0.8} />
-                      <line x1={4} y1={13} x2={42} y2={13}
-                        stroke={isActive ? '#facc15' : '#ca8a04'}
-                        strokeWidth={1.5} strokeDasharray="3 2" />
-                    </g>
-                  ))}
+                  {z.id === 'optics' && (() => {
+                    const PAD = 8;
+                    const cols = 2, rows = 2;
+                    const bW = Math.floor((z.w - PAD * 2 - (cols - 1) * 5) / cols);
+                    const bH = Math.floor((z.h - PAD * 2 - (rows - 1) * 6) / rows);
+                    return Array.from({ length: cols * rows }).map((_, i) => {
+                      const col = i % cols, row = Math.floor(i / cols);
+                      const bx = z.x + PAD + col * (bW + 5);
+                      const by = z.y + PAD + row * (bH + 6);
+                      return (
+                        <g key={i} transform={`translate(${bx}, ${by})`}>
+                          <rect width={bW} height={bH} rx={3}
+                            fill={isActive ? '#2a1f00' : '#110c00'}
+                            stroke={isActive ? '#facc15' : '#ca8a04'}
+                            strokeWidth={0.8} />
+                          <line x1={4} y1={bH / 2} x2={bW - 4} y2={bH / 2}
+                            stroke={isActive ? '#facc15' : '#ca8a04'}
+                            strokeWidth={1.5} strokeDasharray="3 2" />
+                        </g>
+                      );
+                    });
+                  })()}
 
-                  {z.id === 'cooling' && Array.from({ length: 5 }).map((_, i) => (
-                    <g key={i}>
-                      <circle
-                        cx={z.x + z.w / 2} cy={z.y + 44 + i * 70}
-                        r={26} fill="none"
-                        stroke={isActive ? '#22d3ee' : '#0891b2'}
-                        strokeWidth={1.2}
-                      />
-                      <text
-                        x={z.x + z.w / 2} y={z.y + 44 + i * 70}
-                        textAnchor="middle" dominantBaseline="middle"
-                        fontSize={30} className="spin-fan"
-                        fill={isActive ? '#22d3ee' : '#0891b2'}
-                      >✦</text>
-                    </g>
-                  ))}
+                  {z.id === 'cooling' && (() => {
+                    // 5 fans evenly distributed vertically
+                    const count = 5;
+                    const r = Math.min(Math.floor((z.w - 8) / 2), 26);
+                    const totalH = z.h - 8;
+                    const step = totalH / count;
+                    return Array.from({ length: count }).map((_, i) => {
+                      const cy = z.y + 4 + step * i + step / 2;
+                      return (
+                        <g key={i}>
+                          <circle
+                            cx={z.x + z.w / 2} cy={cy}
+                            r={r} fill="none"
+                            stroke={isActive ? '#22d3ee' : '#0891b2'}
+                            strokeWidth={1.2}
+                          />
+                          <text
+                            x={z.x + z.w / 2} y={cy}
+                            textAnchor="middle" dominantBaseline="middle"
+                            fontSize={r * 1.3} className="spin-fan"
+                            fill={isActive ? '#22d3ee' : '#0891b2'}
+                          >✦</text>
+                        </g>
+                      );
+                    });
+                  })()}
 
                   {isActive && z.fill !== 'none' && (
                     <rect
@@ -305,7 +415,7 @@ export default function Illustration() {
               );
             })}
 
-            <text x={100} y={76} fontSize={8.5} fill="#334155" fontWeight="700" letterSpacing="1"
+            <text x={FAC_X + 8} y={R2_Y + 14} fontSize={8.5} fill="#334155" fontWeight="700" letterSpacing="1"
               style={{ pointerEvents: 'none' }}>
               DATA CENTER FACILITY
             </text>
