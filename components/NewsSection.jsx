@@ -18,6 +18,7 @@ export default function NewsSection() {
   const [activeLayer, setActiveLayer]   = useState('all'); // 'all' | layer.id
   const [activeComp,  setActiveComp]    = useState('all'); // 'all' | comp.id
   const [activeType,  setActiveType]    = useState('all'); // 'all' | type
+  const [sortOrder,   setSortOrder]     = useState('desc'); // 'desc' | 'asc'
 
   // 레이어 변경 시 구성요소 필터 초기화
   function handleLayerClick(layerId) {
@@ -39,20 +40,28 @@ export default function NewsSection() {
     );
   }, [visibleComps]);
 
-  // 필터링된 뉴스
+  // 필터링 + 정렬된 뉴스
   const filtered = useMemo(() => {
-    // 레이어 필터: 해당 레이어의 comp id 목록
     const layerCompIds = activeLayer === 'all'
       ? null
       : LAYERS.find(l => l.id === activeLayer)?.components.map(c => c.id);
 
-    return NEWS_ITEMS.filter(n => {
+    const result = NEWS_ITEMS.filter(n => {
       const layerMatch = !layerCompIds || layerCompIds.includes(n.category);
       const compMatch  = activeComp === 'all' || n.category === activeComp;
       const typeMatch  = activeType === 'all' || n.type === activeType;
       return layerMatch && compMatch && typeMatch;
     });
-  }, [activeLayer, activeComp, activeType]);
+
+    // 정렬 적용 (date 문자열은 YYYY-MM-DD 포맷이라 문자열 비교로 충분)
+    result.sort((a, b) =>
+      sortOrder === 'desc'
+        ? b.date.localeCompare(a.date)
+        : a.date.localeCompare(b.date)
+    );
+
+    return result;
+  }, [activeLayer, activeComp, activeType, sortOrder]);
 
   // 레이어별 뉴스 수 (뱃지용)
   const countByLayer = useMemo(() => {
@@ -154,17 +163,26 @@ export default function NewsSection() {
         ))}
       </div>
 
-      {/* ── 결과 요약 ── */}
+      {/* ── 결과 요약 + 정렬 ── */}
       <div className="news-result-summary">
-        {filtered.length}개 항목
-        {activeLayer !== 'all' && (
-          <span className="news-breadcrumb">
-            {' '}· {LAYER_TABS.find(l => l.id === activeLayer)?.label.replace(/ 레이어$/, '')}
-            {activeComp !== 'all' && (
-              <> › {ALL_COMPONENTS.find(c => c.id === activeComp)?.icon} {ALL_COMPONENTS.find(c => c.id === activeComp)?.name}</>
-            )}
-          </span>
-        )}
+        <span>
+          {filtered.length}개 항목
+          {activeLayer !== 'all' && (
+            <span className="news-breadcrumb">
+              {' '}· {LAYER_TABS.find(l => l.id === activeLayer)?.label.replace(/ 레이어$/, '')}
+              {activeComp !== 'all' && (
+                <> › {ALL_COMPONENTS.find(c => c.id === activeComp)?.icon} {ALL_COMPONENTS.find(c => c.id === activeComp)?.name}</>
+              )}
+            </span>
+          )}
+        </span>
+        <button
+          className={`sort-btn${sortOrder === 'desc' ? ' active' : ''}`}
+          onClick={() => setSortOrder(o => o === 'desc' ? 'asc' : 'desc')}
+          title={sortOrder === 'desc' ? '최신순 정렬 중 (클릭 시 오래된순)' : '오래된순 정렬 중 (클릭 시 최신순)'}
+        >
+          {sortOrder === 'desc' ? '↓ 최신순' : '↑ 오래된순'}
+        </button>
       </div>
 
       {/* ── 뉴스 목록 ── */}

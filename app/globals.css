@@ -383,6 +383,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* 결과 요약 */
 .news-result-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 11px;
   color: var(--text-muted);
   margin-bottom: 12px;
@@ -390,6 +393,32 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .news-breadcrumb {
   color: var(--accent-light);
   font-weight: 600;
+}
+
+/* 정렬 버튼 */
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.sort-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-light);
+}
+.sort-btn.active {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent-light);
 }
 
 /* 구성요소 레이블 뱃지 (뉴스 카드 내) */
