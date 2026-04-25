@@ -1,61 +1,9 @@
 import { NextResponse } from 'next/server';
+import { fetchBatch } from '@/lib/mktcap-utils.js';
 
 // ── 티커별 개별 캐시 ──────────────────────────────────────────
 const tickerCache = new Map();
 const TICKER_TTL  = 60 * 60 * 1000; // 1시간
-
-const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-// ── Finnhub: 티커 1개의 시가총액 조회 ────────────────────────
-// 반환값: USD 원시값 (e.g. 5_062_000_000_000) 또는 null
-async function fetchOneFinnhub(ticker, token) {
-  // Finnhub는 일부 국제 ticker 형식이 달라 US 단일 심볼만 처리
-  // 예: '000660.KS' → Finnhub에서 지원 안 됨 → null 반환
-  const url = `https://finnhub.io/api/v1/stock/metric?symbol=${encodeURIComponent(ticker)}&metric=all&token=${token}`;
-
-  try {
-    const res = await fetch(url, {
-      headers: { 'Content-Type': 'application/json' },
-    });
-    if (!res.ok) return null;
-
-    const json = await res.json();
-    // Finnhub는 marketCapitalization을 백만 USD 단위로 반환
-    const mktcapM = json?.metric?.marketCapitalization;
-    if (!mktcapM) return null;
-
-    return mktcapM * 1_000_000; // USD 원시값으로 변환
-  } catch {
-    return null;
-  }
-}
-
-// ── 배치 처리: 5개씩 병렬 + 100ms 딜레이 ─────────────────────
-async function fetchBatch(tickers, token) {
-  const result = {};
-  const BATCH = 5;
-
-  for (let i = 0; i < tickers.length; i += BATCH) {
-    const batch = tickers.slice(i, i + BATCH);
-
-    const entries = await Promise.allSettled(
-      batch.map(async ticker => {
-        const mktcap = await fetchOneFinnhub(ticker, token);
-        return mktcap ? { ticker, mktcap } : null;
-      })
-    );
-
-    for (const e of entries) {
-      if (e.status === 'fulfilled' && e.value) {
-        result[e.value.ticker] = e.value.mktcap;
-      }
-    }
-
-    if (i + BATCH < tickers.length) await sleep(100);
-  }
-
-  return result;
-}
 
 // ── API Route ─────────────────────────────────────────────────
 export async function GET(request) {

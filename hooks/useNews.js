@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { NEWS_ITEMS } from '@/data/news';
+import { merge } from '@/lib/news-utils';
 
 // 탭 공유 캐시
 const _cache = { data: null, ts: 0 };
@@ -80,21 +81,3 @@ export default function useNews() {
   return state;
 }
 
-/**
- * 정적 뉴스와 라이브 뉴스를 병합합니다.
- * - 정적 뉴스는 URL·제목 기준으로 중복 제거 후 라이브 뉴스 뒤에 append
- * - 전체를 날짜 내림차순 정렬
- */
-function merge(staticItems, liveItems) {
-  const liveUrls   = new Set(liveItems.map(n => n.url));
-  const liveTitles = new Set(liveItems.map(n => n.title.slice(0, 40).toLowerCase()));
-
-  // 정적 중 라이브에 없는 것만 유지
-  const uniqueStatic = staticItems.filter(
-    n => !liveUrls.has(n.url) && !liveTitles.has(n.title.slice(0, 40).toLowerCase())
-  );
-
-  const all = [...liveItems, ...uniqueStatic];
-  all.sort((a, b) => b.date.localeCompare(a.date));
-  return all;
-}
