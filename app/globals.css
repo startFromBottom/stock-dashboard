@@ -259,6 +259,20 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ── News Section ── */
 
+/* 라이브 상태 바 */
+.news-live-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.news-total-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
 /* 레이어 탭 */
 .news-layer-tabs {
   display: flex;
@@ -608,6 +622,79 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--text-muted);
   text-align: center;
   padding: 12px 0;
+}
+
+/* ════════════════════════════════════════
+   섹터 탭 (AI 데이터센터 / 반도체)
+════════════════════════════════════════ */
+.sector-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.sector-btn {
+  padding: 6px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.2px;
+}
+
+.sector-btn:hover {
+  color: var(--text-secondary);
+  border-color: #475569;
+}
+
+.sector-btn.active {
+  color: #fbbf24;
+  background: #1a1200;
+  border-color: #fbbf24;
+  box-shadow: 0 0 0 2px rgba(251,191,36,0.15);
+}
+
+/* ════════════════════════════════════════
+   반도체 밸류체인 다이어그램
+════════════════════════════════════════ */
+.semi-chain-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  background: #080f1f;
+  margin-bottom: 4px;
+}
+
+.semi-chain-wrap svg {
+  min-width: 700px;
+}
+
+/* ── 반도체 섹션 헤더 ── */
+.semi-section-header {
+  margin-bottom: 16px;
+}
+
+.semi-section-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.semi-section-header p {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ── 반응형 ── */
+@media (max-width: 900px) {
+  .sector-nav { gap: 6px; }
+  .sector-btn { padding: 5px 14px; font-size: 12px; }
+  .semi-chain-wrap { border-radius: 8px; }
 }
 
 /* ── Responsive (기존 - 중복 제거됨, 위 섹션에 통합) ── */

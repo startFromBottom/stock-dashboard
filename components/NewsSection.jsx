@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { NEWS_ITEMS, NEWS_TYPE_LABEL } from '@/data/news';
+import { NEWS_TYPE_LABEL } from '@/data/news';
 import { LAYERS, ALL_COMPONENTS } from '@/data/companies';
+import useNews from '@/hooks/useNews';
 
 // 레이어별 구성요소 id 목록 (탭 구조 생성용)
 const LAYER_TABS = LAYERS.map(layer => ({
@@ -12,6 +13,8 @@ const LAYER_TABS = LAYERS.map(layer => ({
 }));
 
 export default function NewsSection() {
+  const { items: NEWS_ITEMS, loading, error, liveCount, fresh } = useNews();
+
   const [activeLayer, setActiveLayer]   = useState('all'); // 'all' | layer.id
   const [activeComp,  setActiveComp]    = useState('all'); // 'all' | comp.id
   const [activeType,  setActiveType]    = useState('all'); // 'all' | type
@@ -72,6 +75,24 @@ export default function NewsSection() {
 
   return (
     <div>
+      {/* ── 라이브 상태 배지 ── */}
+      <div className="news-live-bar">
+        {loading && (
+          <span className="live-badge loading-badge">⟳ 최신 뉴스 수집 중…</span>
+        )}
+        {fresh && (
+          <span className="live-badge">
+            ● LIVE — Finnhub + RSS {liveCount}개 수집
+          </span>
+        )}
+        {error && (
+          <span className="live-badge error-badge" title={error}>
+            ⚠ API 오류 · 정적 데이터 표시 중
+          </span>
+        )}
+        <span className="news-total-count">총 {NEWS_ITEMS.length}개</span>
+      </div>
+
       {/* ── 레이어 탭 ── */}
       <div className="news-layer-tabs">
         <button
@@ -196,8 +217,10 @@ export default function NewsSection() {
       )}
 
       <p className="hint-text" style={{ marginTop: 24 }}>
-        뉴스 데이터 기준: 2026년 4월 · 웹 검색 수동 수집 —{' '}
-        <span style={{ color: 'var(--accent-light)' }}>추후 NewsAPI / RSS 자동화 연동 예정</span>
+        {fresh
+          ? <>라이브 뉴스: Finnhub company-news + RSS 피드 자동 수집 (1시간 캐시) · 정적 큐레이션 {NEWS_ITEMS.filter(n => !n._live).length}개 포함</>
+          : <>뉴스 데이터: 정적 큐레이션 표시 중 · 백그라운드에서 최신 뉴스 수집 중</>
+        }
       </p>
     </div>
   );
