@@ -252,7 +252,7 @@ export function getNewsByTicker(ticker) {
 }
 
 export const NEWS_TYPE_LABEL = {
-  announcement: { label: '발표', color: '#7c3aed', bg: '#f5f3ff' },
-  news:         { label: '뉴스', color: '#0369a1', bg: '#eff6ff' },
-  report:       { label: '리포트', color: '#15803d', bg: '#f0fdf4' },
+  announcement: { label: '발표', color: '#a78bfa', bg: '#2e1065' },
+  news:         { label: '뉴스', color: '#60a5fa', bg: '#0c1a2e' },
+  report:       { label: '리포트', color: '#4ade80', bg: '#052e16' },
 };

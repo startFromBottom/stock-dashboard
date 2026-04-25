@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-// 브라우저 탭 공유 메모리 캐시 (새로고침 전까지 유지)
-const clientCache = { data: null, ts: 0, key: '' };
+// 브라우저 탭 공유 메모리 캐시 — ticker 세트(key)별로 저장
+// key = 정렬된 ticker 문자열, value = { data, ts }
+const clientCache = new Map();
 const CACHE_TTL = 60 * 60 * 1000; // 1시간
 
 /**
- * @param {string[]} tickers  - FMP 정규화된 ticker 배열
+ * @param {string[]} tickers  - Finnhub 정규화된 ticker 배열
  * @returns {{ mktcaps: Record<string,number>, loading: boolean, error: string|null, fresh: boolean }}
  *   mktcaps: { NVDA: 2700000000000, ... }
  *   fresh: true = API에서 막 가져온 값, false = 캐시 또는 미로드
@@ -27,9 +28,10 @@ export default function useMarketCaps(tickers) {
     const key = [...tickers].sort().join(',');
     const now = Date.now();
 
-    // 클라이언트 캐시 히트
-    if (clientCache.key === key && clientCache.data && now - clientCache.ts < CACHE_TTL) {
-      setState({ mktcaps: clientCache.data, loading: false, error: null, fresh: false });
+    // 클라이언트 캐시 히트 (이 ticker 세트에 대해 이미 가져온 적 있으면 재사용)
+    const cached = clientCache.get(key);
+    if (cached && now - cached.ts < CACHE_TTL) {
+      setState({ mktcaps: cached.data, loading: false, error: null, fresh: false });
       return;
     }
 
@@ -49,9 +51,7 @@ export default function useMarketCaps(tickers) {
       })
       .then(data => {
         if (data.error) throw new Error(data.error);
-        clientCache.data = data;
-        clientCache.ts   = Date.now();
-        clientCache.key  = key;
+        clientCache.set(key, { data, ts: Date.now() });
         setState({ mktcaps: data, loading: false, error: null, fresh: true });
       })
       .catch(err => {

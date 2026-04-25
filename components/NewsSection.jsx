@@ -2,54 +2,125 @@
 
 import { useState, useMemo } from 'react';
 import { NEWS_ITEMS, NEWS_TYPE_LABEL } from '@/data/news';
-import { ALL_COMPONENTS } from '@/data/companies';
+import { LAYERS, ALL_COMPONENTS } from '@/data/companies';
 
-const ALL_FILTER = { id: 'all', label: '전체' };
+// 레이어별 구성요소 id 목록 (탭 구조 생성용)
+const LAYER_TABS = LAYERS.map(layer => ({
+  id: layer.id,
+  label: layer.layer,
+  componentIds: layer.components.map(c => c.id),
+}));
 
 export default function NewsSection() {
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [activeType, setActiveType]     = useState('all');
+  const [activeLayer, setActiveLayer]   = useState('all'); // 'all' | layer.id
+  const [activeComp,  setActiveComp]    = useState('all'); // 'all' | comp.id
+  const [activeType,  setActiveType]    = useState('all'); // 'all' | type
 
-  // category filter options from actual news data
-  const categoryFilters = useMemo(() => {
-    const ids = [...new Set(NEWS_ITEMS.map(n => n.category))];
-    return ids.map(id => {
-      const comp = ALL_COMPONENTS.find(c => c.id === id);
-      return { id, label: comp ? `${comp.icon} ${comp.name}` : id };
+  // 레이어 변경 시 구성요소 필터 초기화
+  function handleLayerClick(layerId) {
+    setActiveLayer(layerId);
+    setActiveComp('all');
+  }
+
+  // 현재 레이어에서 보여줄 구성요소 목록
+  const visibleComps = useMemo(() => {
+    if (activeLayer === 'all') return ALL_COMPONENTS;
+    const layer = LAYERS.find(l => l.id === activeLayer);
+    return layer ? layer.components : [];
+  }, [activeLayer]);
+
+  // 현재 카테고리 필터에서 뉴스가 1개 이상인 comp만 표시
+  const compsWithNews = useMemo(() => {
+    return visibleComps.filter(c =>
+      NEWS_ITEMS.some(n => n.category === c.id)
+    );
+  }, [visibleComps]);
+
+  // 필터링된 뉴스
+  const filtered = useMemo(() => {
+    // 레이어 필터: 해당 레이어의 comp id 목록
+    const layerCompIds = activeLayer === 'all'
+      ? null
+      : LAYERS.find(l => l.id === activeLayer)?.components.map(c => c.id);
+
+    return NEWS_ITEMS.filter(n => {
+      const layerMatch = !layerCompIds || layerCompIds.includes(n.category);
+      const compMatch  = activeComp === 'all' || n.category === activeComp;
+      const typeMatch  = activeType === 'all' || n.type === activeType;
+      return layerMatch && compMatch && typeMatch;
     });
+  }, [activeLayer, activeComp, activeType]);
+
+  // 레이어별 뉴스 수 (뱃지용)
+  const countByLayer = useMemo(() => {
+    const map = {};
+    for (const layer of LAYERS) {
+      const ids = layer.components.map(c => c.id);
+      map[layer.id] = NEWS_ITEMS.filter(n => ids.includes(n.category)).length;
+    }
+    return map;
   }, []);
 
-  const filtered = useMemo(() => {
-    return NEWS_ITEMS.filter(n => {
-      const catMatch  = activeFilter === 'all' || n.category === activeFilter;
-      const typeMatch = activeType   === 'all' || n.type     === activeType;
-      return catMatch && typeMatch;
-    });
-  }, [activeFilter, activeType]);
+  // 구성요소별 뉴스 수 (뱃지용)
+  const countByComp = useMemo(() => {
+    const map = {};
+    for (const c of ALL_COMPONENTS) {
+      map[c.id] = NEWS_ITEMS.filter(n => n.category === c.id).length;
+    }
+    return map;
+  }, []);
 
   return (
     <div>
-      {/* Filters */}
-      <div className="news-filters">
-        <span className="filter-label">카테고리</span>
+      {/* ── 레이어 탭 ── */}
+      <div className="news-layer-tabs">
         <button
-          className={`filter-btn${activeFilter === 'all' ? ' active' : ''}`}
-          onClick={() => setActiveFilter('all')}
+          className={`news-layer-tab${activeLayer === 'all' ? ' active' : ''}`}
+          onClick={() => handleLayerClick('all')}
         >
-          전체 ({NEWS_ITEMS.length})
+          전체
+          <span className="news-count-badge">{NEWS_ITEMS.length}</span>
         </button>
-        {categoryFilters.map(f => (
-          <button
-            key={f.id}
-            className={`filter-btn${activeFilter === f.id ? ' active' : ''}`}
-            onClick={() => setActiveFilter(f.id)}
-          >
-            {f.label}
-          </button>
-        ))}
+        {LAYER_TABS.map(lt => {
+          const cnt = countByLayer[lt.id] ?? 0;
+          if (cnt === 0) return null;
+          return (
+            <button
+              key={lt.id}
+              className={`news-layer-tab${activeLayer === lt.id ? ' active' : ''}`}
+              onClick={() => handleLayerClick(lt.id)}
+            >
+              {lt.label.replace(/ 레이어$/, '')}
+              <span className="news-count-badge">{cnt}</span>
+            </button>
+          );
+        })}
       </div>
 
-      <div className="news-filters" style={{ marginTop: -10 }}>
+      {/* ── 구성요소 필터 (선택된 레이어의 comp) ── */}
+      {compsWithNews.length > 0 && (
+        <div className="news-comp-filters">
+          <button
+            className={`filter-btn${activeComp === 'all' ? ' active' : ''}`}
+            onClick={() => setActiveComp('all')}
+          >
+            전체 ({activeLayer === 'all' ? NEWS_ITEMS.length : (countByLayer[activeLayer] ?? 0)})
+          </button>
+          {compsWithNews.map(c => (
+            <button
+              key={c.id}
+              className={`filter-btn${activeComp === c.id ? ' active' : ''}`}
+              onClick={() => setActiveComp(c.id)}
+            >
+              {c.icon} {c.name}
+              <span className="news-comp-count">{countByComp[c.id] ?? 0}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* ── 유형 필터 ── */}
+      <div className="news-type-filters">
         <span className="filter-label">유형</span>
         {['all', 'announcement', 'news', 'report'].map(t => (
           <button
@@ -62,16 +133,30 @@ export default function NewsSection() {
         ))}
       </div>
 
-      {/* News list */}
+      {/* ── 결과 요약 ── */}
+      <div className="news-result-summary">
+        {filtered.length}개 항목
+        {activeLayer !== 'all' && (
+          <span className="news-breadcrumb">
+            {' '}· {LAYER_TABS.find(l => l.id === activeLayer)?.label.replace(/ 레이어$/, '')}
+            {activeComp !== 'all' && (
+              <> › {ALL_COMPONENTS.find(c => c.id === activeComp)?.icon} {ALL_COMPONENTS.find(c => c.id === activeComp)?.name}</>
+            )}
+          </span>
+        )}
+      </div>
+
+      {/* ── 뉴스 목록 ── */}
       {filtered.length === 0 ? (
         <p className="hint-text">해당 조건의 뉴스가 없습니다.</p>
       ) : (
         <div className="news-grid">
           {filtered.map(item => {
-            const typeInfo = NEWS_TYPE_LABEL[item.type] ?? { label: item.type, color: '#666', bg: '#eee' };
+            const typeInfo = NEWS_TYPE_LABEL[item.type] ?? { label: item.type, color: '#818cf8', bg: '#1e1b4b' };
+            const compInfo = ALL_COMPONENTS.find(c => c.id === item.category);
             return (
               <div key={item.id} className="news-card">
-                {/* Type badge */}
+                {/* 유형 뱃지 */}
                 <span
                   className="news-type-badge"
                   style={{ color: typeInfo.color, background: typeInfo.bg }}
@@ -86,6 +171,12 @@ export default function NewsSection() {
                     {item.tickers.map(t => (
                       <span key={t} className="news-ticker-badge">{t}</span>
                     ))}
+                    {/* 구성요소 레이블 (전체 탭에서만 표시) */}
+                    {compInfo && (
+                      <span className="news-comp-badge">
+                        {compInfo.icon} {compInfo.name}
+                      </span>
+                    )}
                     <span className="news-meta">{item.date}</span>
                     <span className="news-source">출처: {item.source}</span>
                     <a
