@@ -3,6 +3,8 @@
  */
 import { NextResponse } from 'next/server';
 
+const TEST_TICKERS = ['NVDA', 'MSFT', 'GOOGL'];
+
 export async function GET() {
   const apiKey = process.env.FMP_API_KEY;
   if (!apiKey) {
@@ -10,24 +12,25 @@ export async function GET() {
   }
 
   try {
-    const res = await fetch(
-      `https://financialmodelingprep.com/stable/quote?symbol=NVDA,MSFT,GOOGL&apikey=${apiKey}`
+    const results = await Promise.all(
+      TEST_TICKERS.map(async ticker => {
+        const res = await fetch(
+          `https://financialmodelingprep.com/stable/quote?symbol=${ticker}&apikey=${apiKey}`
+        );
+        const raw = await res.json();
+        const item = Array.isArray(raw) ? raw[0] : null;
+        return {
+          symbol: ticker,
+          status: res.status,
+          marketCap: item?.marketCap ?? null,
+          formatted: item?.marketCap
+            ? '$' + (item.marketCap / 1e12).toFixed(2) + '조'
+            : null,
+        };
+      })
     );
-    const raw = await res.json();
-    const items = Array.isArray(raw) ? raw : [];
 
-    return NextResponse.json({
-      ok: res.ok,
-      status: res.status,
-      count: items.length,
-      sample: items.map(i => ({
-        symbol: i.symbol,
-        marketCap: i.marketCap,
-        formatted: i.marketCap
-          ? '$' + (i.marketCap / 1e12).toFixed(2) + '조'
-          : null,
-      })),
-    });
+    return NextResponse.json({ ok: true, results });
   } catch (err) {
     return NextResponse.json({ ok: false, error: err.message }, { status: 500 });
   }
