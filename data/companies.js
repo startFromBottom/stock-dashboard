@@ -250,3 +250,61 @@ export const LAYERS = [
 ];
 
 export const ALL_COMPONENTS = LAYERS.flatMap(l => l.components);
+
+// 회사 이름 → 국기 이모지 매핑
+export const FLAG_BY_NAME = {
+  // 🇺🇸 미국
+  'Microsoft': '🇺🇸', 'NVIDIA': '🇺🇸', 'Alphabet': '🇺🇸', 'Amazon': '🇺🇸',
+  'Meta': '🇺🇸', 'Oracle': '🇺🇸', 'IBM': '🇺🇸', 'CoreWeave': '🇺🇸',
+  'Equinix': '🇺🇸', 'Digital Realty': '🇺🇸', 'Iron Mountain': '🇺🇸',
+  'American Tower': '🇺🇸', 'Crown Castle': '🇺🇸', 'SBA Communications': '🇺🇸',
+  'CyrusOne': '🇺🇸', 'Compass DC': '🇺🇸',
+  'Broadcom': '🇺🇸', 'AMD': '🇺🇸', 'Marvell': '🇺🇸', 'Intel': '🇺🇸',
+  'Qualcomm': '🇺🇸', 'Cerebras': '🇺🇸', 'Silicon Motion': '🇺🇸',
+  'Micron': '🇺🇸', 'Rambus': '🇺🇸',
+  'Dell': '🇺🇸', 'Super Micro': '🇺🇸', 'HPE': '🇺🇸',
+  'Pure Storage': '🇺🇸', 'NetApp': '🇺🇸', 'Western Digital': '🇺🇸',
+  'Seagate': '🇺🇸', 'Nutanix': '🇺🇸', 'Weka': '🇺🇸',
+  'Quantum Corp': '🇺🇸', 'DDN': '🇺🇸', 'VAST Data': '🇺🇸',
+  'Arista Networks': '🇺🇸', 'Cisco': '🇺🇸', 'Juniper Networks': '🇺🇸',
+  'Extreme Networks': '🇺🇸', 'Pensando (AMD)': '🇺🇸',
+  'Coherent Corp': '🇺🇸', 'Lumentum': '🇺🇸', 'Fabrinet': '🇺🇸',
+  'Viavi Solutions': '🇺🇸', 'AAOI': '🇺🇸',
+  'Vertiv': '🇺🇸', 'Emerson Electric': '🇺🇸', 'AMETEK': '🇺🇸', 'Hubbell': '🇺🇸',
+  'Modine': '🇺🇸', 'Comfort Systems': '🇺🇸', 'Carrier Global': '🇺🇸',
+  'Chart Industries': '🇺🇸',
+  'Quanta Services': '🇺🇸', 'AECOM': '🇺🇸', 'EMCOR Group': '🇺🇸',
+  'MYR Group': '🇺🇸', 'Jacobs': '🇺🇸', 'Fluor': '🇺🇸',
+  'Parsons Corp': '🇺🇸', 'KBR': '🇺🇸', 'Tutor Perini': '🇺🇸',
+  'NextEra Energy': '🇺🇸', 'Constellation Energy': '🇺🇸', 'Vistra Energy': '🇺🇸',
+  'Dominion Energy': '🇺🇸', 'Duke Energy': '🇺🇸', 'Southern Company': '🇺🇸',
+  'AES Corporation': '🇺🇸', 'NRG Energy': '🇺🇸', 'Entergy': '🇺🇸',
+  // 🇰🇷 한국
+  'SK Hynix': '🇰🇷', 'Samsung': '🇰🇷',
+  // 🇹🇼 대만
+  'TSMC': '🇹🇼', 'MediaTek': '🇹🇼', 'Nanya Tech': '🇹🇼', 'Winbond': '🇹🇼',
+  'Foxconn': '🇹🇼', 'Quanta Computer': '🇹🇼', 'Wiwynn': '🇹🇼',
+  'Gigabyte': '🇹🇼', 'ASUS': '🇹🇼',
+  // 🇯🇵 일본
+  'Kioxia': '🇯🇵', 'NTT Data': '🇯🇵', 'Sumitomo Electric': '🇯🇵',
+  // 🇨🇳 중국
+  'Tencent': '🇨🇳', 'Alibaba': '🇨🇳', 'GDS Holdings': '🇨🇳',
+  'Inspur': '🇨🇳', 'CXMT': '🇨🇳', 'Lenovo': '🇨🇳',
+  'Eoptolink': '🇨🇳', 'Accelink': '🇨🇳', 'InnoLight': '🇨🇳', 'HG Genuine': '🇨🇳',
+  // 🇬🇧 영국
+  'Arm Holdings': '🇬🇧', 'nVent Electric': '🇬🇧',
+  // 🇫🇮 핀란드
+  'Nokia': '🇫🇮',
+  // 🇸🇪 스웨덴
+  'Ericsson': '🇸🇪', 'Alfa Laval': '🇸🇪', 'Skanska': '🇸🇪',
+  // 🇫🇷 프랑스
+  'Schneider Electric': '🇫🇷', 'Legrand': '🇫🇷',
+  // 🇩🇪 독일
+  'Siemens Energy': '🇩🇪', 'Stulz': '🇩🇪',
+  // 🇨🇭 스위스
+  'ABB': '🇨🇭',
+  // 🇮🇪 아일랜드
+  'Eaton': '🇮🇪', 'Johnson Controls': '🇮🇪', 'Trane Technologies': '🇮🇪',
+  // 🇨🇦 캐나다
+  'Brookfield Renewable': '🇨🇦',
+};

@@ -202,7 +202,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .rank-9  { background: #1a0f2a; color: #c084fc; }
 .rank-10 { background: #0f1a2a; color: #38bdf8; }
 
-.company-name   { font-size: 14px; font-weight: 800; color: var(--text-primary); }
+.company-name   { font-size: 14px; font-weight: 800; color: var(--text-primary); display: flex; align-items: center; gap: 5px; }
+.company-flag   { font-size: 14px; line-height: 1; flex-shrink: 0; }
 .company-ticker { font-size: 10px; color: var(--text-muted); margin: 2px 0; font-family: monospace; }
 .company-mktcap { font-size: 12px; font-weight: 700; color: var(--accent-light); margin-bottom: 6px; }
 .company-detail { font-size: 10.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px; }
@@ -373,9 +374,19 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--text-secondary);
   line-height: 1.5;
   margin-top: 5px;
-  display: none;
 }
-.illust-item.active .illust-item-body { display: block; }
+.illust-item-layer {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--accent-light);
+  background: var(--accent-bg);
+  border: 1px solid var(--border-active);
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin-bottom: 5px;
+  letter-spacing: 0.2px;
+}
 
 /* ── Pulse / Blink ── */
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }

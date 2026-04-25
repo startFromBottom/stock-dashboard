@@ -1,18 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import LayerMap from './LayerMap';
 import NewsSection from './NewsSection';
 import Illustration from './Illustration';
 
 const TABS = [
-  { id: 'map',   label: '🗺️ 레이어 맵' },
   { id: 'illust', label: '🏢 데이터센터' },
-  { id: 'news',  label: '📰 뉴스 & 레포트' },
+  { id: 'news',   label: '📰 뉴스 & 레포트' },
 ];
 
 export default function Dashboard() {
-  const [tab, setTab] = useState('map');
+  const [tab, setTab] = useState('illust');
 
   const now = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric', month: 'long', day: 'numeric',
@@ -27,7 +25,7 @@ export default function Dashboard() {
           <span className="header-meta">마지막 업데이트: {now}</span>
         </div>
         <p className="header-desc">
-          AI 데이터센터 레이어별 구성 요소 · 시가총액 Top 5 기업 · 최신 뉴스 & 리포트
+          AI 데이터센터 레이어별 구성 요소 · 시가총액 Top 10 기업 · 최신 뉴스 & 리포트
         </p>
       </div>
 
@@ -45,7 +43,6 @@ export default function Dashboard() {
       </nav>
 
       {/* Tab Content */}
-      {tab === 'map'    && <LayerMap />}
       {tab === 'illust' && <Illustration />}
       {tab === 'news'   && <NewsSection />}
     </div>

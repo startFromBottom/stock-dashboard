@@ -1,269 +1,355 @@
 'use client';
-
 import { useState } from 'react';
+import { ALL_COMPONENTS } from '@/data/companies';
+import CompanyPanel from './CompanyPanel';
 
-const ITEMS = [
+/* ─── Zone definitions ─── */
+// SVG 총 너비: 732 (= energy 88 + facility 644)
+const W = 734;
+const ZONE_DEFS = [
   {
-    id: 'rack',
-    label: '🖥️ AI GPU 서버랙',
-    body: '데이터센터의 핵심. NVIDIA H100/B200/Rubin GPU를 탑재한 서버들이 밀집 배치됩니다. GB200 NVL72 기준 랙 하나에 72개 GPU, 랙당 전력 소비 최대 120kW+에 달합니다.',
+    id: 'hyperscaler',
+    label: '☁️ 클라우드 플랫폼',
+    layer: '☁️ 클라우드 / 하이퍼스케일러 레이어',
+    role: 'AWS·Azure·GCP 등 퍼블릭 클라우드가 AI 인프라를 서비스로 제공. GPU 클러스터 운영·API 배포·사용량 과금까지 관리.',
+    x: 0, y: 0, w: W, h: 62,
+    rx: 0,
+    svgLabel: { x: W / 2, y: 34 },
   },
   {
-    id: 'network',
-    label: '🔀 네트워크 스위치',
-    body: 'GPU 간 초고속 데이터 전송을 위한 InfiniBand 또는 이더넷 스위치. NVIDIA Quantum-X800(3200Gb/s)나 Broadcom Tomahawk6 칩 기반으로 수천 개 GPU를 낮은 레이턴시로 연결합니다.',
+    id: 'energy',
+    label: '⚡ 에너지 공급',
+    layer: '🏭 물리 인프라 레이어',
+    role: '원전·태양광·풍력 등 전력을 데이터센터에 직접 공급. AI 가속기의 전력 수요 급증으로 장기 PPA 계약이 핵심 이슈.',
+    x: 0, y: 62, w: 88, h: 398,
+    rx: 0,
+    svgLabel: { x: 44, y: 261, rotate: -90 },
+  },
+  {
+    id: 'facility',
+    label: '🏢 데이터센터 시설',
+    layer: '☁️ 클라우드 / 하이퍼스케일러 레이어',
+    role: '코로케이션 부지·전력·냉각 인프라를 임대. 하이퍼스케일러와 기업이 직접 서버를 설치하거나 xScale 전용 캠퍼스 계약.',
+    x: 88, y: 62, w: 644, h: 398,
+    rx: 0,
+    fill: 'none',
+    svgLabel: null,
+  },
+  {
+    id: 'power',
+    label: '🔋 전력 인프라',
+    layer: '🔋 전력 & 냉각 레이어',
+    role: 'UPS·PDU·변압기로 안정적인 전력을 랙까지 공급. 랙당 수십 kW에서 100 kW+ AI 고밀도 환경에 맞춰 800 VDC 배전 방식 확산.',
+    x: 90, y: 64, w: 70, h: 394,
+    rx: 4,
+    svgLabel: { x: 125, y: 261, rotate: -90 },
+  },
+  {
+    id: 'gpu',
+    label: '🖥️ AI 가속기/GPU',
+    layer: '⚡ 컴퓨트 레이어',
+    role: 'AI 모델 학습·추론의 핵심 연산 유닛. NVIDIA GPU·커스텀 ASIC(Broadcom·Marvell)이 수천 개씩 묶인 클러스터로 동작.',
+    x: 162, y: 64, w: 302, h: 110,
+    rx: 4,
+    svgLabel: { x: 313, y: 122 },
+  },
+  {
+    id: 'memory',
+    label: '💾 메모리 (HBM)',
+    layer: '⚡ 컴퓨트 레이어',
+    role: 'GPU 칩 위에 적층된 HBM이 초고속 데이터를 전달. 대형 모델 처리에 HBM 대역폭이 병목이 되므로 HBM4 세대 경쟁이 치열.',
+    x: 162, y: 176, w: 302, h: 96,
+    rx: 4,
+    svgLabel: { x: 313, y: 227 },
+  },
+  {
+    id: 'server',
+    label: '🖧 서버',
+    layer: '⚡ 컴퓨트 레이어',
+    role: 'GPU·CPU·메모리를 묶는 AI 서버 섀시. ODM(Foxconn·Quanta)이 NVIDIA GB200 NVL 랙을 조립해 클라우드에 납품.',
+    x: 162, y: 274, w: 302, h: 90,
+    rx: 4,
+    svgLabel: { x: 313, y: 322 },
+  },
+  {
+    id: 'ai-network',
+    label: '🔗 AI 네트워킹',
+    layer: '🔗 네트워킹 레이어',
+    role: 'GPU 수천 개를 InfiniBand·RoCE 이더넷으로 연결해 분산 학습 통신 병목을 최소화. Arista·NVIDIA Quantum이 핵심 장비.',
+    x: 162, y: 366, w: 180, h: 92,
+    rx: 4,
+    svgLabel: { x: 252, y: 415 },
+  },
+  {
+    id: 'optics',
+    label: '💡 광트랜시버',
+    layer: '🔗 네트워킹 레이어',
+    role: '800G~1.6T 광모듈이 랙 간·데이터센터 간 초고속 광신호를 전송. CPO(Co-Packaged Optics) 기술로 전력 효율 대폭 향상.',
+    x: 344, y: 366, w: 120, h: 92,
+    rx: 4,
+    svgLabel: { x: 404, y: 415 },
   },
   {
     id: 'storage',
-    label: '📦 스토리지 어레이',
-    body: 'AI 학습 데이터셋과 모델 체크포인트를 저장. NVMe 올플래시 스토리지가 주로 사용되며, 수십 PB 용량에 초당 수백 GB의 I/O 처리 능력이 요구됩니다.',
+    label: '🗄️ 스토리지',
+    layer: '⚡ 컴퓨트 레이어',
+    role: 'AI 학습 데이터셋·체크포인트·모델 가중치를 저장. 올플래시 NVMe(Pure·NetApp)와 고용량 HDD(Seagate·WD)가 병행.',
+    x: 466, y: 64, w: 186, h: 394,
+    rx: 4,
+    svgLabel: { x: 559, y: 261, rotate: -90 },
   },
   {
     id: 'cooling',
     label: '❄️ 냉각 시스템',
-    body: 'AI GPU는 랙당 40~120kW의 열을 발생. 전통 공냉(CRAC) 외에도 직접 액침냉각(DLC), 칩 수냉 방식이 확산 중. 냉각 효율은 PUE 지표(이상적 = 1.0)로 측정합니다.',
+    layer: '🔋 전력 & 냉각 레이어',
+    role: '100 kW+ 랙 발열을 직접 액냉·액침냉각으로 처리. 공냉 대비 PUE를 획기적으로 낮춰 데이터센터 운영비 절감.',
+    x: 654, y: 64, w: 78, h: 394,
+    rx: 4,
+    svgLabel: { x: 693, y: 261, rotate: -90 },
   },
   {
-    id: 'power',
-    label: '⚡ 전력 분배 (PDU/UPS)',
-    body: '안정적인 전력 공급을 위한 배전반(PDU), 무정전전원장치(UPS). 대형 AI 데이터센터 한 곳이 수백~수천 MW를 소비하며, 이는 소형 도시 전체 소비량과 맞먹습니다.',
-  },
-  {
-    id: 'monitor',
-    label: '📊 모니터링 (NOC/DCIM)',
-    body: '수천 대 서버의 온도·전력·네트워크 상태를 실시간 감시하는 DCIM 시스템. GPU 장애, 과열, 네트워크 이상을 즉각 탐지·대응합니다.',
+    id: 'construction',
+    label: '🏗️ 건설/엔지니어링',
+    layer: '🏭 물리 인프라 레이어',
+    role: '데이터센터 부지 선정·설계·전기/기계 시공 전담. AI 붐으로 글로벌 착공 물량이 폭증해 수주 잔고가 사상 최고치.',
+    x: 88, y: 460, w: 644, h: 55,
+    rx: 0,
+    svgLabel: { x: 88 + 644 / 2, y: 490 },
   },
 ];
 
+/* ─── Per-zone color themes ─── */
+const ZONE_COLORS = {
+  hyperscaler:  { bg: '#0c1a3a', bgA: '#1a306b', bd: '#2563eb', bdA: '#60a5fa', tx: '#93c5fd', txA: '#dbeafe' },
+  energy:       { bg: '#1a1205', bgA: '#3b2800', bd: '#b45309', bdA: '#fbbf24', tx: '#fcd34d', txA: '#fef08a' },
+  facility:     { bg: 'transparent', bgA: 'transparent', bd: '#475569', bdA: '#818cf8', tx: '#94a3b8', txA: '#c7d2fe' },
+  power:        { bg: '#1a0f00', bgA: '#3d2200', bd: '#d97706', bdA: '#fbbf24', tx: '#fb923c', txA: '#fed7aa' },
+  gpu:          { bg: '#0a1f0a', bgA: '#163a16', bd: '#16a34a', bdA: '#4ade80', tx: '#86efac', txA: '#dcfce7' },
+  memory:       { bg: '#0f172a', bgA: '#1e3a5f', bd: '#0369a1', bdA: '#38bdf8', tx: '#7dd3fc', txA: '#e0f2fe' },
+  server:       { bg: '#1a0a1a', bgA: '#3b1a3b', bd: '#7c3aed', bdA: '#a78bfa', tx: '#c4b5fd', txA: '#ede9fe' },
+  'ai-network': { bg: '#0f1a0a', bgA: '#1f3a14', bd: '#15803d', bdA: '#4ade80', tx: '#86efac', txA: '#dcfce7' },
+  optics:       { bg: '#1a1505', bgA: '#3a2d0a', bd: '#ca8a04', bdA: '#facc15', tx: '#fde68a', txA: '#fef9c3' },
+  storage:      { bg: '#0f0a1a', bgA: '#231447', bd: '#6d28d9', bdA: '#c084fc', tx: '#d8b4fe', txA: '#f3e8ff' },
+  cooling:      { bg: '#001a1a', bgA: '#003a3a', bd: '#0891b2', bdA: '#22d3ee', tx: '#67e8f9', txA: '#cffafe' },
+  construction: { bg: '#1a0f0f', bgA: '#3a1a0f', bd: '#c2410c', bdA: '#fb923c', tx: '#fca5a5', txA: '#ffe4e6' },
+};
+
+function RackLines({ x, y, w, h, color }) {
+  const lines = [];
+  for (let i = y + 8; i < y + h - 4; i += 10) {
+    lines.push(
+      <rect key={i} x={x + 4} y={i} width={w - 8} height={5}
+        rx={1} fill={color} opacity={0.18} />
+    );
+  }
+  return <>{lines}</>;
+}
+
 export default function Illustration() {
-  const [active, setActive] = useState('rack');
+  const [activeId, setActiveId] = useState(null);
+
+  const toggle = (id) => setActiveId(prev => prev === id ? null : id);
+  const activeComp = ALL_COMPONENTS.find(c => c.id === activeId);
+  const activeZone = ZONE_DEFS.find(z => z.id === activeId);
 
   return (
-    <div className="illust-wrap">
-      {/* SVG */}
-      <div className="illust-svg">
-        <svg viewBox="0 0 560 440" xmlns="http://www.w3.org/2000/svg">
-          <rect width="560" height="440" fill="#0f172a" />
-          <defs>
-            <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M20 0L0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.5" />
-            </pattern>
-          </defs>
-          <rect width="560" height="440" fill="url(#g)" />
+    <div>
+      <div className="illust-wrap">
+        {/* ── SVG Canvas ── */}
+        <div className="illust-svg">
+          <svg viewBox={`0 0 ${W} 515`} xmlns="http://www.w3.org/2000/svg"
+            style={{ display: 'block', width: '100%', borderRadius: 12, background: '#080f1f' }}>
 
-          {/* Ceiling cable tray */}
-          <rect x="0" y="30" width="560" height="18" fill="#1e293b" rx="2" />
-          <rect x="10" y="34" width="540" height="3" fill="#334155" rx="1" />
-          <line x1="60"  y1="30" x2="60"  y2="48" stroke="#f59e0b" strokeWidth="2" opacity=".7" />
-          <line x1="100" y1="30" x2="100" y2="48" stroke="#3b82f6" strokeWidth="2" opacity=".7" />
-          <line x1="200" y1="30" x2="200" y2="48" stroke="#10b981" strokeWidth="2" opacity=".7" />
-          <line x1="340" y1="30" x2="340" y2="48" stroke="#f59e0b" strokeWidth="2" opacity=".7" />
-          <line x1="460" y1="30" x2="460" y2="48" stroke="#3b82f6" strokeWidth="2" opacity=".7" />
+            <defs>
+              <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1e293b" strokeWidth="0.4" />
+              </pattern>
+              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+            </defs>
 
-          {/* ── GPU Server Racks ── */}
-          <g onClick={() => setActive('rack')} style={{ cursor: 'pointer' }}>
-            {[30, 100, 170].map((x, i) => (
-              <g key={i}>
-                <rect x={x} y="80" width="60" height="200" rx="4"
-                  fill={active === 'rack' ? '#1e3a5f' : '#172135'}
-                  stroke="#3b82f6" strokeWidth={active === 'rack' ? 2 : 1} />
-                {[90,102,114,126,138,150,162,174,186].map((y, j) => (
-                  <rect key={j} x={x+5} y={y} width="50" height="8" rx="2"
-                    fill={j % 3 === 2 ? '#7c3aed' : '#1d4ed8'} opacity="0.85" />
-                ))}
-                <circle cx={x+46} cy="94"  r="2" fill="#22c55e" className="pulse" />
-                <circle cx={x+46} cy="130" r="2" fill="#f59e0b" className="blink" />
-                <text x={x+30} y="292" textAnchor="middle" fill="#64748b" fontSize="8">
-                  RACK {String.fromCharCode(65 + i)}
-                </text>
-              </g>
-            ))}
-            <rect x="28" y="60" width="206" height="18" rx="4"
-              fill={active === 'rack' ? '#1e3a5f' : '#172135'}
-              stroke="#3b82f6" strokeWidth={active === 'rack' ? 2 : 1} />
-            <text x="131" y="72" textAnchor="middle" fill="#93c5fd" fontSize="9" fontWeight="bold">
-              🖥 AI GPU 서버랙
+            <rect width={W} height="515" fill="url(#grid)" />
+
+            {ZONE_DEFS.map((z) => {
+              const isActive = activeId === z.id;
+              const c = ZONE_COLORS[z.id] || ZONE_COLORS.facility;
+              const fillColor = z.fill === 'none' ? 'none' : (isActive ? c.bgA : c.bg);
+              const strokeColor = isActive ? c.bdA : c.bd;
+              const strokeWidth = isActive ? 2 : 1.2;
+
+              return (
+                <g key={z.id} onClick={() => toggle(z.id)} style={{ cursor: 'pointer' }}>
+                  <rect
+                    x={z.x + 0.6} y={z.y + 0.6}
+                    width={z.w - 1.2} height={z.h - 1.2}
+                    rx={z.rx ?? 4}
+                    fill={fillColor}
+                    stroke={strokeColor}
+                    strokeWidth={strokeWidth}
+                    style={{ transition: 'all 0.18s' }}
+                  />
+
+                  {['storage', 'power', 'energy'].includes(z.id) && (
+                    <RackLines x={z.x + 2} y={z.y + 2} w={z.w - 4} h={z.h - 4}
+                      color={isActive ? c.bdA : c.bd} />
+                  )}
+
+                  {z.id === 'gpu' && Array.from({ length: 12 }).map((_, i) => (
+                    <rect key={i}
+                      x={z.x + 10 + (i % 6) * 48} y={z.y + 20 + Math.floor(i / 6) * 50}
+                      width={38} height={36} rx={4}
+                      fill={isActive ? '#1f4a2a' : '#111f14'}
+                      stroke={isActive ? '#4ade80' : '#16a34a'}
+                      strokeWidth={0.8}
+                    />
+                  ))}
+
+                  {z.id === 'memory' && Array.from({ length: 16 }).map((_, i) => (
+                    <rect key={i}
+                      x={z.x + 8 + (i % 8) * 36} y={z.y + 18 + Math.floor(i / 8) * 42}
+                      width={28} height={32} rx={2}
+                      fill={isActive ? '#0e2a4a' : '#080f1a'}
+                      stroke={isActive ? '#38bdf8' : '#0369a1'}
+                      strokeWidth={0.8}
+                    />
+                  ))}
+
+                  {z.id === 'server' && Array.from({ length: 8 }).map((_, i) => (
+                    <rect key={i}
+                      x={z.x + 6 + (i % 4) * 72} y={z.y + 12 + Math.floor(i / 4) * 38}
+                      width={62} height={28} rx={3}
+                      fill={isActive ? '#1a0f30' : '#0d0818'}
+                      stroke={isActive ? '#a78bfa' : '#7c3aed'}
+                      strokeWidth={0.8}
+                    />
+                  ))}
+
+                  {z.id === 'ai-network' && Array.from({ length: 6 }).map((_, i) => (
+                    <g key={i} transform={`translate(${z.x + 10 + (i % 3) * 56}, ${z.y + 14 + Math.floor(i / 3) * 38})`}>
+                      <rect width={46} height={26} rx={3}
+                        fill={isActive ? '#0f2a14' : '#091409'}
+                        stroke={isActive ? '#4ade80' : '#15803d'}
+                        strokeWidth={0.8} />
+                      {Array.from({ length: 8 }).map((_, p) => (
+                        <circle key={p} cx={5 + p * 5} cy={13} r={1.5}
+                          fill={isActive ? '#4ade80' : '#15803d'} opacity={0.7} />
+                      ))}
+                    </g>
+                  ))}
+
+                  {z.id === 'optics' && Array.from({ length: 4 }).map((_, i) => (
+                    <g key={i} transform={`translate(${z.x + 8 + (i % 2) * 54}, ${z.y + 12 + Math.floor(i / 2) * 36})`}>
+                      <rect width={46} height={26} rx={3}
+                        fill={isActive ? '#2a1f00' : '#110c00'}
+                        stroke={isActive ? '#facc15' : '#ca8a04'}
+                        strokeWidth={0.8} />
+                      <line x1={4} y1={13} x2={42} y2={13}
+                        stroke={isActive ? '#facc15' : '#ca8a04'}
+                        strokeWidth={1.5} strokeDasharray="3 2" />
+                    </g>
+                  ))}
+
+                  {z.id === 'cooling' && Array.from({ length: 5 }).map((_, i) => (
+                    <g key={i}>
+                      <circle
+                        cx={z.x + z.w / 2} cy={z.y + 44 + i * 70}
+                        r={26} fill="none"
+                        stroke={isActive ? '#22d3ee' : '#0891b2'}
+                        strokeWidth={1.2}
+                      />
+                      <text
+                        x={z.x + z.w / 2} y={z.y + 44 + i * 70}
+                        textAnchor="middle" dominantBaseline="middle"
+                        fontSize={30} className="spin-fan"
+                        fill={isActive ? '#22d3ee' : '#0891b2'}
+                      >✦</text>
+                    </g>
+                  ))}
+
+                  {isActive && z.fill !== 'none' && (
+                    <rect
+                      x={z.x + 0.6} y={z.y + 0.6}
+                      width={z.w - 1.2} height={z.h - 1.2}
+                      rx={z.rx ?? 4}
+                      fill="none"
+                      stroke={c.bdA}
+                      strokeWidth={3}
+                      opacity={0.45}
+                      filter="url(#glow)"
+                    />
+                  )}
+
+                  {z.svgLabel && (
+                    <text
+                      x={z.svgLabel.x}
+                      y={z.svgLabel.y}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fontSize={z.id === 'hyperscaler' || z.id === 'construction' ? 12 : 10}
+                      fontWeight="700"
+                      fill={isActive ? c.txA : c.tx}
+                      transform={
+                        z.svgLabel.rotate
+                          ? `rotate(${z.svgLabel.rotate}, ${z.svgLabel.x}, ${z.svgLabel.y})`
+                          : undefined
+                      }
+                      style={{ pointerEvents: 'none', transition: 'fill 0.18s' }}
+                      letterSpacing="0.3"
+                    >
+                      {z.label}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+
+            <text x={100} y={76} fontSize={8.5} fill="#334155" fontWeight="700" letterSpacing="1"
+              style={{ pointerEvents: 'none' }}>
+              DATA CENTER FACILITY
             </text>
-          </g>
+          </svg>
+        </div>
 
-          {/* ── Network Switch ── */}
-          <g onClick={() => setActive('network')} style={{ cursor: 'pointer' }}>
-            <rect x="248" y="80" width="80" height="200" rx="4"
-              fill={active === 'network' ? '#14532d' : '#0f2820'}
-              stroke="#22c55e" strokeWidth={active === 'network' ? 2 : 1} />
-            {[95,107,119,131].map((y, i) => (
-              <rect key={i} x="254" y={y} width="68" height="6" rx="1" fill="#166534" />
-            ))}
-            {[258,265,272,279,286,293,300,307,314].map((cx, i) => (
-              <circle key={i} cx={cx} cy="98" r="2"
-                fill={i === 4 ? '#fbbf24' : '#4ade80'}
-                className={i === 4 ? 'blink' : 'pulse'} />
-            ))}
-            {[256,270,284,298].map((x, i) => (
-              <rect key={i} x={x} y="153" width="12" height="8" rx="1"
-                fill={i < 2 ? '#0ea5e9' : '#22c55e'} />
-            ))}
-            <rect x="254" y="200" width="68" height="20" rx="2" fill="#0f172a" />
-            <text x="288" y="213" textAnchor="middle" fill="#4ade80" fontSize="7" fontFamily="monospace">
-              SW&gt; ACTIVE
-            </text>
-            <rect x="246" y="60" width="84" height="18" rx="4"
-              fill={active === 'network' ? '#14532d' : '#0f2820'}
-              stroke="#22c55e" strokeWidth={active === 'network' ? 2 : 1} />
-            <text x="288" y="72" textAnchor="middle" fill="#86efac" fontSize="9" fontWeight="bold">
-              🔀 네트워크 스위치
-            </text>
-          </g>
-
-          {/* ── Storage ── */}
-          <g onClick={() => setActive('storage')} style={{ cursor: 'pointer' }}>
-            <rect x="348" y="80" width="80" height="200" rx="4"
-              fill={active === 'storage' ? '#3b1f0f' : '#200e07'}
-              stroke="#f97316" strokeWidth={active === 'storage' ? 2 : 1} />
-            {[90,104,118,132,146,160,174,188].map((y, i) => (
-              <g key={i}>
-                <rect x="353" y={y} width="70" height="10" rx="2" fill="#431407" />
-                <circle cx="415" cy={y + 5} r="2"
-                  fill={i % 2 === 0 ? '#f97316' : '#22c55e'}
-                  className={i % 2 === 0 ? 'blink' : 'pulse'} />
-              </g>
-            ))}
-            <rect x="353" y="215" width="70" height="28" rx="2" fill="#0f172a" />
-            <text x="388" y="226" textAnchor="middle" fill="#fb923c" fontSize="7" fontFamily="monospace">
-              USED: 78%
-            </text>
-            <rect x="355" y="229" width="66" height="4" rx="2" fill="#1f2937" />
-            <rect x="355" y="229" width="52" height="4" rx="2" fill="#f97316" />
-            <rect x="346" y="60" width="84" height="18" rx="4"
-              fill={active === 'storage' ? '#3b1f0f' : '#200e07'}
-              stroke="#f97316" strokeWidth={active === 'storage' ? 2 : 1} />
-            <text x="388" y="72" textAnchor="middle" fill="#fdba74" fontSize="9" fontWeight="bold">
-              📦 스토리지 어레이
-            </text>
-          </g>
-
-          {/* ── Cooling ── */}
-          <g onClick={() => setActive('cooling')} style={{ cursor: 'pointer' }}>
-            <rect x="448" y="80" width="90" height="200" rx="4"
-              fill={active === 'cooling' ? '#0c1e3a' : '#080f1d'}
-              stroke="#0ea5e9" strokeWidth={active === 'cooling' ? 2 : 1} />
-            <rect x="453" y="90" width="80" height="60" rx="2" fill="#0f2d4a" />
-            <g className="spin-fan">
-              {[0, 60, 120].map((rot, i) => (
-                <ellipse key={i} cx="493" cy="120" rx="24" ry="6"
-                  fill="#0369a1" opacity="0.7"
-                  transform={`rotate(${rot}, 493, 120)`} />
-              ))}
-            </g>
-            <circle cx="493" cy="120" r="5" fill="#0c1e3a" />
-            <rect x="453" y="158" width="80" height="22" rx="2" fill="#0f172a" />
-            <text x="493" y="170" textAnchor="middle" fill="#38bdf8" fontSize="8" fontFamily="monospace">
-              INLET: 18°C
-            </text>
-            <rect x="453" y="190" width="80" height="35" rx="2" fill="#0f172a" opacity=".7" />
-            {[460,472,484,496].map((x, i) => (
-              <rect key={i} x={x} y="197" width="8" height="22" rx="3"
-                fill={i % 2 === 0 ? '#0369a1' : '#0ea5e9'} />
-            ))}
-            <text x="493" y="242" textAnchor="middle" fill="#7dd3fc" fontSize="7">냉수 IN/OUT</text>
-            <rect x="446" y="60" width="94" height="18" rx="4"
-              fill={active === 'cooling' ? '#0c1e3a' : '#080f1d'}
-              stroke="#0ea5e9" strokeWidth={active === 'cooling' ? 2 : 1} />
-            <text x="493" y="72" textAnchor="middle" fill="#7dd3fc" fontSize="9" fontWeight="bold">
-              ❄️ 냉각 시스템
-            </text>
-          </g>
-
-          {/* Connector cables */}
-          {[90, 160, 230].map((x, i) => (
-            <path key={i} d={`M ${x} 175 L 248 175`}
-              stroke="#22c55e" strokeWidth="1.5" fill="none" opacity=".4" strokeDasharray="4 3" />
-          ))}
-          <path d="M 328 175 L 348 175" stroke="#f97316" strokeWidth="1.5" fill="none" opacity=".4" strokeDasharray="4 3" />
-          <path d="M 428 175 L 448 175" stroke="#0ea5e9" strokeWidth="1.5" fill="none" opacity=".4" strokeDasharray="4 3" />
-
-          {/* ── Power PDU ── */}
-          <g onClick={() => setActive('power')} style={{ cursor: 'pointer' }}>
-            <rect x="30" y="320" width="220" height="70" rx="6"
-              fill={active === 'power' ? '#1e1b3a' : '#12102a'}
-              stroke="#a855f7" strokeWidth={active === 'power' ? 2 : 1} />
-            <text x="140" y="338" textAnchor="middle" fill="#c4b5fd" fontSize="9" fontWeight="bold">
-              ⚡ 전력 분배 (PDU / UPS)
-            </text>
-            {[40,62,84,106,128,150].map((x, i) => (
-              <g key={i}>
-                <rect x={x} y="344" width="18" height="30" rx="3" fill="#2e1065" />
-                <rect x={x+4} y="348" width="10" height="4" rx="1"
-                  fill={i === 3 ? '#f59e0b' : '#a855f7'}
-                  className={i === 3 ? 'blink' : undefined} />
-              </g>
-            ))}
-            <rect x="178" y="344" width="62" height="30" rx="3" fill="#0f172a" />
-            <text x="209" y="355" textAnchor="middle" fill="#c4b5fd" fontSize="7" fontFamily="monospace">2.4 MW</text>
-            <text x="209" y="365" textAnchor="middle" fill="#7c3aed" fontSize="7" fontFamily="monospace">PUE: 1.18</text>
-          </g>
-
-          {/* ── Monitoring ── */}
-          <g onClick={() => setActive('monitor')} style={{ cursor: 'pointer' }}>
-            <rect x="270" y="320" width="260" height="70" rx="6"
-              fill={active === 'monitor' ? '#1a1a2e' : '#0f0f1d'}
-              stroke="#f59e0b" strokeWidth={active === 'monitor' ? 2 : 1} />
-            <text x="400" y="338" textAnchor="middle" fill="#fcd34d" fontSize="9" fontWeight="bold">
-              📊 운영 & 모니터링 (NOC / DCIM)
-            </text>
-            <rect x="280" y="344" width="100" height="36" rx="3" fill="#0f172a" />
-            <polyline
-              points="283,375 290,365 298,370 306,358 314,362 322,352 330,356 338,345 346,349 354,355 362,350 370,358 378,352"
-              stroke="#22c55e" strokeWidth="1.5" fill="none" />
-            <text x="284" y="353" fill="#64748b" fontSize="6">CPU %</text>
-            <rect x="390" y="344" width="130" height="36" rx="3" fill="#0f172a" />
-            <text x="394" y="354" fill="#4ade80" fontSize="7" fontFamily="monospace">✓ GPU TEMP: OK</text>
-            <text x="394" y="363" fill="#4ade80" fontSize="7" fontFamily="monospace">✓ NETWORK: OK</text>
-            <text x="394" y="372" fill="#fbbf24" fontSize="7" fontFamily="monospace">⚠ RACK B2: 42°C</text>
-          </g>
-
-          {/* Power lines */}
-          {[60, 130, 200, 288, 388, 493].map((x, i) => (
-            <line key={i} x1="140" y1="320" x2={x} y2="280"
-              stroke="#a855f7" strokeWidth="1" opacity="0.25" strokeDasharray="3 3" />
-          ))}
-
-          {/* Legend */}
-          <rect x="10" y="405" width="540" height="28" rx="4" fill="#1e293b" opacity=".8" />
-          {[
-            { cx: 22,  color: '#3b82f6', label: 'GPU 서버' },
-            { cx: 82,  color: '#22c55e', label: '네트워크' },
-            { cx: 148, color: '#f97316', label: '스토리지' },
-            { cx: 208, color: '#0ea5e9', label: '냉각' },
-            { cx: 258, color: '#a855f7', label: '전력' },
-            { cx: 308, color: '#f59e0b', label: '모니터링' },
-          ].map(({ cx, color, label }) => (
-            <g key={cx}>
-              <circle cx={cx} cy="419" r="4" fill={color} />
-              <text x={cx + 8} y="423" fill="#94a3b8" fontSize="8">{label}</text>
-            </g>
-          ))}
-          <text x="540" y="423" textAnchor="end" fill="#475569" fontSize="8">▶ 클릭으로 설명 확인</text>
-        </svg>
+        {/* ── Right panel: zone list + description ── */}
+        <div className="illust-panel">
+          <div className="illust-panel-title">구성 요소 선택</div>
+          {ZONE_DEFS.map((z) => {
+            const isActive = activeId === z.id;
+            const c = ZONE_COLORS[z.id] || ZONE_COLORS.facility;
+            return (
+              <div
+                key={z.id}
+                className={`illust-item${isActive ? ' active' : ''}`}
+                onClick={() => toggle(z.id)}
+                style={isActive
+                  ? { borderColor: c.bdA, background: c.bgA !== 'transparent' ? c.bgA : undefined }
+                  : {}}
+              >
+                <div className="illust-item-label" style={{ color: isActive ? c.txA : undefined }}>
+                  {z.label}
+                </div>
+                {isActive && (
+                  <div className="illust-item-body">
+                    <div className="illust-item-layer">{z.layer}</div>
+                    <div>{z.role}</div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Description panel */}
-      <div className="illust-panel">
-        <div className="illust-panel-title">📋 구성 요소 설명</div>
-        {ITEMS.map(item => (
-          <div
-            key={item.id}
-            className={`illust-item${active === item.id ? ' active' : ''}`}
-            onClick={() => setActive(item.id)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={e => e.key === 'Enter' && setActive(item.id)}
-          >
-            <div className="illust-item-label">{item.label}</div>
-            <div className="illust-item-body">{item.body}</div>
-          </div>
-        ))}
-      </div>
+      {/* ── Company Panel ── */}
+      {activeComp && <CompanyPanel comp={activeComp} />}
+
+      {!activeId && (
+        <p className="hint-text" style={{ marginTop: 20 }}>
+          ↑ 구성 요소를 클릭하면 레이어 설명과 Top 10 기업이 표시됩니다
+        </p>
+      )}
     </div>
   );
 }
