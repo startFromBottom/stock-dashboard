@@ -164,7 +164,36 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .panel-icon { font-size: 26px; }
 .panel-title { font-size: 15px; font-weight: 800; color: var(--text-primary); }
-.panel-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+.panel-subtitle { font-size: 11px; color: var(--text-secondary); margin-top: 1px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.panel-refresh-note { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+/* LIVE 배지 */
+.live-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #052e16;
+  color: #4ade80;
+  border: 1px solid #166534;
+  letter-spacing: 0.3px;
+}
+.loading-badge { background: #1e1b4b; color: #818cf8; border-color: #4338ca; }
+.error-badge   { background: #2d1515; color: #fca5a5; border-color: #7f1d1d; }
+
+/* 시가총액 실시간 점 */
+.mktcap-live-dot {
+  font-size: 7px;
+  color: #4ade80;
+  margin-left: 3px;
+  vertical-align: middle;
+  animation: pulse 2s infinite;
+}
+
+/* 순위 변동 */
+.rank-change { font-size: 8px; font-weight: 700; margin-left: 2px; }
+.rank-up   { color: #4ade80; }
+.rank-down { color: #f87171; }
 
 .companies-grid {
   display: grid;
