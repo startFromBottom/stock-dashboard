@@ -1,124 +1,114 @@
 import { NextResponse } from 'next/server';
 
-const FMP_BASE = 'https://financialmodelingprep.com/stable';
-const TICKER_TTL = 60 * 60 * 1000; // 1시간
-
-// ── 티커별 개별 캐시 (요청 단위가 아닌 티커 단위로 저장) ──
-// { 'NVDA': { marketCap: 5062002467464, ts: 1234567890 } }
+// ── 티커별 개별 캐시 ──────────────────────────────────────────
 const tickerCache = new Map();
+const TICKER_TTL  = 60 * 60 * 1000; // 1시간
 
-function getCached(tickers) {
-  const now = Date.now();
-  const hit = {};
-  const miss = [];
-  for (const t of tickers) {
-    const entry = tickerCache.get(t);
-    if (entry && now - entry.ts < TICKER_TTL) {
-      hit[t] = entry.marketCap;
-    } else {
-      miss.push(t);
-    }
-  }
-  return { hit, miss };
-}
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-function saveToCache(data) {
-  const ts = Date.now();
-  for (const [symbol, marketCap] of Object.entries(data)) {
-    tickerCache.set(symbol, { marketCap, ts });
-  }
-}
+// ── Finnhub: 티커 1개의 시가총액 조회 ────────────────────────
+// 반환값: USD 원시값 (e.g. 5_062_000_000_000) 또는 null
+async function fetchOneFinnhub(ticker, token) {
+  // Finnhub는 일부 국제 ticker 형식이 달라 US 단일 심볼만 처리
+  // 예: '000660.KS' → Finnhub에서 지원 안 됨 → null 반환
+  const url = `https://finnhub.io/api/v1/stock/metric?symbol=${encodeURIComponent(ticker)}&metric=all&token=${token}`;
 
-// ── FMP 요청 ──
-async function fetchFMP(tickers) {
-  const apiKey = process.env.FMP_API_KEY;
-  if (!apiKey) throw new Error('FMP_API_KEY 환경변수가 없습니다');
-
-  const result = {};
-
-  // 1) 배치 시도 — 쉼표를 인코딩하지 않고 그대로 전달
-  const batchSymbols = tickers.join(',');
   try {
-    const batchRes = await fetch(
-      `${FMP_BASE}/quote?symbol=${batchSymbols}&apikey=${apiKey}`
+    const res = await fetch(url, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (!res.ok) return null;
+
+    const json = await res.json();
+    // Finnhub는 marketCapitalization을 백만 USD 단위로 반환
+    const mktcapM = json?.metric?.marketCapitalization;
+    if (!mktcapM) return null;
+
+    return mktcapM * 1_000_000; // USD 원시값으로 변환
+  } catch {
+    return null;
+  }
+}
+
+// ── 배치 처리: 5개씩 병렬 + 100ms 딜레이 ─────────────────────
+async function fetchBatch(tickers, token) {
+  const result = {};
+  const BATCH = 5;
+
+  for (let i = 0; i < tickers.length; i += BATCH) {
+    const batch = tickers.slice(i, i + BATCH);
+
+    const entries = await Promise.allSettled(
+      batch.map(async ticker => {
+        const mktcap = await fetchOneFinnhub(ticker, token);
+        return mktcap ? { ticker, mktcap } : null;
+      })
     );
-    if (batchRes.ok) {
-      const text = await batchRes.text();
-      // "Premium" 텍스트가 오면 JSON 파싱 건너뜀
-      if (text.trim().startsWith('[') || text.trim().startsWith('{')) {
-        const raw = JSON.parse(text);
-        if (Array.isArray(raw) && raw.length > 0) {
-          for (const item of raw) {
-            if (item.symbol && item.marketCap) result[item.symbol] = item.marketCap;
-          }
-          if (Object.keys(result).length > 0) {
-            console.log(`[mktcap] 배치 성공: ${Object.keys(result).length}/${tickers.length}개`);
-            return result;
-          }
-        }
-      } else {
-        console.log('[mktcap] 배치 응답이 JSON 아님, 개별 요청으로 전환:', text.slice(0, 80));
+
+    for (const e of entries) {
+      if (e.status === 'fulfilled' && e.value) {
+        result[e.value.ticker] = e.value.mktcap;
       }
     }
-  } catch (e) {
-    console.log('[mktcap] 배치 실패:', e.message, '→ 개별 요청으로 전환');
+
+    if (i + BATCH < tickers.length) await sleep(100);
   }
 
-  // 2) 개별 요청 병렬 처리
-  console.log(`[mktcap] 개별 요청: ${tickers.length}개`);
-  const entries = await Promise.allSettled(
-    tickers.map(ticker =>
-      fetch(`${FMP_BASE}/quote?symbol=${encodeURIComponent(ticker)}&apikey=${apiKey}`)
-        .then(async r => {
-          const text = await r.text();
-          if (!text.trim().startsWith('[')) return null;
-          const raw = JSON.parse(text);
-          const item = Array.isArray(raw) ? raw[0] : null;
-          return item?.marketCap ? { symbol: ticker, marketCap: item.marketCap } : null;
-        })
-        .catch(() => null)
-    )
-  );
-
-  for (const entry of entries) {
-    if (entry.status === 'fulfilled' && entry.value) {
-      result[entry.value.symbol] = entry.value.marketCap;
-    }
-  }
-  console.log(`[mktcap] 개별 완료: ${Object.keys(result).length}/${tickers.length}개`);
   return result;
 }
 
-// ── API Route ──
+// ── API Route ─────────────────────────────────────────────────
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const tickers = searchParams.get('tickers')?.split(',').filter(Boolean) ?? [];
   if (!tickers.length) return NextResponse.json({});
 
-  // 캐시에서 찾기
-  const { hit, miss } = getCached(tickers);
+  const token = process.env.FINNHUB_API_KEY;
+  if (!token) {
+    return NextResponse.json(
+      { error: '.env.local에 FINNHUB_API_KEY를 추가해 주세요 (https://finnhub.io 무료 발급)' },
+      { status: 500 }
+    );
+  }
+
+  const now  = Date.now();
+  const hit  = {};
+  const miss = [];
+
+  for (const t of tickers) {
+    const cached = tickerCache.get(t);
+    if (cached && now - cached.ts < TICKER_TTL) {
+      hit[t] = cached.marketCap;
+    } else {
+      miss.push(t);
+    }
+  }
 
   if (miss.length === 0) {
-    // 전부 캐시 히트
     return NextResponse.json(hit, { headers: { 'X-Cache': 'HIT' } });
   }
 
-  // 캐시 미스 티커만 FMP에서 가져오기
   try {
-    const fresh = await fetchFMP(miss);
-    saveToCache(fresh);
+    const fresh = await fetchBatch(miss, token);
 
-    return NextResponse.json(
-      { ...hit, ...fresh },
-      { headers: { 'X-Cache': miss.length === tickers.length ? 'MISS' : 'PARTIAL' } }
+    for (const [sym, mktcap] of Object.entries(fresh)) {
+      tickerCache.set(sym, { marketCap: mktcap, ts: now });
+    }
+
+    const merged = { ...hit, ...fresh };
+    console.log(
+      `[mktcap] Finnhub 취득: ${Object.keys(fresh).length}/${miss.length}개` +
+      (Object.keys(hit).length ? ` (캐시 히트: ${Object.keys(hit).length}개)` : '')
     );
+
+    return NextResponse.json(merged, {
+      headers: { 'X-Cache': Object.keys(hit).length > 0 ? 'PARTIAL' : 'MISS' },
+    });
   } catch (err) {
     console.error('[mktcap] 오류:', err.message);
-    // 캐시 히트 데이터라도 반환
     return NextResponse.json(
-      hit,
-      { status: Object.keys(hit).length ? 200 : 502,
-        headers: { 'X-Cache': 'ERROR', 'X-Error': err.message } }
+      Object.keys(hit).length ? hit : { error: err.message },
+      { status: Object.keys(hit).length ? 200 : 502 }
     );
   }
 }
