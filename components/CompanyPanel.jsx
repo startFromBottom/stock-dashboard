@@ -1,6 +1,6 @@
 'use client';
 
-const RANK_LABELS = ['🥇 1위', '🥈 2위', '🥉 3위', '4위', '5위'];
+const RANK_LABELS = ['🥇 1위', '🥈 2위', '🥉 3위', '4위', '5위', '6위', '7위', '8위', '9위', '10위'];
 
 export default function CompanyPanel({ comp }) {
   if (!comp) return null;
@@ -11,7 +11,7 @@ export default function CompanyPanel({ comp }) {
         <div className="panel-icon">{comp.icon}</div>
         <div>
           <div className="panel-title">{comp.name}</div>
-          <div className="panel-subtitle">시가총액 Top 5 기업 · 2025년 기준</div>
+          <div className="panel-subtitle">시가총액 Top 10 기업 · 2025년 기준</div>
         </div>
       </div>
 

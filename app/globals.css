@@ -191,11 +191,16 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   margin-bottom: 7px;
   letter-spacing: 0.3px;
 }
-.rank-1 { background: #422006; color: #fcd34d; }
-.rank-2 { background: #1e293b; color: #94a3b8; }
-.rank-3 { background: #2d1515; color: #fca5a5; }
-.rank-4 { background: #0c2a20; color: #6ee7b7; }
-.rank-5 { background: #1e1b4b; color: #a5b4fc; }
+.rank-1  { background: #422006; color: #fcd34d; }
+.rank-2  { background: #1e293b; color: #94a3b8; }
+.rank-3  { background: #2d1515; color: #fca5a5; }
+.rank-4  { background: #0c2a20; color: #6ee7b7; }
+.rank-5  { background: #1e1b4b; color: #a5b4fc; }
+.rank-6  { background: #1a1a2e; color: #818cf8; }
+.rank-7  { background: #0f2a1a; color: #34d399; }
+.rank-8  { background: #2a1a0f; color: #fb923c; }
+.rank-9  { background: #1a0f2a; color: #c084fc; }
+.rank-10 { background: #0f1a2a; color: #38bdf8; }
 
 .company-name   { font-size: 14px; font-weight: 800; color: var(--text-primary); }
 .company-ticker { font-size: 10px; color: var(--text-muted); margin: 2px 0; font-family: monospace; }
