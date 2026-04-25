@@ -21,7 +21,7 @@ export default function CompanyPanel({ comp }) {
         {comp.companies.map((c) => {
           const flag = FLAG_BY_NAME[c.name] ?? '🌐';
           return (
-            <div key={c.ticker} className="company-card">
+            <div key={c.rank} className="company-card">
               <span className={`rank-badge rank-${c.rank}`}>
                 {RANK_LABELS[c.rank - 1]}
               </span>
