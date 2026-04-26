@@ -6,6 +6,7 @@ import Illustration from './Illustration';
 import SemiconductorDashboard from './SemiconductorDashboard';
 import SemiNewsSection from './SemiNewsSection';
 import SpaceDashboard from './SpaceDashboard';
+import SpaceNewsSection from './SpaceNewsSection';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
@@ -29,6 +30,7 @@ const SEMI_TABS = [
 /* ── 우주 탭 ── */
 const SPACE_TABS = [
   { id: 'chain', label: '🚀 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 레포트' },
 ];
 
 export default function Dashboard() {
@@ -128,6 +130,7 @@ export default function Dashboard() {
             ))}
           </nav>
           {spaceTab === 'chain' && <SpaceDashboard />}
+          {spaceTab === 'news'  && <SpaceNewsSection />}
         </>
       )}
     </div>
