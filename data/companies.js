@@ -12,6 +12,11 @@ export const LAYERS = [
         icon: '🌐',
         name: '클라우드 플랫폼',
         desc: 'AI 서비스 제공, GPU 클러스터 운영',
+        detail: [
+          'AWS·Azure·GCP·OCI로 대표되는 하이퍼스케일러는 AI 인프라를 서비스(IaaS/PaaS)로 포장해 기업·연구소에 제공합니다. 핵심은 수만 개의 GPU를 고속 인터커넥트(InfiniBand, RoCE)로 묶은 GPU 클러스터입니다. 고객은 몇 분 안에 수천 GPU짜리 인스턴스를 임대하고, 모델 학습·추론·배포까지 원스톱으로 처리할 수 있습니다. 2026년 Big 4(Microsoft·Amazon·Google·Meta)의 AI 인프라 합산 캐팩스는 $3000억 이상으로 사상 최고치입니다.',
+          '하이퍼스케일러는 단순 임대를 넘어 자체 AI 칩 개발 경쟁에 돌입했습니다. Google은 TPU v5p·v6를 자체 설계해 외부 GPU 의존도를 낮추고, AWS는 Trainium2·Inferentia로 학습·추론을 내재화합니다. Meta는 MTIA 2nm ASIC으로 추천 시스템 연산을 처리합니다. NVIDIA GPU 확보 전쟁과 병행해 자체 실리콘을 키우는 이중 전략이 표준이 됐습니다.',
+          '콘텐츠 전송·보안·AI 추론 API 등 부가가치 서비스도 수익 다각화의 핵심입니다. CoreWeave 같은 AI 전문 CSP(클라우드 서비스 공급자)의 부상은 범용 하이퍼스케일러에 새로운 위협이 됩니다. GPU 클러스터 가격이 높아질수록 독자 프라이빗 클라우드를 구축하는 초대형 기업들도 늘고 있어, 장기적으로 시장은 퍼블릭·프라이빗·AI 전용 CSP의 3파전 구도로 재편될 전망입니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'Microsoft',      ticker: 'MSFT',    mktcap: '~$3.0조',  detail: 'Azure AI, OpenAI 파트너십 — GB200 NVL72 Rubin 우선 배포, 위스콘신·애틀랜타 AI 슈퍼팩토리', ir: 'https://investor.microsoft.com', news: 'https://news.microsoft.com', x: 'https://x.com/search?q=Microsoft+Azure+AI' },
           { rank: 2,  name: 'NVIDIA',         ticker: 'NVDA',    mktcap: '~$2.7조',  detail: 'DGX Cloud, NVCF — AI 인프라를 클라우드로 직접 제공, Rubin 플랫폼 2026 H2 배포', ir: 'https://investor.nvidia.com', news: 'https://nvidianews.nvidia.com', x: 'https://x.com/search?q=NVIDIA+cloud+AI' },
@@ -35,6 +40,11 @@ export const LAYERS = [
         icon: '🏗️',
         name: '데이터센터 시설',
         desc: '코로케이션, 부지·전력 운영',
+        detail: [
+          '데이터센터 시설 기업(코로케이션 REIT)은 부지·건물·전력 인프라·냉각 설비를 임대하고, 고객(하이퍼스케일러·기업)이 직접 서버 장비를 설치합니다. 핵심 경쟁력은 입지(전력 가용성·지연시간), 전력 용량(MW급), 냉각 PUE, 광섬유 연결성입니다. Equinix는 260+ 메트로 거점, Digital Realty는 50+ 도시에 분산 운영하며 글로벌 상호연결 허브로 기능합니다.',
+          'AI 붐이 코로케이션 수요를 폭발적으로 끌어올리고 있습니다. GPU 서버 한 랙의 전력 밀도가 기존 10~15kW에서 AI 시대 100kW+로 급등했기 때문입니다. 이에 따라 코로케이션 업체는 액침냉각·직접 수냉 설비를 갖춘 AI 특화 시설(xScale 캠퍼스)을 별도로 개발하고 있으며, 임대료 단가도 일반 시설 대비 2~3배 프리미엄을 받습니다.',
+          '전력 확보가 가장 큰 병목입니다. 미국·유럽 주요 도시는 전력망 포화로 신규 데이터센터 허가가 몇 년씩 지연되고 있습니다. 이에 따라 코로케이션 기업들은 전력 자급을 위해 원전 PPA(전력구매계약), 태양광·ESS 직접 투자, 소형모듈원전(SMR) 도입까지 검토합니다. 전력 조달 능력이 향후 시설 업체의 핵심 차별화 요소가 될 것입니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'Equinix',            ticker: 'EQIX',    mktcap: '~$830억',  detail: '전 세계 260+ 데이터센터, xScale AI 캠퍼스 — 하이퍼스케일러 전용 고밀도 시설', ir: 'https://investor.equinix.com', news: 'https://blog.equinix.com', x: 'https://x.com/search?q=Equinix+AI+datacenter' },
           { rank: 2,  name: 'Digital Realty',     ticker: 'DLR',     mktcap: '~$490억',  detail: 'PlatformDIGITAL 글로벌 허브, 50+ 도시 — AI 수요로 임대율 최고치 경신', ir: 'https://investor.digitalrealty.com', news: 'https://www.digitalrealty.com/resources', x: 'https://x.com/search?q=Digital+Realty+AI' },
@@ -64,6 +74,11 @@ export const LAYERS = [
         icon: '🔲',
         name: 'AI 가속기 / GPU',
         desc: '학습·추론용 고성능 칩',
+        detail: [
+          'AI 모델 학습은 대규모 행렬 곱셈(GEMM)을 수조 번 반복하는 작업입니다. GPU는 수천 개의 코어를 병렬로 동작시켜 이를 처리합니다. NVIDIA H100의 경우 FP8 정밀도에서 초당 4000 TOPS 연산이 가능하며, 2026년 출시 예정인 Rubin GPU는 이를 4배 이상 뛰어넘을 전망입니다. 하나의 LLM 학습에 수만 개의 GPU가 수개월간 연속 가동됩니다.',
+          'GPU 이외에 TPU(Google), Trainium(AWS), MTIA(Meta) 같은 커스텀 ASIC이 빠르게 성장하고 있습니다. ASIC은 특정 연산에 최적화돼 같은 전력 대비 효율이 GPU보다 높지만, 범용성이 낮습니다. NVIDIA는 소프트웨어 생태계(CUDA)로 교체 비용을 높여 점유율 80%+를 방어하고 있습니다. NVIDIA를 대체하려는 AMD, Cerebras, Groq 등의 도전이 계속되지만 CUDA 호환 생태계의 벽은 여전히 높습니다.',
+          'AI 가속기의 핵심 병목은 메모리 대역폭입니다. GPU 연산 속도가 빨라질수록 HBM(고대역폭 메모리)이 데이터를 공급하는 속도가 더 중요해집니다. 또한 수천 개의 GPU를 연결하는 NVLink·InfiniBand 네트워크도 성능의 결정적 요소입니다. 칩 하나의 성능보다 클러스터 전체의 연산 효율(MFU, Model FLOPS Utilization)이 AI 인프라의 실질 경쟁력입니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'NVIDIA',        ticker: 'NVDA',      mktcap: '~$2.7조',  detail: 'Rubin GPU 2026 H2 출시 — 72 GPU 랙, 전력효율 전 세대 대비 4배↑, AI칩 시장 80%+ 점유', ir: 'https://investor.nvidia.com', news: 'https://nvidianews.nvidia.com', x: 'https://x.com/search?q=NVIDIA+Rubin+GPU+2026' },
           { rank: 2,  name: 'Broadcom',      ticker: 'AVGO',      mktcap: '~$1.0조',  detail: 'AI 매출 106% YoY, Meta MTIA 2nm·OpenAI ASIC 공급 — 2027 AI칩 매출 $1000억 목표', ir: 'https://investors.broadcom.com', news: 'https://newsroom.broadcom.com', x: 'https://x.com/search?q=Broadcom+AI+ASIC+2026' },
@@ -87,6 +102,11 @@ export const LAYERS = [
         icon: '💾',
         name: '메모리 (HBM / DRAM)',
         desc: '고대역폭 AI 전용 메모리',
+        detail: [
+          'HBM(High Bandwidth Memory)은 DRAM 다이를 수직으로 수십 층 적층하고, 실리콘 관통 전극(TSV)으로 연결한 초고속 메모리입니다. GPU 다이 바로 옆에 CoWoS 패키징으로 탑재돼 일반 GDDR 대비 5~10배 높은 대역폭을 제공합니다. NVIDIA H100에는 HBM3 80GB(3.35TB/s)가, B200에는 HBM3E 192GB가 들어갑니다. AI 모델이 커질수록 HBM 용량·대역폭 부족이 성능의 핵심 병목이 됩니다.',
+          'HBM 시장은 SK하이닉스·삼성전자·Micron의 3강 구도입니다. SK하이닉스가 NVIDIA에 HBM3E를 독점 공급하며 1위를 굳히고 있고, 삼성은 HBM3E 품질 이슈로 납품에 어려움을 겪으며 점유율이 일시 하락했습니다. Micron은 DRAM 전력효율에서 강점을 보이며 빠르게 추격 중입니다. HBM4 세대(2026년)부터는 대역폭이 2배 이상 올라 기술 격차가 더 벌어질 전망입니다.',
+          'AI 서버 한 대에 들어가는 HBM 용량은 일반 서버 대비 수십 배입니다. GB200 NVL72 랙 하나에만 HBM 수십 TB가 탑재됩니다. 이 때문에 HBM 생산량 전체가 AI 수요로 흡수되면서 일반 DRAM·모바일 메모리까지 공급 부족 현상이 연쇄적으로 발생하고 있습니다. HBM 공급이 GPU 출하 속도를 결정하는 실질적 제약이 된 상황입니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'SK Hynix',      ticker: '000660.KS', mktcap: '~$900억',  detail: 'HBM4 16단 48GB CES 2026 공개, M15X 팹 5월 가동 — HBM 시장 점유율 50%+, NVIDIA 우선 공급사', ir: 'https://www.skhynix.com/investor', news: 'https://news.skhynix.com', x: 'https://x.com/search?q=SK+Hynix+HBM4+2026' },
           { rank: 2,  name: 'Micron',        ticker: 'MU',        mktcap: '~$1100억', detail: 'HBM3E 양산 가속, 2026 HBM4 진입 — AI 메모리 수요로 분기 사상 최고 매출 경신', ir: 'https://investors.micron.com', news: 'https://www.micron.com/about/news', x: 'https://x.com/search?q=Micron+HBM+AI+2026' },
@@ -108,6 +128,11 @@ export const LAYERS = [
         icon: '🖥️',
         name: '서버 / AI 시스템',
         desc: 'AI 서버 설계·조립',
+        detail: [
+          'AI 서버는 GPU·CPU·HBM 메모리·NVMe SSD·고속 NIC을 하나의 섀시에 통합한 고밀도 컴퓨팅 시스템입니다. NVIDIA GB200 NVL72 랙의 경우 72개의 Blackwell GPU가 NVLink 스위치로 전부 연결된 단일 논리 도메인을 이루며, 소비 전력은 120kW 이상입니다. 이 수준의 전력 밀도는 기존 공랭 방식으로는 처리 불가능해, 모든 AI 서버에 직접수냉(DLC) 혹은 액침냉각이 표준이 됩니다.',
+          'AI 서버 시장은 브랜드 OEM(Dell·HPE·Lenovo)과 ODM(Foxconn·Quanta·Wiwynn)으로 나뉩니다. 하이퍼스케일러는 대부분 ODM과 직접 설계(Custom Design)하며, 마진이 낮은 범용 서버보다 AI 전용 설계를 선호합니다. Super Micro(SMCI)는 빠른 제품 출시 주기와 NVIDIA와의 긴밀한 협력으로 AI 서버 시장에서 빠르게 점유율을 높였습니다.',
+          '2025~2026년 AI 서버 시장 규모는 $1500억 이상으로 추산되며, 전체 서버 시장의 40%+를 차지합니다. 공급망 리스크로는 CoWoS 패키징 캐파 부족(TSMC), HBM 공급 제한, 전력 공급 장치(PSU·PDU) 리드타임 증가 등이 있습니다. NVIDIA의 주요 AI 서버 파트너를 얼마나 많이 확보하느냐가 ODM 업체들의 수주 경쟁에서 핵심입니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'Dell',            ticker: 'DELL',     mktcap: '~$450억',  detail: 'PowerEdge AI 서버 엔터프라이즈 1위 — XE9680 Rubin 기반 신형 발표, 빅테크 직접 공급', ir: 'https://investors.delltechnologies.com', news: 'https://www.dell.com/en-us/blog', x: 'https://x.com/search?q=Dell+AI+server+2026' },
           { rank: 2,  name: 'Super Micro',     ticker: 'SMCI',     mktcap: '~$250억',  detail: 'GB200 NVL 랙 서버 핵심 ODM — 가장 빠른 출시 속도, 회계 이슈 해소 후 재성장', ir: 'https://www.supermicro.com/investor', news: 'https://www.supermicro.com/en/newsroom', x: 'https://x.com/search?q=SuperMicro+GB200+2026' },
@@ -131,6 +156,11 @@ export const LAYERS = [
         icon: '📦',
         name: '스토리지',
         desc: '학습 데이터 저장·관리',
+        detail: [
+          'AI 학습에는 수십~수백 PB에 달하는 학습 데이터셋, 수 TB 규모의 모델 체크포인트, 그리고 추론 결과 저장이 필요합니다. 이를 처리하는 스토리지 레이어는 ① 초고속 NVMe SSD(학습 중 핫 데이터), ② 올플래시 스토리지 어레이(체크포인트·액티브 데이터셋), ③ 고용량 HDD 기반 오브젝트 스토리지(콜드 데이터·장기 보관)의 3계층으로 구성됩니다.',
+          '올플래시 스토리지 시장은 Pure Storage·NetApp이 선도합니다. Pure의 FlashArray//XL은 AI 클러스터에 최적화된 고속 블록 스토리지를 제공하며, NetApp의 ONTAP AI는 NVIDIA DGX와 검증된 통합 레퍼런스 아키텍처를 갖추고 있습니다. 학습 클러스터의 I/O 패턴(대규모 순차 읽기)에 최적화된 병렬 파일시스템(GPFS, Lustre, VAST Data)도 빠르게 성장 중입니다.',
+          '고용량 HDD 수요도 AI 덕분에 반등했습니다. 모델 학습용 원시 텍스트·이미지·영상 데이터가 폭발적으로 늘면서 Seagate·Western Digital의 20~30TB HAMR HDD가 데이터 레이크 구축에 대량 채용됩니다. 한편, 체크포인트 저장 속도를 높이기 위한 NVMe over Fabric(NVMe-oF) 고속 네트워크 스토리지 솔루션도 데이터센터 표준으로 자리잡는 중입니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'Pure Storage',    ticker: 'PSTG',    mktcap: '~$200억',  detail: 'FlashBlade//S 올플래시 AI 워크로드 최적화 — NVIDIA DGX 공식 스토리지 파트너', ir: 'https://investor.purestorage.com', news: 'https://www.purestorage.com/company/newsroom', x: 'https://x.com/search?q=Pure+Storage+AI+2026' },
           { rank: 2,  name: 'NetApp',          ticker: 'NTAP',    mktcap: '~$180억',  detail: 'ONTAP AI 스토리지 + 하이브리드 클라우드 — AI 파이프라인 최적화, AFF A-Series', ir: 'https://investors.netapp.com', news: 'https://www.netapp.com/newsroom', x: 'https://x.com/search?q=NetApp+AI+storage+2026' },
@@ -158,6 +188,11 @@ export const LAYERS = [
         icon: '🔀',
         name: 'AI 네트워킹',
         desc: 'InfiniBand·이더넷 패브릭',
+        detail: [
+          'AI 클러스터에서 GPU 수천 개가 협력하려면 초저지연·초고대역폭 네트워크가 필수입니다. 현재 두 가지 기술이 경쟁합니다. ① NVIDIA InfiniBand(NDR 400G·HDR 계열) — 전통적 HPC·AI 클러스터의 표준으로, 지연시간이 수백 나노초 수준입니다. ② RoCE(RDMA over Converged Ethernet) — Arista·Cisco 이더넷 스위치 위에서 동작하며, NVIDIA 에코시스템 외 대형 하이퍼스케일러가 선호합니다. Meta·Microsoft가 RoCE로 대규모 AI 팹릭을 구축하고 있습니다.',
+          'AI 네트워킹의 핵심 과제는 collective communication(AllReduce, AllGather 등)의 병목 해소입니다. GPU가 많아질수록 네트워크 통신이 전체 학습 시간의 30~50%를 차지할 수 있습니다. 이를 해결하기 위해 NVIDIA는 Quantum-X InfiniBand와 NVLink를 계층화해 랙 내·랙 간 대역폭을 극대화합니다. Arista는 AI 전용 스파인-리프 토폴로지를 400G/800G 포트로 구성해 하이퍼스케일러에 공급합니다.',
+          'DPU(Data Processing Unit)와 SmartNIC도 AI 네트워킹의 새 축입니다. NVIDIA BlueField-3 DPU는 네트워크 패킷 처리·보안·스토리지 가속을 CPU에서 분리해 GPU가 연산에만 집중하게 해줍니다. 인터커넥트 속도는 매 세대 2배씩 증가(200G→400G→800G→1.6T)하고 있으며, 2027년경에는 1.6T 이더넷·InfiniBand가 AI 클러스터 표준이 될 전망입니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'NVIDIA',           ticker: 'NVDA',    mktcap: '~$2.7조',  detail: 'Quantum-X800 InfiniBand, NVLink 6, Spectrum-6 이더넷 — Rubin 랙 전용 통합 네트워크', ir: 'https://investor.nvidia.com', news: 'https://nvidianews.nvidia.com', x: 'https://x.com/search?q=NVIDIA+InfiniBand+NVLink+2026' },
           { rank: 2,  name: 'Broadcom',          ticker: 'AVGO',    mktcap: '~$1.0조',  detail: 'Tomahawk 6·Jericho3-AI 이더넷 스위치칩 — AI 클러스터 RoCEv2 네트워크 점유율 1위', ir: 'https://investors.broadcom.com', news: 'https://newsroom.broadcom.com', x: 'https://x.com/search?q=Broadcom+Tomahawk+AI+network' },
@@ -181,6 +216,11 @@ export const LAYERS = [
         icon: '💡',
         name: '광트랜시버',
         desc: '고속 광학 통신 부품',
+        detail: [
+          '광트랜시버(Optical Transceiver)는 전기 신호를 빛(광신호)으로 변환해 광섬유로 전송하고, 반대로 수신된 빛을 전기 신호로 변환하는 부품입니다. 데이터센터 내 서버 간 연결(intra-DC)과 데이터센터 간 연결(DCI)에 필수적으로 사용됩니다. AI 클러스터에서는 스위치-GPU 구간, 스파인-리프 구간 모두에 고속 광모듈이 빼곡히 채워집니다. 단일 GB200 NVL72 랙에만 수백 개의 트랜시버가 탑재됩니다.',
+          'AI 붐으로 400G→800G→1.6T 세대 전환이 기존 PC 로드맵보다 2~3배 빠르게 진행되고 있습니다. 800G 광트랜시버는 2024년부터 대량 양산에 들어갔고, 1.6T는 2025~2026년 하이퍼스케일러 채택이 시작됩니다. CPO(Co-Packaged Optics) 기술은 트랜시버를 스위치 칩과 동일 패키지에 통합해 전력 소비를 30~40% 줄이는 차세대 방식으로, NVIDIA Rubin 플랫폼부터 도입될 전망입니다.',
+          '광트랜시버 시장은 Coherent·Lumentum·Inphi(Marvell)·중국 신흥 업체들의 경쟁 구도입니다. 중국 업체(HG Genuine·Eoptolink·Accelink)가 가격 경쟁력으로 빠르게 점유율을 늘리고 있어, 미국 업체들은 고성능 CPO·VCSEL 등 기술 차별화로 대응합니다. 광트랜시버는 AI 인프라 수요와 직결되는 만큼, AI 투자 사이클의 체온계 역할을 합니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'Coherent Corp',     ticker: 'COHR',      mktcap: '~$170억',  detail: '800G·1.6T 광트랜시버 — AI 데이터센터 최대 수혜, NVIDIA·Cisco 주요 공급사', ir: 'https://www.coherent.com/company/investor-relations', news: 'https://www.coherent.com/news', x: 'https://x.com/search?q=Coherent+Corp+AI+transceiver+2026' },
           { rank: 2,  name: 'Lumentum',          ticker: 'LITE',      mktcap: '~$90억',   detail: 'VCSEL·고속 광트랜시버 — 클라우드 광통신 공급사, AI 데이터센터 수요 급증', ir: 'https://investor.lumentum.com', news: 'https://www.lumentum.com/en/news-releases', x: 'https://x.com/search?q=Lumentum+AI+optics+2026' },
@@ -210,6 +250,11 @@ export const LAYERS = [
         icon: '⚡',
         name: '전력 인프라',
         desc: 'UPS, PDU, 변압기',
+        detail: [
+          'AI 데이터센터의 전력 인프라는 전력망에서 랙까지 안정적으로 전력을 공급하는 전체 체계입니다. 고압 전력을 받아 변환하는 변압기, 정전 시 무정전 전원 공급을 위한 UPS(무정전전원장치), 각 랙까지 분배하는 PDU(전력배전장치)로 구성됩니다. AI GPU 서버 한 랙이 100~150kW를 소비하는 시대에는 기존 전력 인프라를 전면 재설계해야 합니다. 48VDC 직류 배전 방식이 AC 방식보다 변환 손실이 작아 빠르게 채택되고 있습니다.',
+          'NVIDIA와 Vertiv·Eaton은 800VDC(고압직류배전) 표준화를 추진하고 있습니다. 기존 480VAC 대비 변환 단계를 줄여 전력 효율을 3~5% 향상시킬 수 있습니다. Vertiv의 AI 서버용 전력 솔루션은 GB200 NVL 랙과 연동 검증이 완료돼 있어, NVIDIA 공급망의 핵심 파트너로 부상했습니다. Schneider Electric은 EcoStruxure 플랫폼으로 데이터센터 전력 모니터링·자동화 시장 1위를 유지합니다.',
+          '전력 인프라 업체들은 AI 붐으로 역대급 수주 잔고를 기록 중입니다. 변압기는 리드타임이 2~3년에 달해 공급 병목이 심각합니다. 특히 전력망 업그레이드가 필요한 신규 데이터센터 부지는 변압기 확보가 착공 일정을 결정합니다. Eaton·Schneider·Siemens Energy 모두 2024~2026년 수주 잔고가 사상 최고치를 경신 중이며, 가격결정력도 강해지고 있습니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'Schneider Electric', ticker: 'SU.PA',   mktcap: '~$1500억', detail: 'EcoStruxure 데이터센터 통합 전력·관리 1위 — 2026 AI 데이터센터 전력 수주 급증', ir: 'https://www.se.com/us/en/about-us/investor-relations', news: 'https://www.se.com/us/en/about-us/press-releases', x: 'https://x.com/search?q=Schneider+Electric+AI+datacenter+2026' },
           { rank: 2,  name: 'Eaton',              ticker: 'ETN',     mktcap: '~$1200억', detail: 'UPS·PDU·배전 시스템 글로벌 1위 — AI 데이터센터 고밀도 전력 공급 전문', ir: 'https://www.eaton.com/us/en-us/company/investor-relations', news: 'https://www.eaton.com/us/en-us/company/news', x: 'https://x.com/search?q=Eaton+AI+power+datacenter+2026' },
@@ -231,6 +276,11 @@ export const LAYERS = [
         icon: '❄️',
         name: '냉각 시스템',
         desc: '액침·공냉·수냉 쿨링',
+        detail: [
+          'AI GPU가 발열하는 수백 kW를 처리하기 위해 냉각 기술은 공냉 중심에서 액냉 방식으로 빠르게 전환 중입니다. 세 가지 방식이 경쟁합니다. ① 공랭(CRAC/CRAH) — 냉각된 공기를 서버 팬으로 흡입, 구현 비용 낮지만 고밀도 랙에는 한계. ② 직접 액냉(DLC, Direct Liquid Cooling) — CPU·GPU에 냉각수를 직접 접촉시키는 콜드플레이트 방식, GB200 NVL부터 사실상 필수. ③ 액침냉각(Immersion Cooling) — 서버 전체를 비전도성 냉각액에 담그는 방식, PUE 1.03 이하 달성 가능.',
+          '냉각 시스템의 핵심 지표는 PUE(Power Usage Effectiveness)입니다. 공랭 기준 PUE 1.4~1.6, DLC 기준 1.1~1.2, 액침냉각은 1.03~1.05 수준입니다. AI 데이터센터에서 PUE 0.1 차이가 연간 수억 달러의 전기요금 차이를 만들기 때문에 대규모 투자가 정당화됩니다. Vertiv·Modine·CoolIT는 DLC 분야에서 빠르게 성장하고 있으며, Submer·GRC 등 액침냉각 스타트업도 주목받고 있습니다.',
+          '냉각 인프라는 데이터센터 건설 초기에 설계가 확정되기 때문에 교체 비용이 매우 큽니다. 따라서 한 번 냉각 벤더를 선정하면 수십 년간 유지하는 경향이 있어, 초기 수주 경쟁이 치열합니다. 2026년부터 NVIDIA Rubin 랙(1MW급)이 실사용되면 냉각 인프라 투자 사이클이 다시 한 번 도래할 전망이며, 이 구간에서 관련 업체들의 수주가 집중될 것으로 보입니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'Vertiv',              ticker: 'VRT',     mktcap: '~$400억',  detail: 'MegaMod HDX 모듈형 액침냉각 출시 — 랙당 120kW+ 고밀도 GPU 냉각 선도', ir: 'https://investors.vertiv.com', news: 'https://www.vertiv.com/en-us/about/news-and-insights', x: 'https://x.com/search?q=Vertiv+liquid+cooling+AI+2026' },
           { rank: 2,  name: 'Schneider Electric',  ticker: 'SU.PA',   mktcap: '~$1500억', detail: '정밀 냉각·CRAC·Adiabatic 쿨링 — AI 데이터센터 통합 냉각 관리 시스템', ir: 'https://www.se.com/us/en/about-us/investor-relations', news: 'https://www.se.com/us/en/about-us/press-releases', x: 'https://x.com/search?q=Schneider+Electric+cooling+AI' },
@@ -258,6 +308,11 @@ export const LAYERS = [
         icon: '🏚️',
         name: '건설 / 엔지니어링',
         desc: '데이터센터 설계·시공',
+        detail: [
+          '데이터센터 건설은 부지 선정부터 완공까지 통상 18~36개월이 소요되는 대규모 프로젝트입니다. 전기·기계 설비(MEP) 공사가 전체 비용의 절반 이상을 차지하며, 고압 수전설비·변전소 연결·냉각 배관·UPS 설치·광케이블 포설 등이 동시에 진행됩니다. AI 시대에는 랙당 100kW+ 고밀도 전력을 감당하는 전기 설비 설계가 핵심 기술 경쟁력이 됐습니다.',
+          'AI 붐으로 데이터센터 착공 물량이 2023~2026년 사이 연평균 30%+씩 증가하면서, 건설·엔지니어링 기업들의 수주 잔고가 사상 최고치를 기록 중입니다. Quanta Services는 전기 인프라 시공에 특화돼 AI 수요의 직접 수혜를 받고 있고, AECOM·Jacobs는 설계·PM 역량으로 하이퍼스케일러 캠퍼스 프로젝트를 수주합니다. 인력 부족이 새로운 병목으로 등장해 전기기사·냉각 설비 전문가 임금이 급등하고 있습니다.',
+          '데이터센터 건설의 또 다른 난관은 인허가와 전력망 연결입니다. 미국·유럽 주요 도시에서 전력망 연결 대기 시간이 3~7년에 달하는 사례도 나타나고 있습니다. 이에 따라 하이퍼스케일러들은 전력망에서 독립된 온사이트 발전(SMR, 가스터빈, 대규모 ESS)과 함께 데이터센터를 짓는 방식을 검토합니다. 건설·엔지니어링 기업들이 에너지 인프라 설계 역량까지 갖춰야 하는 시대가 됐습니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'Quanta Services',    ticker: 'PWR',     mktcap: '~$400억',  detail: '데이터센터 전기·전력 인프라 시공 전문 — AI 수요로 수주 잔고 사상 최고치 경신', ir: 'https://investor.quantaservices.com', news: 'https://www.quantaservices.com/news', x: 'https://x.com/search?q=Quanta+Services+AI+datacenter' },
           { rank: 2,  name: 'AECOM',              ticker: 'ACM',     mktcap: '~$160억',  detail: '초대형 데이터센터 엔지니어링·설계 글로벌 1위 — 하이퍼스케일 AI 캠퍼스 설계 다수', ir: 'https://investors.aecom.com', news: 'https://aecom.com/press-release', x: 'https://x.com/search?q=AECOM+datacenter+2026' },
@@ -279,6 +334,11 @@ export const LAYERS = [
         icon: '🔆',
         name: '에너지 공급',
         desc: '전력 생산·공급 (원전·신재생)',
+        detail: [
+          'AI 데이터센터의 전력 수요는 산업 역사상 유례없는 속도로 증가하고 있습니다. 국제에너지기구(IEA)는 2026년 전 세계 데이터센터 전력 소비가 1000TWh를 돌파할 것으로 전망합니다. 이는 일본의 연간 총 전력 소비량에 맞먹는 규모입니다. 하이퍼스케일러들은 ESG 목표 달성을 위해 24/7 탄소제로 전력(CFE)을 요구하며, 이에 따라 원전·재생에너지 전력 구매계약(PPA)이 폭발적으로 늘고 있습니다.',
+          '원전이 데이터센터 전력원으로 급부상했습니다. 태양광·풍력과 달리 원전은 날씨에 관계없이 24시간 안정적으로 전력을 공급하기 때문입니다. Microsoft는 미국 스리마일 아일랜드 원전 재가동 계약을 맺었고, Google은 SMR(소형모듈원자로) 스타트업 Kairos Power와 협약을 체결했습니다. Constellation·Vistra 같은 원전 운영사는 AI 붐의 최대 수혜 에너지 기업으로 재평가받고 있습니다.',
+          '장기적으로 SMR이 데이터센터 전용 전력원으로 각광받고 있습니다. 기존 대형 원전(1GW+)보다 훨씬 작은 50~300MW급 SMR은 데이터센터 부지 인근에 직접 건설해 송전 손실 없이 전력을 공급할 수 있습니다. 규제 인증과 건설 기간이 과제이지만, Oklo·NuScale·TerraPower 등이 2030년대 상업 운전을 목표로 개발 중입니다. 에너지 공급이 AI 인프라 확장 속도를 결정하는 궁극의 병목이 됐습니다.',
+        ],
         candidates: [
           { rank: 1,  name: 'NextEra Energy',        ticker: 'NEE',  mktcap: '~$1500억', detail: '재생에너지 세계 1위, 데이터센터 PPA 확대 — AI 수요로 신규 태양광·풍력·배터리 가속', ir: 'https://investor.nexteraenergy.com', news: 'https://newsroom.nexteraenergy.com', x: 'https://x.com/search?q=NextEra+Energy+AI+datacenter+2026' },
           { rank: 2,  name: 'Constellation Energy',  ticker: 'CEG',  mktcap: '~$700억',  detail: '원전 전력 AI DC 직접 공급 계약 급증 — Microsoft Three Mile Island 재가동 계약 체결', ir: 'https://investor.constellationenergy.com', news: 'https://www.constellationenergy.com/newsroom', x: 'https://x.com/search?q=Constellation+Energy+nuclear+AI+2026' },

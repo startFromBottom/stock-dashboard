@@ -74,6 +74,15 @@ function PanelInner({ comp }) {
         )}
       </div>
 
+      {/* ── 상세 설명 ── */}
+      {comp.detail?.length > 0 && (
+        <div className="comp-detail-box">
+          {comp.detail.map((para, i) => (
+            <p key={i} className="comp-detail-para">{para}</p>
+          ))}
+        </div>
+      )}
+
       {/* ── Top 10 그리드 ── */}
       <div className="companies-grid">
         {top10.map((c, idx) => {

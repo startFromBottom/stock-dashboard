@@ -156,6 +156,25 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; } }
 
+/* 구성요소 상세 설명 박스 */
+.comp-detail-box {
+  border: 1.5px solid #ca8a04;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  background: color-mix(in srgb, #ca8a04 6%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.comp-detail-para {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  word-break: keep-all;
+}
+
 .panel-header {
   display: flex;
   align-items: center;
@@ -1196,6 +1215,121 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border: 1px dashed var(--border);
   border-radius: var(--radius-sm);
   line-height: 1.7;
+}
+
+/* ── 1단계: 카테고리 그룹 탭 ── */
+.raw-group-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.raw-group-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+.raw-group-btn:hover {
+  color: var(--text-secondary);
+  border-color: #475569;
+}
+.raw-group-btn-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.raw-group-btn-label {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.raw-group-btn-desc {
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+.raw-group-btn.active .raw-group-btn-desc { opacity: 0.75; }
+.raw-group-count {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  color: var(--text-muted);
+  margin-left: auto;
+  white-space: nowrap;
+}
+.raw-group-btn.active .raw-group-count {
+  background: rgba(255,255,255,0.15);
+  color: inherit;
+}
+
+/* ── 2단계: 세부 원소 탭 (기존 raw-mat-btn 확장) ── */
+.raw-mat-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+.raw-mat-btn:hover {
+  color: var(--text-secondary);
+  border-color: #475569;
+}
+.raw-mat-btn-name {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.raw-mat-type-badge {
+  display: inline-block;
+  font-size: 8px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-top: 2px;
+  letter-spacing: 0.3px;
+}
+.raw-mat-type-badge.hree {
+  background: #2d1b4e;
+  color: #c084fc;
+  border: 1px solid #6b21a8;
+}
+.raw-mat-type-badge.lree {
+  background: #0f2a3a;
+  color: #67e8f9;
+  border: 1px solid #0e7490;
+}
+
+/* 원자번호 배지 */
+.raw-atomic-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: #1e293b;
+  color: #64748b;
+  border: 1px solid #334155;
+  font-family: monospace;
 }
 
 /* 반응형 */
