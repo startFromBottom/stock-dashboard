@@ -7,12 +7,14 @@ import SemiconductorDashboard from './SemiconductorDashboard';
 import SemiNewsSection from './SemiNewsSection';
 import SpaceDashboard from './SpaceDashboard';
 import SpaceNewsSection from './SpaceNewsSection';
+import RawMaterialsMap from './RawMaterialsMap';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
   { id: 'ai-dc',  label: 'AI 데이터센터', icon: '🏢' },
   { id: 'semi',   label: '반도체',         icon: '🔬' },
   { id: 'space',  label: '우주',           icon: '🚀' },
+  { id: 'raw',    label: '원자재',         icon: '⛏️' },
 ];
 
 /* ── 데이터센터 탭 ── */
@@ -38,6 +40,7 @@ export default function Dashboard() {
   const [dcTab,     setDcTab]     = useState('illust');
   const [semiTab,   setSemiTab]   = useState('chain');
   const [spaceTab,  setSpaceTab]  = useState('chain');
+  const [rawTab,    setRawTab]    = useState('map');
 
   const now = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric', month: 'long', day: 'numeric',
@@ -46,12 +49,14 @@ export default function Dashboard() {
   const headerTitle =
     sector === 'ai-dc' ? <>🏢 AI 데이터센터 <span>인프라</span></> :
     sector === 'semi'  ? <>🔬 반도체 <span>밸류체인</span></> :
-                         <>🚀 우주 섹터 <span>밸류체인</span></>;
+    sector === 'space' ? <>🚀 우주 섹터 <span>밸류체인</span></> :
+                         <>⛏️ 원자재 <span>매장량 분포</span></>;
 
   const headerDesc =
     sector === 'ai-dc' ? 'AI 데이터센터 레이어별 구성 요소 · 시가총액 Top 10 기업 · 최신 뉴스 & 리포트' :
     sector === 'semi'  ? '실리콘 원자재 → EDA/IP → 소재 → 장비 → 파운드리 → 팹리스 → 패키징 → 테스트 → 유통 · 각 단계 Top 10 기업' :
-                         '소재·부품·엔진 → 발사체·론치 → 위성 제작·운용 → 우주 데이터·분석 → 국방·응용 · 각 레이어 Top 기업';
+    sector === 'space' ? '소재·부품·엔진 → 발사체·론치 → 위성 제작·운용 → 우주 데이터·분석 → 국방·응용 · 각 레이어 Top 기업' :
+                         '희토류 · 구리 · 금&은&백금 · 모래(규사) · 철 — 대륙별 전세계 매장량 비중 시각화 · USGS 2024 기준';
 
   return (
     <div className="page-wrap">
@@ -132,6 +137,11 @@ export default function Dashboard() {
           {spaceTab === 'chain' && <SpaceDashboard />}
           {spaceTab === 'news'  && <SpaceNewsSection />}
         </>
+      )}
+
+      {/* ── 원자재 섹션 ── */}
+      {sector === 'raw' && (
+        <RawMaterialsMap />
       )}
     </div>
   );
