@@ -257,7 +257,7 @@ export default function SpaceDashboard() {
 
       {!activeId && (
         <p className="hint-text" style={{ marginTop: 20 }}>
-          🚀 레이어를 클릭하면 해당 분야의 세부 카테고리와 Top 기업이 표시됩니다
+          ↑ 레이어를 클릭하면 세부 카테고리와 Top 기업이 표시됩니다
         </p>
       )}
 
@@ -265,21 +265,6 @@ export default function SpaceDashboard() {
       {activeId && (
         <div style={{ marginTop: 24 }}>
           <SpaceLayerMap filterLayerId={activeId} />
-        </div>
-      )}
-
-      {/* 전체 LayerMap (항상 표시) */}
-      {!activeId && (
-        <div style={{ marginTop: 32, borderTop: '1px solid var(--border)', paddingTop: 24 }}>
-          <div style={{ marginBottom: 12 }}>
-            <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>
-              📋 전체 카테고리 목록
-            </h3>
-            <p style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
-              각 카드를 클릭하면 해당 분야 Top 기업 상세 정보를 확인할 수 있습니다
-            </p>
-          </div>
-          <SpaceLayerMap />
         </div>
       )}
     </div>
