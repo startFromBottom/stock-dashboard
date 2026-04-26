@@ -4,6 +4,7 @@ import { useState } from 'react';
 import NewsSection from './NewsSection';
 import Illustration from './Illustration';
 import SemiconductorDashboard from './SemiconductorDashboard';
+import SemiNewsSection from './SemiNewsSection';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
@@ -17,9 +18,16 @@ const DC_TABS = [
   { id: 'news',   label: '📰 뉴스 & 레포트' },
 ];
 
+/* ── 반도체 탭 ── */
+const SEMI_TABS = [
+  { id: 'chain', label: '🔬 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 레포트' },
+];
+
 export default function Dashboard() {
-  const [sector, setSector] = useState('ai-dc');
-  const [dcTab,  setDcTab]  = useState('illust');
+  const [sector,   setSector]   = useState('ai-dc');
+  const [dcTab,    setDcTab]    = useState('illust');
+  const [semiTab,  setSemiTab]  = useState('chain');
 
   const now = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric', month: 'long', day: 'numeric',
@@ -77,7 +85,23 @@ export default function Dashboard() {
       )}
 
       {/* ── 반도체 섹션 ── */}
-      {sector === 'semi' && <SemiconductorDashboard />}
+      {sector === 'semi' && (
+        <>
+          <nav className="tab-nav">
+            {SEMI_TABS.map(t => (
+              <button
+                key={t.id}
+                className={`tab-btn${semiTab === t.id ? ' active' : ''}`}
+                onClick={() => setSemiTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {semiTab === 'chain' && <SemiconductorDashboard />}
+          {semiTab === 'news'  && <SemiNewsSection />}
+        </>
+      )}
     </div>
   );
 }
