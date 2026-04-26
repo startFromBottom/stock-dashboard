@@ -85,8 +85,8 @@ export default function EtfPanel({ sectorId }) {
                     <>
                       <span className="etf-price">{fmtPrice(q?.price)}</span>
                       {pct !== undefined && pct !== null && (
-                        <span className="etf-change" style={{ color: pctColor }}>
-                          {pctSign}{fmt(pct)}%
+                        <span className="etf-change" style={{ color: pctColor }} title="전일 종가 대비 등락률">
+                          {pctSign}{fmt(pct)}% <span style={{ fontSize: 9, opacity: 0.7, fontWeight: 400 }}>전일比</span>
                         </span>
                       )}
                     </>
