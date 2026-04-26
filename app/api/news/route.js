@@ -197,6 +197,176 @@ const RSS_FEEDS = [
     source: 'DigiTimes',
     tickers: [], category: null,
   },
+
+  // ── 추가: 하이퍼스케일러 공식 블로그 ──
+  {
+    url: 'https://aws.amazon.com/blogs/aws/feed/',
+    source: 'AWS News Blog',
+    tickers: ['AMZN'], category: 'hyperscaler',
+  },
+  {
+    url: 'https://blog.google/products/google-cloud/rss/',
+    source: 'Google Cloud Blog',
+    tickers: ['GOOGL'], category: 'hyperscaler',
+  },
+  {
+    url: 'https://techcommunity.microsoft.com/plugins/custom/microsoft/o365/custom-blog-rss?tid=&board=AzureInfrastructureBlog&pageSize=10',
+    source: 'Microsoft Azure Infra',
+    tickers: ['MSFT'], category: 'hyperscaler',
+  },
+  {
+    url: 'https://research.google/blog/rss/',
+    source: 'Google Research',
+    tickers: ['GOOGL'], category: 'hyperscaler',
+  },
+  {
+    url: 'https://ai.meta.com/blog/rss/',
+    source: 'Meta AI Blog',
+    tickers: ['META'], category: 'hyperscaler',
+  },
+  {
+    url: 'https://deepmind.google/blog/rss.xml',
+    source: 'Google DeepMind',
+    tickers: ['GOOGL'], category: 'hyperscaler',
+  },
+  {
+    url: 'https://huggingface.co/blog/feed.xml',
+    source: 'HuggingFace Blog',
+    tickers: [], category: 'hyperscaler',
+  },
+  {
+    url: 'https://www.anthropic.com/news/rss.xml',
+    source: 'Anthropic News',
+    tickers: [], category: 'hyperscaler',
+  },
+
+  // ── 추가: 반도체·하드웨어 ──
+  {
+    url: 'https://www.qualcomm.com/news/releases/rss',
+    source: 'Qualcomm News',
+    tickers: ['QCOM'], category: 'gpu',
+  },
+  {
+    url: 'https://newsroom.arm.com/rss.xml',
+    source: 'Arm Newsroom',
+    tickers: ['ARM'], category: 'gpu',
+  },
+  {
+    url: 'https://www.broadcom.com/company/news/press-releases/rss',
+    source: 'Broadcom News',
+    tickers: ['AVGO'], category: 'gpu',
+  },
+  {
+    url: 'https://www.micron.com/about/blog/rss',
+    source: 'Micron Blog',
+    tickers: ['MU'], category: 'memory',
+  },
+  {
+    url: 'https://newsroom.tsmc.com/en/rss.xml',
+    source: 'TSMC Newsroom',
+    tickers: [], category: 'gpu',
+  },
+  {
+    url: 'https://www.computerworld.com/feed/',
+    source: 'Computerworld',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://www.nextplatform.com/feed/',
+    source: 'The Next Platform',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://insidehpc.com/feed/',
+    source: 'insideHPC',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://www.servethehome.com/feed/',
+    source: 'ServeTheHome',
+    tickers: [], category: 'server',
+  },
+
+  // ── 추가: 데이터센터 인프라·전력 ──
+  {
+    url: 'https://www.datacenterdynamics.com/en/rss/',
+    source: 'DCD (Data Centre Dynamics)',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://journal.uptimeinstitute.com/feed/',
+    source: 'Uptime Institute Journal',
+    tickers: [], category: 'facility',
+  },
+  {
+    url: 'https://www.power-mag.com/feed/',
+    source: 'POWER Magazine',
+    tickers: [], category: 'power',
+  },
+  {
+    url: 'https://www.utilitydive.com/feeds/news/',
+    source: 'Utility Dive',
+    tickers: [], category: 'power',
+  },
+  {
+    url: 'https://www.greenbiz.com/feeds/news',
+    source: 'GreenBiz',
+    tickers: [], category: 'energy',
+  },
+  {
+    url: 'https://www.spglobal.com/marketintelligence/en/mi/research-analysis/rss.xml',
+    source: 'S&P Market Intelligence',
+    tickers: [], category: null,
+  },
+
+  // ── 추가: AI·ML 연구 ──
+  {
+    url: 'https://arxiv.org/rss/cs.AI',
+    source: 'arXiv cs.AI',
+    tickers: [], category: 'hyperscaler',
+  },
+  {
+    url: 'https://arxiv.org/rss/cs.AR',
+    source: 'arXiv cs.AR (Hardware)',
+    tickers: [], category: 'gpu',
+  },
+  {
+    url: 'https://venturebeat.com/ai/feed/',
+    source: 'VentureBeat AI',
+    tickers: [], category: 'hyperscaler',
+  },
+  {
+    url: 'https://techcrunch.com/category/artificial-intelligence/feed/',
+    source: 'TechCrunch AI',
+    tickers: [], category: 'hyperscaler',
+  },
+  {
+    url: 'https://www.wired.com/feed/tag/artificial-intelligence/latest/rss',
+    source: 'Wired AI',
+    tickers: [], category: 'hyperscaler',
+  },
+  {
+    url: 'https://spectrum.ieee.org/rss/fulltext',
+    source: 'IEEE Spectrum',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://cacm.acm.org/rss',
+    source: 'ACM CACM',
+    tickers: [], category: null,
+  },
+
+  // ── 추가: 금융·마켓 (반도체 섹터) ──
+  {
+    url: 'https://finance.yahoo.com/rss/industry/semiconductors',
+    source: 'Yahoo Finance Semis',
+    tickers: [], category: null,
+  },
+  {
+    url: 'https://seekingalpha.com/sector/technology.xml',
+    source: 'Seeking Alpha Tech',
+    tickers: [], category: null,
+  },
 ];
 
 // ── category 자동 분류 (RSS source가 null일 때 키워드로 추정) ──
@@ -246,6 +416,104 @@ const AI_KEYWORDS = [
 function isAiRelated(text) {
   const lower = (text || '').toLowerCase();
   return AI_KEYWORDS.some(kw => lower.includes(kw));
+}
+
+// ── GDELT DOC 2.0 API (완전 무료, 실시간) ─────────────────
+const GDELT_QUERIES = [
+  { q: '"nvidia" OR "gpu" OR "AI chip" OR "accelerator chip"',                    cat: 'gpu'         },
+  { q: '"HBM" OR "DRAM" OR "NAND" OR "memory chip" OR "SK Hynix" OR "Samsung memory"', cat: 'memory'  },
+  { q: '"AI server" OR "data center server" OR "GPU server" OR "SuperMicro"',    cat: 'server'      },
+  { q: '"AI networking" OR "InfiniBand" OR "NVLink" OR "800G" OR "Arista"',      cat: 'ai-network'  },
+  { q: '"optical transceiver" OR "coherent optics" OR "CPO" OR "800G optics"',   cat: 'optics'      },
+  { q: '"hyperscaler" OR "AWS" OR "Azure AI" OR "Google Cloud AI" OR "LLM"',     cat: 'hyperscaler' },
+  { q: '"data center construction" OR "hyperscale campus" OR "data center build"', cat: 'facility'   },
+  { q: '"data center power" OR "nuclear data center" OR "SMR" OR "PPA renewable"', cat: 'power'      },
+  { q: '"liquid cooling" OR "immersion cooling" OR "data center cooling" OR "CDU"', cat: 'cooling'   },
+  { q: '"TSMC" OR "semiconductor foundry" OR "fab" OR "advanced packaging"',     cat: 'gpu'         },
+];
+
+async function fetchGdeltNews() {
+  const results = [];
+  await Promise.allSettled(
+    GDELT_QUERIES.map(async ({ q, cat }) => {
+      try {
+        const encoded = encodeURIComponent(q);
+        const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${encoded}&mode=artlist&maxrecords=10&sourcelang=english&format=json`;
+        const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+        if (!res.ok) return;
+        const data = await res.json();
+        const articles = data?.articles;
+        if (!Array.isArray(articles)) return;
+
+        for (const art of articles) {
+          if (!art.title) continue;
+          const date = art.seendate
+            ? `${art.seendate.slice(0,4)}-${art.seendate.slice(4,6)}-${art.seendate.slice(6,8)}`
+            : new Date().toISOString().slice(0, 10);
+
+          results.push({
+            id:       `gdelt-${cat}-${Buffer.from(art.title).toString('base64').slice(0, 12)}`,
+            tickers:  [],
+            category: cat,
+            type:     'news',
+            title:    art.title,
+            summary:  art.title,
+            date,
+            source:   art.domain || 'GDELT',
+            url:      art.url || '#',
+            _live:    true,
+          });
+        }
+      } catch {
+        // 조용히 무시
+      }
+    })
+  );
+  return results;
+}
+
+// ── Alpha Vantage NEWS_SENTIMENT (무료 25콜/일) ─────────────
+async function fetchAlphaVantageNews(avKey) {
+  if (!avKey) return [];
+  const AV_TICKERS = ['NVDA', 'AMD', 'INTC', 'AVGO', 'MU', 'ANET', 'MSFT', 'GOOGL', 'AMZN', 'META'];
+  const results = [];
+
+  await Promise.allSettled(
+    AV_TICKERS.map(async ticker => {
+      try {
+        const url = `https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=${ticker}&limit=8&apikey=${avKey}`;
+        const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+        if (!res.ok) return;
+        const data = await res.json();
+        const feed = data?.feed;
+        if (!Array.isArray(feed)) return;
+
+        for (const item of feed) {
+          if (!item.title || !isAiRelated(item.title + ' ' + (item.summary || ''))) continue;
+          const ds = item.time_published?.slice(0, 8);
+          const date = ds
+            ? `${ds.slice(0,4)}-${ds.slice(4,6)}-${ds.slice(6,8)}`
+            : new Date().toISOString().slice(0, 10);
+
+          results.push({
+            id:       `av-${ticker}-${Buffer.from(item.title).toString('base64').slice(0, 12)}`,
+            tickers:  [ticker],
+            category: TICKER_CATEGORY[ticker] ?? 'gpu',
+            type:     'news',
+            title:    item.title,
+            summary:  (item.summary || item.title).slice(0, 220),
+            date,
+            source:   item.source || 'Alpha Vantage',
+            url:      item.url || '#',
+            _live:    true,
+          });
+        }
+      } catch {
+        // 조용히 무시
+      }
+    })
+  );
+  return results;
 }
 
 // ── Finnhub 뉴스 조회 ──────────────────────────────────────
@@ -370,8 +638,9 @@ function dedup(items) {
 
 // ── API Route ─────────────────────────────────────────────
 export async function GET() {
-  const token = process.env.FINNHUB_API_KEY;
-  if (!token) {
+  const finnhubKey = process.env.FINNHUB_API_KEY;
+  const avKey      = process.env.ALPHA_VANTAGE_API_KEY; // 선택적
+  if (!finnhubKey) {
     return NextResponse.json({ error: 'FINNHUB_API_KEY 없음' }, { status: 500 });
   }
 
@@ -381,34 +650,37 @@ export async function GET() {
   }
 
   try {
-    // 병렬 수집
-    const [finnhubItems, rssItems] = await Promise.all([
-      fetchFinnhubNews(token),
+    // 병렬 수집 (Finnhub + Alpha Vantage + GDELT + RSS)
+    const [finnhubItems, avItems, gdeltItems, rssItems] = await Promise.all([
+      fetchFinnhubNews(finnhubKey),
+      fetchAlphaVantageNews(avKey),
+      fetchGdeltNews(),
       fetchRssFeeds(),
     ]);
 
-    const all = dedup([...finnhubItems, ...rssItems]);
-
-    // 날짜 내림차순 정렬, 최대 100개
+    const all = dedup([...finnhubItems, ...avItems, ...gdeltItems, ...rssItems]);
     all.sort((a, b) => b.date.localeCompare(a.date));
-    const result = all.slice(0, 100);
+    const result = all.slice(0, 150);
 
     _cache   = result;
     _cacheTs = Date.now();
 
-    // 소스별 통계
-    const bySource = {};
-    for (const item of rssItems) {
-      bySource[item.source] = (bySource[item.source] ?? 0) + 1;
-    }
-    console.log(`[news] 수집 완료: Finnhub ${finnhubItems.length}개 + RSS ${rssItems.length}개 (${Object.entries(bySource).map(([s,n])=>`${s}:${n}`).join(', ')}) → 중복제거 후 ${result.length}개`);
+    console.log(
+      `[news] 수집 완료: Finnhub ${finnhubItems.length}개` +
+      ` + AV ${avItems.length}개` +
+      ` + GDELT ${gdeltItems.length}개` +
+      ` + RSS ${rssItems.length}개` +
+      ` → 중복제거 후 ${result.length}개`
+    );
 
     return NextResponse.json(result, {
       headers: {
-        'X-Cache':        'MISS',
-        'X-Finnhub-Count': String(finnhubItems.length),
-        'X-RSS-Count':     String(rssItems.length),
-        'X-Total':         String(result.length),
+        'X-Cache':          'MISS',
+        'X-Finnhub-Count':  String(finnhubItems.length),
+        'X-AV-Count':       String(avItems.length),
+        'X-GDELT-Count':    String(gdeltItems.length),
+        'X-RSS-Count':      String(rssItems.length),
+        'X-Total':          String(result.length),
       },
     });
   } catch (err) {
