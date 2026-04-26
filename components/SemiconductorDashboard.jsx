@@ -794,12 +794,18 @@ function SemiCompanyPanel({ step }) {
 
       {/* 단계 설명 */}
       <div style={{
-        padding: '10px 16px', fontSize: 12,
-        color: 'var(--text-secondary)',
+        padding: '12px 18px 14px',
         background: 'rgba(255,255,255,0.02)',
-        borderBottom: '1px solid var(--border)', lineHeight: 1.7,
+        borderBottom: '1px solid var(--border)',
       }}>
-        {step.detail}
+        {(Array.isArray(step.detail) ? step.detail : [step.detail]).map((para, i) => (
+          <p key={i} style={{
+            fontSize: 13, color: 'var(--text-secondary)',
+            lineHeight: 1.75, margin: i === 0 ? 0 : '10px 0 0',
+          }}>
+            {para}
+          </p>
+        ))}
       </div>
 
       {/* Top 10 그리드 */}

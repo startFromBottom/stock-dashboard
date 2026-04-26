@@ -12,7 +12,11 @@ export const SEMI_CHAIN = [
     icon: '⛏️', name: '실리콘 원자재', shortName: '원자재',
     desc: '규석·폴리실리콘·웨이퍼 원료 채굴·정제',
     color: { bg: '#1a0f05', bgA: '#3a2410', bd: '#b45309', bdA: '#fbbf24', tx: '#fcd34d', txA: '#fef9c3' },
-    detail: '모래(SiO₂)에서 순도 99.9999999% 폴리실리콘을 정제. 중국이 글로벌 폴리실리콘의 80%+ 공급. 웨이퍼 형태로 가공 후 팹에 입고.',
+    detail: [
+      '반도체 칩은 결국 모래에서 시작합니다. 규석(SiO₂)을 고온의 아크로에서 환원하면 야금급 실리콘(MG-Si, 순도 98%)이 만들어지고, 이를 지멘스(Siemens) 공정 등으로 반복 정제해 9N(99.9999999%) 이상의 폴리실리콘을 얻습니다. 불순물이 ppb 이하여야 트랜지스터가 정상적으로 동작합니다.',
+      '이 폴리실리콘을 초크랄스키(CZ) 공정으로 녹인 뒤 씨앗 결정(seed crystal)을 천천히 인상·회전시켜 지름 300mm, 길이 1~2m짜리 단결정 실리콘 잉곳을 키웁니다. 잉곳을 다이아몬드 와이어로 얇게 썰어(슬라이싱) 웨이퍼를 만들고, 연마·에칭·세정을 거쳐 나노미터 수준의 평탄도로 마무리합니다.',
+      '공급망 관점에서 폴리실리콘은 중국(GCL·Tongwei 등)이 전 세계의 80%+ 이상을 공급하고 있어 지정학적 리스크가 큽니다. 반면 고순도 반도체급 웨이퍼(300mm)는 신에츠·Sumco(일본) 두 회사가 글로벌 점유율 50%+ 이상을 과점합니다. AI 반도체 수요 급증으로 웨이퍼 공급 부족이 2026년까지 이어질 전망입니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'Shin-Etsu Chemical', ticker: 'TYO:4063', mktcap: '~¥7조',      detail: '실리콘 웨이퍼 글로벌 1위(30%) + 폴리실리콘 — 300mm 웨이퍼 최대 공급사', ir: 'https://www.shinetsu.co.jp/en/ir/', news: 'https://www.shinetsu.co.jp/en/news/', x: 'https://x.com/search?q=Shin-Etsu+Chemical+wafer' },
       { rank: 2,  name: 'Sumco',              ticker: 'TYO:3436', mktcap: '~¥5000억',   detail: '실리콘 웨이퍼 글로벌 2위(26%) — 300mm 웨이퍼, AI 반도체 수요로 2026년 캐파 증설', ir: 'https://www.sumcosi.com/english/ir/', news: 'https://www.sumcosi.com/english/news/', x: 'https://x.com/search?q=Sumco+silicon+wafer' },
@@ -34,7 +38,11 @@ export const SEMI_CHAIN = [
     icon: '🧪', name: '소재/화학', shortName: '소재',
     desc: '포토레지스트·CMP 슬러리·특수가스·타깃재',
     color: { bg: '#0f1a0a', bgA: '#1a3010', bd: '#16a34a', bdA: '#4ade80', tx: '#86efac', txA: '#dcfce7' },
-    detail: '포토레지스트(PR), CMP 슬러리·패드, 특수가스(HF·WF₆·NF₃), ALD 전구체, 스퍼터 타깃 등. 일본이 핵심 소재 70~90% 과점.',
+    detail: [
+      '반도체 공정에는 수백 종의 특수 소재가 필요합니다. 크게 ① 포토레지스트(PR) — 빛에 반응해 회로 패턴을 형성하는 감광 소재, ② CMP 슬러리/패드 — 웨이퍼 표면을 원자 수준으로 평탄화하는 연마재, ③ 특수 공정가스(HF·NF₃·WF₆·SiH₄) — 식각·세정·증착에 쓰이는 초고순도 가스, ④ ALD 전구체 — 게이트 산화막·커패시터 유전막 형성용 기체 원료, ⑤ 스퍼터 타깃 — 금속 배선막 형성용 고순도 금속판으로 구성됩니다.',
+      '이 중 EUV 포토레지스트는 일본 JSR·TOK·신에츠 3사가 사실상 독점합니다. 2019년 일본의 대한국 수출규제 품목(불화수소·포토레지스트·불화 폴리이미드)이 바로 이 소재들이었고, 한국 반도체 업계가 공급망 다변화에 나서는 계기가 됐습니다. EUV용 PR은 분자 설계부터 정밀하게 제어해야 해 기술 진입장벽이 매우 높습니다.',
+      '소재 기업은 장비사·파운드리에 비해 주목도는 낮지만, 특정 소재를 대체하기 어렵기 때문에 한 번 공급 승인(Qualification)을 받으면 교체가 거의 일어나지 않습니다. 수십 년에 걸쳐 쌓인 배합·정제 노하우가 핵심 해자입니다. 2nm 이하 공정으로 갈수록 소재 사양이 더 엄격해져 기존 공급사의 과점이 강화되는 구조입니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'Shin-Etsu Chemical', ticker: 'TYO:4063', mktcap: '~¥7조',    detail: 'PR·실리콘 소재·포토마스크용 석영 — 포토레지스트 3위, 웨이퍼·실리콘 소재 다각화', ir: 'https://www.shinetsu.co.jp/en/ir/', news: 'https://www.shinetsu.co.jp/en/news/', x: 'https://x.com/search?q=Shin-Etsu+semiconductor+materials' },
       { rank: 2,  name: 'JSR',               ticker: 'Private',  mktcap: '비상장(JIC)', detail: 'EUV 포토레지스트 세계 1위 — 일본 정부 주도 JIC 인수, 전략 소재 국유화', ir: 'https://www.jsr.co.jp/jsr_e/ir/', news: 'https://www.jsr.co.jp/jsr_e/news/', x: 'https://x.com/search?q=JSR+EUV+photoresist' },
@@ -58,7 +66,11 @@ export const SEMI_CHAIN = [
     icon: '🔦', name: '노광 장비', shortName: '노광',
     desc: 'EUV·ArF 노광기 — 회로 패턴을 웨이퍼에 전사',
     color: { bg: '#1a0020', bgA: '#35004a', bd: '#9333ea', bdA: '#d946ef', tx: '#e879f9', txA: '#fae8ff' },
-    detail: 'EUV(극자외선) 노광기는 ASML이 세계 유일 공급사. 2nm 이하 공정은 High-NA EUV 필수. 장비 1대 가격 약 4000억 원.',
+    detail: [
+      '노광(Lithography)은 반도체 공정의 핵심 단계입니다. 포토레지스트(PR)가 코팅된 웨이퍼 위에 강한 빛을 쏴서 회로 패턴이 그려진 마스크(레티클)의 모양을 찍어 내는 과정입니다. 마치 필름 카메라로 사진을 찍는 것과 같은 원리지만, 해상도가 수 나노미터 수준으로 극도로 정밀합니다.',
+      '핵심은 파장(λ)이 짧을수록 더 작은 패턴을 만들 수 있다는 점입니다. 기존 ArF 레이저(193nm)는 물을 렌즈와 웨이퍼 사이에 채우는 "액침(Immersion)" 방식과 여러 번 겹쳐 찍는 "멀티 패터닝"으로 10nm대까지 연장했지만, 7nm 이하부터는 파장 13.5nm의 EUV(극자외선) 노광이 필수입니다. EUV는 공기 중에서도 흡수되기 때문에 장비 내부를 진공으로 유지하고, CO₂ 레이저로 주석 플라즈마를 만들어 빛을 발생시키는 복잡한 구조입니다.',
+      'ASML은 EUV 노광기를 전 세계에서 유일하게 양산할 수 있는 회사입니다. 장비 1대 가격이 약 3,000~4,000억 원이고, 연간 생산 가능 수량이 60대 내외로 제한돼 있어 TSMC·삼성·인텔이 수년치 물량을 선금 지불하고 대기합니다. 차세대인 High-NA EUV(NA 0.55)는 장비 1대 가격이 약 4,500억 원이며, 2nm 이하 공정에 필수입니다. ASML 없이는 첨단 반도체 공정 자체가 불가능하다는 점에서, 이 회사는 전체 반도체 산업의 가장 중요한 병목입니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'ASML',           ticker: 'ASML',      mktcap: '~$2800억', detail: 'EUV 노광기 세계 유일 공급사 — High-NA EUV(TWINSCAN EXE:5200) 2024 출하, 2nm 이하 필수. 연간 생산 60대 한계', ir: 'https://investor.asml.com', news: 'https://www.asml.com/en/news', x: 'https://x.com/search?q=ASML+EUV+High-NA+2026' },
       { rank: 2,  name: 'Nikon',          ticker: 'TYO:7731',  mktcap: '~¥5000억', detail: 'ArF 액침 노광기 2위 — EUV 시장 탈락 후 ArF/i-line 틈새·성숙공정 공략', ir: 'https://www.nikon.com/en/ir/', news: 'https://www.nikon.com/en/news/', x: 'https://x.com/search?q=Nikon+ArF+lithography+semiconductor' },
@@ -80,7 +92,11 @@ export const SEMI_CHAIN = [
     icon: '🧱', name: '증착 장비', shortName: '증착',
     desc: 'CVD·ALD·PVD — 박막 적층 공정 장비',
     color: { bg: '#001a0f', bgA: '#003020', bd: '#059669', bdA: '#34d399', tx: '#6ee7b7', txA: '#d1fae5' },
-    detail: '화학기상증착(CVD), 원자층증착(ALD), 물리기상증착(PVD)으로 절연막·금속막·고유전막을 웨이퍼에 쌓는 공정. Applied Materials·Lam·TEL 과점.',
+    detail: [
+      '증착(Deposition)은 웨이퍼 위에 얇은 박막을 쌓는 공정입니다. 트랜지스터·배선·절연막 등 반도체의 모든 층이 이 공정으로 만들어집니다. 크게 세 가지 방식이 있습니다. ① CVD(화학기상증착): 실란(SiH₄)·TEOS 같은 기체 반응물을 고온 또는 플라즈마로 분해해 절연막(SiO₂·Si₃N₄)이나 폴리실리콘을 웨이퍼에 입힙니다. ② ALD(원자층증착): 전구체 가스를 한 번에 한 층씩 반응시켜 원자 단위의 두께 정밀도로 박막을 형성합니다. ③ PVD(물리기상증착·스퍼터링): 아르곤 이온으로 금속 타깃을 두드려 원자를 떼어내 금속 배선 씨드층을 입힙니다.',
+      '공정이 미세해질수록 ALD의 중요성이 급격히 커집니다. FinFET·GAA 구조의 게이트 산화막(HfO₂)은 두께가 불과 1~2nm 수준이어서 ALD 없이는 균일하게 형성할 수 없습니다. DRAM의 커패시터 유전막도 마찬가지입니다. Applied Materials와 Lam Research가 CVD/ALD 장비 시장을 양분하고, ASM International은 ALD 단일 분야에서 35% 이상의 점유율로 특화돼 있습니다.',
+      '투자 관점에서 증착 장비 시장은 전공정 장비 시장의 약 25~30%를 차지하는 최대 세그먼트입니다. 3D NAND 층수 증가(현재 200~300층)와 DRAM의 고종횡비 커패시터, GAA 트랜지스터 도입이 ALD 장비 수요를 구조적으로 끌어올리고 있습니다. Applied Materials(AMAT)의 경우 매출의 절반 이상이 증착 장비에서 나옵니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'Applied Materials', ticker: 'AMAT',     mktcap: '~$1400억', detail: '증착 장비 글로벌 1위 — CVD·PVD·ALD·에피택시 풀라인업, 매출의 절반 이상이 증착', ir: 'https://ir.appliedmaterials.com', news: 'https://www.appliedmaterials.com/us/en/blogs.html', x: 'https://x.com/search?q=Applied+Materials+CVD+ALD+2026' },
       { rank: 2,  name: 'Lam Research',     ticker: 'LRCX',     mktcap: '~$900억',  detail: 'ALD·CVD 강자 — VECTOR ALD, 3D NAND용 고종횡비 증착 시장 선도', ir: 'https://investor.lamresearch.com', news: 'https://www.lamresearch.com/blog/', x: 'https://x.com/search?q=Lam+Research+ALD+CVD+2026' },
@@ -102,7 +118,11 @@ export const SEMI_CHAIN = [
     icon: '⚡', name: '식각 장비', shortName: '식각',
     desc: 'Dry/Wet Etch — 불필요한 박막 제거 공정',
     color: { bg: '#1a0505', bgA: '#3a1010', bd: '#dc2626', bdA: '#f87171', tx: '#fca5a5', txA: '#fee2e2' },
-    detail: '플라즈마 식각(Dry Etch)으로 회로 패턴 구현. 3D NAND의 고종횡비(HARC) 식각, GAA 핀구조 식각이 기술 난관. Lam·AMAT 양강 구도.',
+    detail: [
+      '식각(Etching)은 증착과 정반대로, 웨이퍼 표면의 불필요한 박막을 선택적으로 제거해 회로 패턴을 "조각"하는 공정입니다. 노광으로 패턴이 인화된 포토레지스트(PR)가 마스크 역할을 하고, 그 아래에 노출된 부분만 식각해 회로를 형성합니다. 크게 두 가지 방식이 있습니다. ① 건식 식각(Dry Etch / RIE): CF₄·Cl₂ 가스를 플라즈마로 이온화해 웨이퍼에 수직으로 충돌시켜 정밀하게 파냅니다. 이방성(수직 방향)이 우수해 미세 패턴 구현에 필수입니다. ② 습식 식각(Wet Etch): 화학 용액(HF·KOH)에 담가 등방성으로 제거합니다. 성숙 공정에서 빠른 대면적 처리에 활용됩니다.',
+      '3D NAND와 GAA 시대가 되면서 식각 난도가 급격히 높아졌습니다. 3D NAND 200~300층 구조에서는 직경 80nm에 깊이 8μm 이상인 채널홀을 수직으로 뚫어야 합니다(종횡비 100:1 이상). 조금이라도 기울어지거나 꼬이면 불량이 됩니다. GAA 트랜지스터에서는 나노시트 사이의 희생층을 원자 2~3개 두께로 선택적으로 제거하는 "나노시트 릴리스" 공정이 필수입니다. 이런 고종횡비 식각은 Lam Research의 독보적 기술 영역입니다.',
+      'Lam Research(LRCX)는 전 세계 건식 식각 장비 시장의 약 45%를 점유하며, 특히 3D NAND 식각에서는 점유율이 훨씬 높습니다. Applied Materials(AMAT)가 2위로 추격 중이며, Tokyo Electron(TEL)이 3위입니다. 식각 장비는 한 번 검증(Qualification)을 받으면 공정 안정성 이유로 교체가 극히 드물기 때문에, 선두권 진입 자체가 중요한 해자입니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'Lam Research',       ticker: 'LRCX',     mktcap: '~$900억',  detail: '식각 장비 글로벌 1위(~45%) — HARC 식각, MERIE·CCP·ICP, 3D NAND 식각 압도적 1위', ir: 'https://investor.lamresearch.com', news: 'https://www.lamresearch.com/blog/', x: 'https://x.com/search?q=Lam+Research+etch+3D+NAND' },
       { rank: 2,  name: 'Applied Materials',  ticker: 'AMAT',     mktcap: '~$1400억', detail: '식각 장비 2위 — Sym3 식각 챔버, 로직 GAA 핀 패터닝 식각 강화, Selectra Etch', ir: 'https://ir.appliedmaterials.com', news: 'https://www.appliedmaterials.com/us/en/blogs.html', x: 'https://x.com/search?q=Applied+Materials+etch+GAA+2026' },
@@ -124,7 +144,11 @@ export const SEMI_CHAIN = [
     icon: '🧹', name: '세정 장비', shortName: '세정',
     desc: 'Wet Clean·매엽식 세정 — 파티클·잔류물 제거',
     color: { bg: '#001520', bgA: '#002840', bd: '#0284c7', bdA: '#38bdf8', tx: '#7dd3fc', txA: '#e0f2fe' },
-    detail: '웨이퍼 표면 파티클·금속 오염·PR 잔류물 제거. 한 장 씩 처리하는 매엽식(Single-Wafer)이 주류. SCREEN·TEL이 양강 구도.',
+    detail: [
+      '반도체 전공정에서 웨이퍼는 수백 단계의 공정을 거치는 동안 끊임없이 세정됩니다. 노광 전·후, 식각 전·후, 증착 전·후 등 각 단계 사이사이에 파티클(먼지), 금속 이온 오염, 포토레지스트 잔류물, 산화막 등을 제거하는 세정이 이루어집니다. 반도체 팹에서 세정은 전체 공정 단계의 30~40%를 차지할 만큼 빈번합니다.',
+      '세정 방식은 크게 두 가지입니다. ① 습식 세정(Wet Clean): 화학 약액에 웨이퍼를 담그거나 약액을 뿌려 오염물을 제거합니다. 대표적으로 NH₄OH+H₂O₂ 혼합액(SC-1)으로 유기물·파티클을 제거하고, HCl+H₂O₂(SC-2)로 금속 이온을 제거하는 RCA 세정 시퀀스가 70년대부터 쓰이고 있습니다. ② 매엽식 세정(Single-Wafer Clean): 웨이퍼 한 장씩 스핀 방식으로 세정하는 방식으로, 교차 오염이 없고 정밀 제어가 가능해 첨단 공정의 주류가 됐습니다. SCREEN Holdings의 SU-3300 시리즈가 대표 장비입니다.',
+      '세정은 "소모적" 공정처럼 보이지만, 2nm 이하 첨단 공정에서 단 하나의 파티클이 수십만 원짜리 칩을 불량으로 만들기 때문에 수율 관리의 핵심입니다. EUV 공정에서는 극자외선이 오염에 극도로 민감해 세정 요구 수준이 더 높아졌습니다. SCREEN Holdings(일본)가 매엽식 세정 장비 시장의 약 40%를, Tokyo Electron이 2위를 차지하며 양강 구도를 형성합니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'SCREEN Holdings',    ticker: 'TYO:7735', mktcap: '~¥8000억', detail: '매엽식 세정 장비 글로벌 1위(~40%) — SU-3300, AI칩 7/5/3nm 공정 세정 장비 핵심 공급사', ir: 'https://www.screen.co.jp/eng/ir/', news: 'https://www.screen.co.jp/eng/news/', x: 'https://x.com/search?q=SCREEN+Holdings+wafer+clean+2026' },
       { rank: 2,  name: 'Tokyo Electron',     ticker: 'TYO:8035', mktcap: '~¥15조',   detail: '세정 장비 2위 — CERTAS Single Wafer Clean, EUV PR 세정, 코터·현상기와 패키지 납품', ir: 'https://www.tel.com/ir/', news: 'https://www.tel.com/news/', x: 'https://x.com/search?q=Tokyo+Electron+wafer+clean' },
@@ -146,7 +170,11 @@ export const SEMI_CHAIN = [
     icon: '🔍', name: '계측/검사', shortName: '계측',
     desc: 'SEM·결함검사·오버레이 계측 — 수율 관리',
     color: { bg: '#0a0a1a', bgA: '#15153a', bd: '#4f46e5', bdA: '#818cf8', tx: '#a5b4fc', txA: '#e0e7ff' },
-    detail: '웨이퍼 결함 검출(KLA Surfscan), CD·오버레이 계측, SEM 검사로 수율을 관리. AI칩 2nm에서 결함 허용 기준이 원자 단위로 엄격해짐.',
+    detail: [
+      '계측·검사(Metrology & Inspection)는 웨이퍼가 공정 목표대로 만들어지고 있는지를 실시간으로 확인하고, 결함을 찾아내는 공정입니다. 아무리 좋은 장비를 써도 불량이 생기기 때문에, 어느 단계에서 어떤 결함이 발생했는지 빠르게 파악하고 피드백을 주어야 수율을 높일 수 있습니다. 계측·검사 장비가 없으면 공정 제어 자체가 불가능합니다.',
+      '주요 계측·검사 영역은 세 가지입니다. ① 결함 검사(Defect Inspection): 밝은장/어두운장 광학 검사(AOI)나 전자빔(e-beam)으로 웨이퍼 전면을 스캔해 파티클·패턴 결함·스크래치를 검출합니다. KLA의 Surfscan·Puma 시리즈가 독보적입니다. ② 임계치수·오버레이 계측(CD/Overlay Metrology): 각 층의 패턴 선폭(CD)이 목표값에 맞는지, 여러 층의 패턴이 얼마나 정확히 겹쳐졌는지(Overlay)를 nm 이하 정밀도로 측정합니다. ③ 박막 두께·조성 계측: X선(XRR·XRF)이나 타원계측법(Ellipsometry)으로 증착된 막의 두께·굴절률·조성을 확인합니다.',
+      'KLA(KLAC)가 이 시장에서 50% 이상의 압도적 점유율을 차지하며 사실상 독점에 가깝습니다. 특히 EUV 포토마스크 결함 검사 장비는 일본 Lasertec이 세계 유일 공급사로, ASML의 EUV와 함께 2nm 이하 공정의 필수 병목 장비입니다. AI가 공정 데이터 분석에 접목되면서 KLA·Applied Materials의 "AI 기반 수율 제어" 소프트웨어도 핵심 경쟁 영역이 되고 있습니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'KLA',               ticker: 'KLAC',      mktcap: '~$900억',  detail: '계측·검사 장비 독보적 1위(50%+) — Surfscan 결함검출, Archer 오버레이, AI 기반 수율 예측', ir: 'https://investor.kla.com', news: 'https://www.kla.com/company/news-events', x: 'https://x.com/search?q=KLA+inspection+metrology+AI+2026' },
       { rank: 2,  name: 'Applied Materials',  ticker: 'AMAT',      mktcap: '~$1400억', detail: 'e빔 검사·계측 — SEMVision·Enlight 결함분석, AI 기반 공정 제어 통합', ir: 'https://ir.appliedmaterials.com', news: 'https://www.appliedmaterials.com/us/en/blogs.html', x: 'https://x.com/search?q=Applied+Materials+ebeam+inspection' },
@@ -170,7 +198,11 @@ export const SEMI_CHAIN = [
     icon: '📦', name: '패키징 (후공정)', shortName: '패키징',
     desc: '칩렛·2.5D/3D·OSAT 패키징 조립',
     color: { bg: '#1a0f00', bgA: '#3d2200', bd: '#d97706', bdA: '#fbbf24', tx: '#fb923c', txA: '#fed7aa' },
-    detail: '완성된 웨이퍼를 다이싱·플립칩·하이브리드 본딩으로 패키지화. HBM을 위한 2.5D/3D 첨단 패키징과 칩렛 통합이 핵심 트렌드.',
+    detail: [
+      '패키징(후공정)은 전공정을 거쳐 완성된 웨이퍼에서 개별 칩(다이)을 잘라내고, 외부와 연결할 수 있도록 포장하는 과정입니다. 전통적인 패키징은 다이를 리드프레임이나 PCB 기판에 붙이고 금·구리 와이어로 연결한 뒤 수지로 봉지하는 단순한 공정이었지만, AI 시대가 되면서 패키징 자체가 핵심 기술이 됐습니다.',
+      'AI 반도체의 성능 병목이 "칩 내부"에서 "칩 간 연결"로 이동했기 때문입니다. GPU와 HBM 메모리를 같은 패키지 안에 넣어 초고속으로 연결하는 "2.5D/3D 첨단 패키징"이 핵심입니다. TSMC의 CoWoS(Chip-on-Wafer-on-Substrate)는 실리콘 인터포저 위에 GPU와 HBM을 나란히 배치해 기존 PCB 대비 수십 배의 대역폭을 제공합니다. NVIDIA H100·B200이 모두 이 방식을 씁니다. 더 나아가 다이를 수직으로 쌓는 3D 적층(SoIC, X-Cube)도 상용화 단계입니다.',
+      '또 다른 트렌드는 "칩렛(Chiplet)"입니다. 단일 대형 칩(모놀리식) 대신 기능별로 작은 칩을 만들어 조합하면 각 부분을 최적 공정으로 따로 제조할 수 있어 수율과 비용이 개선됩니다. AMD의 Zen 시리즈, Intel의 Meteor Lake가 대표 사례입니다. 패키징 시장은 전통 OSAT(아웃소싱 패키징·테스트)인 ASE·Amkor 외에, TSMC·삼성도 첨단 패키징을 직접 수행하며 경쟁이 심화되고 있습니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'TSMC',              ticker: 'TSM',       mktcap: '~$8800억', detail: 'CoWoS·SoIC 첨단 패키징 — HBM+GPU 인터포저 통합, CoWoS-L 2026 확대', ir: 'https://investor.tsmc.com', news: 'https://www.tsmc.com/english/news', x: 'https://x.com/search?q=TSMC+CoWoS+SoIC+packaging+2026' },
       { rank: 2,  name: 'ASE Group',         ticker: 'ASX',       mktcap: '~$170억',  detail: 'OSAT 글로벌 1위(~30%) — SiP·Fan-Out·2.5D, AI·5G 수혜 최대', ir: 'https://ir.aseglobal.com', news: 'https://www.aseglobal.com/en/news/', x: 'https://x.com/search?q=ASE+Group+OSAT+packaging+AI' },
@@ -192,7 +224,11 @@ export const SEMI_CHAIN = [
     icon: '🔬', name: '테스트/검사', shortName: '테스트',
     desc: 'EDS·최종 테스트·번인·수율 검증',
     color: { bg: '#0f172a', bgA: '#1e3a5f', bd: '#0369a1', bdA: '#38bdf8', tx: '#7dd3fc', txA: '#e0f2fe' },
-    detail: '전공정 완료 후 웨이퍼 레벨(EDS)과 패키징 후 최종 테스트로 불량 칩 선별. AI칩의 고성능·고전력 테스트 수요 급증.',
+    detail: [
+      '반도체 테스트는 크게 두 단계로 나뉩니다. ① EDS(Electrical Die Sorting, 웨이퍼 프로브 테스트): 패키징 전에 웨이퍼 상태에서 각 다이에 수천 개의 미세 탐침(프로브 카드)을 접촉시켜 전기적으로 불량인 다이를 미리 걸러냅니다. 불량 다이에 잉크를 찍어 표시하고 패키징에서 제외합니다. ② 최종 테스트(Final Test): 패키징이 완료된 칩을 ATE(자동 테스트 장비)에 장착해 모든 기능과 전기적 특성을 검증합니다. 번인(Burn-in) 테스트에서는 고온·고전압 스트레스를 가해 초기 불량(infant mortality)을 미리 제거합니다.',
+      'AI 칩 시대가 되면서 테스트 난도와 비용이 폭발적으로 증가했습니다. H100 같은 AI GPU는 다이 면적이 800mm²를 넘고, 수만 개의 핀을 동시에 테스트해야 합니다. 또한 AI 연산의 정확성을 보장하기 위한 기능 검증 패턴이 매우 복잡해졌습니다. HBM 메모리는 적층 후 전체 스택을 한 번에 테스트해야 하는데, 이를 위한 극저온 테스트나 고전류 테스트 장비 수요도 급증하고 있습니다.',
+      'Teradyne(TER)과 Advantest(TYO:6857)가 ATE 시장을 양분하며, AI칩 테스트 수요 급증의 최대 수혜주로 꼽힙니다. 프로브 카드는 FormFactor(FORM)가 1위입니다. 반도체 공정의 고도화로 테스트 시간이 길어지고 장비 단가가 올라가면서, 테스트 비용이 전체 제조 원가의 10~30%를 차지하는 경우도 생겼습니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'Teradyne',        ticker: 'TER',       mktcap: '~$200억',  detail: 'ATE 글로벌 1위 — UltraFLEX·Magnum AI SoC 테스터, AI 가속기·HBM 테스트 수요 폭증', ir: 'https://investors.teradyne.com', news: 'https://www.teradyne.com/about-teradyne/news/', x: 'https://x.com/search?q=Teradyne+ATE+AI+chip+test' },
       { rank: 2,  name: 'Advantest',       ticker: 'TYO:6857',  mktcap: '~¥3조',   detail: 'ATE 글로벌 2위 — V93000 SoC·T5503 메모리 테스터, HBM·AI칩 수주 2025~2026 폭증', ir: 'https://www.advantest.com/investors/', news: 'https://www.advantest.com/news/', x: 'https://x.com/search?q=Advantest+ATE+HBM+AI+2026' },
@@ -214,7 +250,11 @@ export const SEMI_CHAIN = [
     icon: '🚚', name: '유통/판매', shortName: '유통',
     desc: '반도체 유통·전자부품 디스트리뷰터·ODM',
     color: { bg: '#0f0a1a', bgA: '#1a1030', bd: '#6d28d9', bdA: '#c084fc', tx: '#d8b4fe', txA: '#f3e8ff' },
-    detail: '팹리스·IDM이 생산한 반도체를 OEM/ODM에 공급. Arrow·Avnet이 글로벌 유통, Foxconn·Quanta가 AI 서버 조립·납품.',
+    detail: [
+      '유통·판매는 완성된 반도체가 최종 제품에 탑재되기까지의 마지막 단계입니다. 크게 두 경로가 있습니다. ① 직접 판매(Direct): NVIDIA·AMD·Qualcomm 같은 팹리스 기업이 대형 고객(구글·메타·MS 등)에게 직접 납품합니다. AI 가속기처럼 고가의 대량 주문은 대부분 이 방식입니다. ② 유통사(Distributor)를 통한 판매: Arrow·Avnet·WPG Holdings 같은 중간 유통사가 수만 종의 부품을 재고로 보유하고 중소 고객사에 소량·긴급 납품합니다. 단순 부품 공급을 넘어 설계 지원, 공급망 관리 서비스까지 제공합니다.',
+      'AI 서버 공급망에서 가장 주목받는 플레이어는 EMS/ODM 기업들입니다. Foxconn(Hon Hai)·Quanta·Wistron 등 대만 ODM은 NVIDIA로부터 GPU·HBM을 공급받아 AI 서버(HGX·DGX 시스템)를 조립해 구글·MS·아마존·메타 데이터센터에 납품합니다. GB200 NVL72 랙 시스템 한 대당 가격이 수십억 원에 달하며, 이들의 AI 서버 매출이 2025~2026년 급격히 성장하고 있습니다.',
+      '스팟 마켓(현물 시장)도 중요한 역할을 합니다. 공급 부족기에는 스팟 가격이 계약가 대비 수 배로 뛰고(2021~2022년 차량용 반도체 대란), 공급 과잉기에는 폭락합니다. DRAM·NAND 현물 가격 지수는 메모리 업황의 선행 지표로 활용됩니다. 유통 단계 기업들은 재고 사이클 관리와 수요 예측이 수익성을 결정하는 핵심 역량입니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'Foxconn (Hon Hai)', ticker: '2317.TW',  mktcap: '~NT$3조',    detail: 'EMS·ODM 글로벌 1위 — NVIDIA AI 서버 조립·공급, GB200 NVL72 랙 주요 생산자', ir: 'https://www.honhai.com/en-us/investor-relations', news: 'https://www.honhai.com/en-us/press-center', x: 'https://x.com/search?q=Foxconn+NVIDIA+AI+server+2026' },
       { rank: 2,  name: 'Quanta Computer',  ticker: '2382.TW',   mktcap: '~NT$5000억', detail: 'AI 서버 ODM 1위 — NVIDIA HGX 플랫폼 AI 서버 최대 조립사, 클라우드 대량 공급', ir: 'https://www.quantatw.com/quanta/english/investors/', news: 'https://www.quantatw.com/quanta/english/media/', x: 'https://x.com/search?q=Quanta+Computer+AI+server+ODM+2026' },
@@ -250,7 +290,11 @@ export const INDUSTRY_PLAYERS = [
     role: '설계 도구 & IP',
     desc: '팹리스가 칩을 설계할 때 사용하는 소프트웨어(EDA)와 회로 IP를 제공. 반도체 산업의 지식재산 기반.',
     color: { bg: '#0c1a3a', bgA: '#1a306b', bd: '#2563eb', bdA: '#60a5fa', tx: '#93c5fd', txA: '#dbeafe' },
-    detail: 'EDA(Electronic Design Automation) 툴과 CPU·GPU 코어 IP로 팹리스 설계를 지원. 설계 없이 반도체 없음. Synopsys·Cadence가 과점.',
+    detail: [
+      'EDA(Electronic Design Automation)는 수십억 개의 트랜지스터로 이루어진 현대 반도체 칩을 인간이 설계할 수 있도록 자동화해주는 소프트웨어 툴체인입니다. RTL(레지스터 전송 레벨) 코드 작성 → 논리 합성(RTL을 게이트 수준으로 변환) → 배치·배선(P&R, 수십억 개 게이트를 칩 위에 배열) → 타이밍·전력 분석 → 설계 규칙 검증(DRC/LVS) → 마스크 데이터 생성까지 전 과정이 EDA 소프트웨어 없이는 불가능합니다. TSMC의 2nm 공정으로 칩을 설계하려면 수천억 원의 EDA 라이선스가 필요합니다.',
+      'IP(Intellectual Property) 코어는 EDA와 함께 팹리스 생태계의 핵심입니다. ARM이 CPU 코어 IP 시장의 90% 이상을 독점하며, 스마트폰부터 AI 서버까지 거의 모든 칩에 ARM 코어가 들어갑니다. 칩 개발사는 CPU·PCIe·USB·DDR 컨트롤러 같은 검증된 IP 블록을 사 와서 조합해 SoC를 완성합니다. 처음부터 다 만드는 것보다 개발 기간과 비용을 대폭 줄일 수 있습니다.',
+      'Synopsys(SNPS)와 Cadence(CDNS)가 EDA 시장을 사실상 양분(합산 점유율 80%+)하며, 이 두 회사가 없으면 첨단 반도체 설계 자체가 멈춥니다. 미국 정부는 이들을 통한 수출 통제로 중국의 첨단 칩 개발을 제한하고 있습니다. 최근에는 EDA 툴 자체에 AI를 접목해 설계 최적화를 자동화하는 "AI-driven EDA"가 빠르게 성장하고 있습니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'Synopsys',        ticker: 'SNPS',      mktcap: '~$800억',    detail: 'EDA 글로벌 1위 — VCS 시뮬레이터·Fusion Compiler, Ansys 인수로 시스템 시뮬레이션 통합', ir: 'https://investor.synopsys.com', news: 'https://news.synopsys.com', x: 'https://x.com/search?q=Synopsys+EDA+AI+chip' },
       { rank: 2,  name: 'Cadence',         ticker: 'CDNS',      mktcap: '~$700억',    detail: 'EDA 글로벌 2위 — Genus·Innovus PnR, AI 기반 Cerebrus 설계 최적화 툴', ir: 'https://investor.cadence.com', news: 'https://www.cadence.com/en_US/home/company/newsroom.html', x: 'https://x.com/search?q=Cadence+EDA+AI+design' },
@@ -272,7 +316,11 @@ export const INDUSTRY_PLAYERS = [
     role: '칩 설계 전문',
     desc: '자체 공장 없이 칩 설계만 담당. EDA 툴로 설계 후 파운드리에 위탁 생산. NVIDIA·Qualcomm·AMD 등이 대표적.',
     color: { bg: '#0a1f0a', bgA: '#163a16', bd: '#16a34a', bdA: '#4ade80', tx: '#86efac', txA: '#dcfce7' },
-    detail: '자체 팹 없이 설계만 하는 기업. NVIDIA·Qualcomm·AMD·Apple 등이 대표적. TSMC 등 파운드리에 생산 위탁.',
+    detail: [
+      '팹리스(Fabless)는 "공장(Fab) 없는(Less)" 칩 설계 전문 기업입니다. 1980년대까지 반도체 회사는 설계와 생산을 모두 자체적으로 해야 했습니다(IDM, Integrated Device Manufacturer). 그러나 공장 투자 비용이 조 단위로 치솟자, TSMC가 1987년 "우리가 대신 만들어 줄게"라는 순수 파운드리 모델을 창시했습니다. 이후 설계만 집중하는 팹리스 기업이 폭발적으로 늘어났습니다.',
+      'EDA 툴로 회로를 설계하고, ARM IP를 사다가 조합하고, TSMC에 생산을 맡기는 구조 덕분에 NVIDIA는 제조 설비 없이 세계 최고의 AI 칩을 만들 수 있습니다. 팹리스의 핵심 경쟁력은 반도체 아키텍처 설계 능력과 소프트웨어 생태계입니다. NVIDIA의 CUDA 플랫폼, Qualcomm의 Snapdragon 생태계, Apple Silicon의 macOS/iOS 최적화가 대표적입니다.',
+      '현재 팹리스 시장은 AI 혁명의 최대 수혜 영역입니다. NVIDIA는 AI GPU 시장의 80%+를 장악하며 시가총액 3조 달러를 넘어섰습니다. 구글(TPU)·아마존(Trainium·Inferentia)·메타(MTIA)·마이크로소프트(Maia) 같은 빅테크도 자체 AI 칩 개발에 수십조 원을 투자하며 팹리스 대열에 합류하고 있습니다. 이들 커스텀 AI칩(ASIC)의 설계는 Broadcom·Marvell 같은 전문 설계 서비스 팹리스가 지원합니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'NVIDIA',            ticker: 'NVDA',      mktcap: '~$2.7조',   detail: 'AI GPU 시장 80%+ — Blackwell B200·Rubin R100 로드맵, DGX·HGX 서버 시스템도 설계', ir: 'https://investor.nvidia.com', news: 'https://nvidianews.nvidia.com', x: 'https://x.com/search?q=NVIDIA+Rubin+GPU+2026' },
       { rank: 2,  name: 'Broadcom',          ticker: 'AVGO',      mktcap: '~$1.0조',   detail: 'AI ASIC+네트워킹+스토리지 — Meta·Google 커스텀 AI칩 설계, 2nm TPU 차기 수주', ir: 'https://investors.broadcom.com', news: 'https://newsroom.broadcom.com', x: 'https://x.com/search?q=Broadcom+AI+ASIC+2026' },
@@ -294,7 +342,11 @@ export const INDUSTRY_PLAYERS = [
     role: '위탁 생산',
     desc: '팹리스 설계도를 받아 전공정 장비로 실제 칩을 생산하는 기업. TSMC·삼성·인텔이 핵심 플레이어.',
     color: { bg: '#001a1a', bgA: '#003030', bd: '#0891b2', bdA: '#22d3ee', tx: '#67e8f9', txA: '#cffafe' },
-    detail: '팹리스의 설계를 받아 실제 칩을 생산. TSMC가 2nm 선단공정 독점, 삼성·인텔이 추격 중. 노광~계측 장비 모두 이 단계로 집결.',
+    detail: [
+      '파운드리(Foundry)는 팹리스로부터 설계 도면(GDS 파일)을 받아 실제 웨이퍼에 칩을 인화하는 수탁 제조 기업입니다. 앞서 설명한 노광→증착→식각→세정→계측의 전공정 장비들이 모두 파운드리의 팹(Fab) 안에 모여있습니다. 파운드리의 수익성은 공정 미세화(선단 공정)와 수율에 달려 있습니다. 동일한 웨이퍼에서 더 많은 칩을 더 높은 수율로 뽑을수록 이익이 늘어납니다.',
+      '파운드리 시장은 TSMC가 60% 이상을 점유하는 독점에 가까운 구조입니다. 특히 5nm 이하 선단 공정에서는 TSMC 점유율이 90%를 넘습니다. TSMC의 2nm(N2) 공정은 2025년 양산을 시작했고, NVIDIA의 Rubin GPU·Apple의 차기 M5 칩이 여기서 만들어집니다. 삼성 파운드리는 세계 최초로 3nm GAA 공정을 양산했지만(2022년), 수율 문제로 주요 팹리스의 신뢰를 잃은 상태로 회복 중입니다.',
+      'TSMC 한 회사에 글로벌 반도체 공급망이 지나치게 의존한다는 지정학적 리스크가 최대 화두입니다. 미국은 CHIPS Act로 애리조나에 TSMC 팹 유치(2nm 공장 2028년 목표), 유럽은 독일에 TSMC 합작법인 설립, 일본은 구마모토에 TSMC 팹(JASM)을 가동하는 등 공급망 분산에 수십조 원을 쏟아붓고 있습니다. 파운드리 경쟁은 단순한 비즈니스를 넘어 국가 안보 차원의 전략 경쟁이 됐습니다.',
+    ],
     candidates: [
       { rank: 1,  name: 'TSMC',             ticker: 'TSM',       mktcap: '~$8800억', detail: '파운드리 글로벌 1위(60%+) — 2nm 양산 2025, 1.6nm(A16) 2026, CoWoS 첨단 패키징, NVIDIA·AMD·Apple 전담', ir: 'https://investor.tsmc.com', news: 'https://www.tsmc.com/english/news', x: 'https://x.com/search?q=TSMC+2nm+AI+chip+2026' },
       { rank: 2,  name: 'Samsung Foundry',  ticker: '005930.KS', mktcap: '~₩300조',  detail: '파운드리 2위(~10%) — GAA SF2 2nm 공정 도전, HBM·파운드리·패키징 수직통합', ir: 'https://www.samsung.com/global/ir', news: 'https://news.samsung.com', x: 'https://x.com/search?q=Samsung+foundry+2nm+GAA+2026' },
