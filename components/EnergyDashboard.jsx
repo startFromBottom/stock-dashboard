@@ -4,7 +4,22 @@ import { useState, useMemo } from 'react';
 import { ENERGY_TYPES, ENERGY_SHARE_SUMMARY } from '@/data/energyCompanies';
 // ENERGY_SHARE_SUMMARY는 DonutChart 내부에서만 사용
 import useMarketCaps from '@/hooks/useMarketCaps';
+import useStockMetrics from '@/hooks/useStockMetrics';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
+
+function getRsiStyle(rsi) {
+  if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
+  if (rsi >= 70) return { color: '#f87171', label: `${rsi}`, badge: '과매수' };
+  if (rsi <= 30) return { color: '#60a5fa', label: `${rsi}`, badge: '과매도' };
+  return { color: '#4ade80', label: `${rsi}`, badge: '중립' };
+}
+function formatVolume(vol) {
+  if (!vol || vol <= 0) return '—';
+  if (vol >= 1_000_000_000) return `${(vol / 1_000_000_000).toFixed(2)}B`;
+  if (vol >= 1_000_000)     return `${(vol / 1_000_000).toFixed(2)}M`;
+  if (vol >= 1_000)         return `${(vol / 1_000).toFixed(1)}K`;
+  return `${vol}`;
+}
 
 /* ══════════════════════════════════════════════════════
    도넛 차트 (전 세계 발전원 비중)
@@ -174,6 +189,7 @@ function EnergyCompanyPanel({ energyType }) {
 
   const tickers = useMemo(() => extractPublicTickers(pool), [energyType.id]); // eslint-disable-line
   const { mktcaps, loading, error, fresh } = useMarketCaps(tickers);
+  const { metrics: stockMetrics, loading: metricsLoading } = useStockMetrics(tickers);
 
   const sortedPool = useMemo(() => {
     const withLive = pool.map(c => {
@@ -222,6 +238,10 @@ function EnergyCompanyPanel({ energyType }) {
         {top10.map((co, idx) => {
           const liveMktcap = co.liveCap ? formatMktcap(co.liveCap) : null;
           const displayRank = idx + 1;
+          const fmpTicker = normalizeTicker(co.ticker);
+          const sm = fmpTicker ? stockMetrics[fmpTicker] : null;
+          const rsiStyle = getRsiStyle(sm?.rsi ?? null);
+          const volStr   = formatVolume(sm?.volume ?? null);
           return (
             <div key={`${co.name}-${idx}`} className="company-card">
               <span className={`rank-badge rank-${displayRank}`}>
@@ -238,6 +258,29 @@ function EnergyCompanyPanel({ energyType }) {
                 {liveMktcap ? (
                   <>{liveMktcap}<span className="mktcap-live-dot" title="실시간">●</span></>
                 ) : co.mktcap}
+              </div>
+              <div className="stock-metrics-row">
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">거래량</span>
+                  <span className="stock-metric-value">
+                    {metricsLoading ? <span className="metrics-loading">…</span> : volStr}
+                  </span>
+                </div>
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">RSI(14)</span>
+                  {metricsLoading ? (
+                    <span className="stock-metric-value metrics-loading">…</span>
+                  ) : (
+                    <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
+                      {rsiStyle.label}
+                      {rsiStyle.badge && (
+                        <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
+                          {rsiStyle.badge}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="company-detail">{co.detail}</div>
               <div className="company-links">

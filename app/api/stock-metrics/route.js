@@ -5,46 +5,64 @@ const metricsCache = new Map();
 const METRICS_TTL  = 15 * 60 * 1000; // 15분
 
 /**
- * Finnhub /quote → 현재 거래량 조회
- * volume 필드: 해당 거래일 누적 거래량
+ * Finnhub /stock/candle (일봉) → 최신 거래량 조회
+ * /quote의 v 필드보다 안정적
  */
 async function fetchVolume(ticker, token) {
   try {
-    const url = `https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(ticker)}&token=${token}`;
-    const res = await fetch(url, { headers: { 'Content-Type': 'application/json' } });
+    const to   = Math.floor(Date.now() / 1000);
+    const from = to - 60 * 60 * 24 * 5; // 최근 5일치 (주말 고려)
+    const url  = `https://finnhub.io/api/v1/stock/candle?symbol=${encodeURIComponent(ticker)}&resolution=D&from=${from}&to=${to}&token=${token}`;
+    const res  = await fetch(url);
     if (!res.ok) return null;
     const json = await res.json();
-    // v = volume (일부 ticker는 없을 수 있음)
-    return typeof json?.v === 'number' && json.v > 0 ? json.v : null;
-  } catch {
+
+    // s: "ok" 여부 확인, v: volume 배열
+    if (json?.s !== 'ok' || !Array.isArray(json?.v) || json.v.length === 0) return null;
+
+    // 마지막(최신) 거래일 거래량
+    const lastVol = json.v[json.v.length - 1];
+    return typeof lastVol === 'number' && lastVol > 0 ? lastVol : null;
+  } catch (e) {
+    console.warn(`[stock-metrics] volume fetch 실패 (${ticker}):`, e.message);
     return null;
   }
 }
 
 /**
  * Finnhub /indicator → RSI(14) 조회
- * resolution: D (일봉), indicator: rsi, timeperiod: 14
  */
 async function fetchRSI(ticker, token) {
   try {
-    // Finnhub indicator API: 최근 일봉 기준 RSI
     const to   = Math.floor(Date.now() / 1000);
-    const from = to - 60 * 60 * 24 * 60; // 60일치 (RSI 계산용)
+    const from = to - 60 * 60 * 24 * 90; // 90일치 (RSI 계산 충분히 확보)
     const url  = `https://finnhub.io/api/v1/indicator?symbol=${encodeURIComponent(ticker)}&resolution=D&from=${from}&to=${to}&indicator=rsi&timeperiod=14&token=${token}`;
-    const res  = await fetch(url, { headers: { 'Content-Type': 'application/json' } });
-    if (!res.ok) return null;
+    const res  = await fetch(url);
+    if (!res.ok) {
+      console.warn(`[stock-metrics] RSI HTTP ${res.status} (${ticker})`);
+      return null;
+    }
     const json = await res.json();
-    // rsi 배열의 마지막 유효값
+
+    // 응답 구조: { rsi: [...], t: [...], s: "ok" }
+    if (json?.s !== 'ok') {
+      console.warn(`[stock-metrics] RSI s != ok (${ticker}):`, json?.s);
+      return null;
+    }
+
     const rsiArr = json?.rsi;
     if (!Array.isArray(rsiArr) || rsiArr.length === 0) return null;
+
     // 뒤에서부터 유효한 숫자 찾기
     for (let i = rsiArr.length - 1; i >= 0; i--) {
-      if (typeof rsiArr[i] === 'number' && !isNaN(rsiArr[i])) {
-        return parseFloat(rsiArr[i].toFixed(2));
+      const v = rsiArr[i];
+      if (typeof v === 'number' && !isNaN(v) && v > 0) {
+        return parseFloat(v.toFixed(2));
       }
     }
     return null;
-  } catch {
+  } catch (e) {
+    console.warn(`[stock-metrics] RSI fetch 실패 (${ticker}):`, e.message);
     return null;
   }
 }
@@ -81,10 +99,10 @@ export async function GET(request) {
     return NextResponse.json(hit, { headers: { 'X-Cache': 'HIT' } });
   }
 
-  // 배치 처리 (Finnhub 무료 플랜: 30 req/s)
+  // 배치 처리 (Finnhub 무료 플랜: 30 req/s, 넉넉히 배치당 250ms 간격)
   const fresh = {};
-  const BATCH = 5;
-  const DELAY = 250; // ms
+  const BATCH = 4;
+  const DELAY = 300;
 
   for (let i = 0; i < miss.length; i += BATCH) {
     const batch = miss.slice(i, i + BATCH);
@@ -113,9 +131,12 @@ export async function GET(request) {
 
   const merged = { ...hit, ...fresh };
 
+  const gotVol = Object.values(fresh).filter(d => d.volume !== null).length;
+  const gotRsi = Object.values(fresh).filter(d => d.rsi !== null).length;
   console.log(
-    `[stock-metrics] 완료: ${Object.keys(fresh).length}/${miss.length}개 신규` +
-    (Object.keys(hit).length ? ` (캐시 히트: ${Object.keys(hit).length}개)` : '')
+    `[stock-metrics] 완료: ${Object.keys(fresh).length}/${miss.length}개` +
+    ` | volume: ${gotVol}개, RSI: ${gotRsi}개` +
+    (Object.keys(hit).length ? ` | 캐시 히트: ${Object.keys(hit).length}개` : '')
   );
 
   return NextResponse.json(merged, {

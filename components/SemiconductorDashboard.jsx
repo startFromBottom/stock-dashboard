@@ -19,7 +19,22 @@ function splitName(name) {
 }
 import { FLAG_BY_NAME } from '@/data/companies';
 import useMarketCaps from '@/hooks/useMarketCaps';
-import { normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
+import useStockMetrics from '@/hooks/useStockMetrics';
+import { normalizeTicker, formatMktcap, extractPublicTickers } from '@/lib/ticker-utils';
+
+function getRsiStyle(rsi) {
+  if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
+  if (rsi >= 70) return { color: '#f87171', label: `${rsi}`, badge: '과매수' };
+  if (rsi <= 30) return { color: '#60a5fa', label: `${rsi}`, badge: '과매도' };
+  return { color: '#4ade80', label: `${rsi}`, badge: '중립' };
+}
+function formatVolume(vol) {
+  if (!vol || vol <= 0) return '—';
+  if (vol >= 1_000_000_000) return `${(vol / 1_000_000_000).toFixed(2)}B`;
+  if (vol >= 1_000_000)     return `${(vol / 1_000_000).toFixed(2)}M`;
+  if (vol >= 1_000)         return `${(vol / 1_000).toFixed(1)}K`;
+  return `${vol}`;
+}
 
 /* ═══════════════════════════════════════════════════════
    레이아웃 상수
@@ -735,16 +750,10 @@ function SemiCompanyPanel({ step }) {
   const [showMore, setShowMore] = useState(false);
   const pool = step.candidates ?? [];
 
-  const tickers = useMemo(() => pool
-    .map(c => c.ticker)
-    .filter(t => t && t !== 'Private'
-      && !t.startsWith('비상장')
-      && !t.includes('지주사')
-      && !t.includes('통합')
-      && !t.includes('중복')),
-  [step.id]); // eslint-disable-line
+  const tickers = useMemo(() => extractPublicTickers(pool), [step.id]); // eslint-disable-line
 
   const { mktcaps, loading, error, fresh } = useMarketCaps(tickers);
+  const { metrics: stockMetrics, loading: metricsLoading } = useStockMetrics(tickers);
 
   const sortedPool = useMemo(() => {
     const withLive = pool.map(c => {
@@ -814,6 +823,10 @@ function SemiCompanyPanel({ step }) {
           const flag       = getFlag(comp.name);
           const liveMktcap = comp.liveCap ? formatMktcap(comp.liveCap) : null;
           const rank       = idx + 1;
+          const fmpTicker  = normalizeTicker(comp.ticker);
+          const sm         = fmpTicker ? stockMetrics[fmpTicker] : null;
+          const rsiStyle   = getRsiStyle(sm?.rsi ?? null);
+          const volStr     = formatVolume(sm?.volume ?? null);
           return (
             <div key={`${comp.name}-${idx}`} className="company-card">
               <span className={`rank-badge rank-${rank}`}>
@@ -833,6 +846,29 @@ function SemiCompanyPanel({ step }) {
                 {liveMktcap
                   ? <>{liveMktcap}<span className="mktcap-live-dot" title="실시간">●</span></>
                   : comp.mktcap}
+              </div>
+              <div className="stock-metrics-row">
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">거래량</span>
+                  <span className="stock-metric-value">
+                    {metricsLoading ? <span className="metrics-loading">…</span> : volStr}
+                  </span>
+                </div>
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">RSI(14)</span>
+                  {metricsLoading ? (
+                    <span className="stock-metric-value metrics-loading">…</span>
+                  ) : (
+                    <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
+                      {rsiStyle.label}
+                      {rsiStyle.badge && (
+                        <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
+                          {rsiStyle.badge}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="company-detail">{comp.detail}</div>
               <div className="company-links">

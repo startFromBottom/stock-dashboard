@@ -4,7 +4,22 @@ import { useState, useMemo } from 'react';
 import { MATERIALS, CONTINENTS, GROUPS } from '@/data/rawMaterials';
 import { RAW_COMPANIES } from '@/data/rawMaterialCompanies';
 import useMarketCaps from '@/hooks/useMarketCaps';
+import useStockMetrics from '@/hooks/useStockMetrics';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
+
+function getRsiStyle(rsi) {
+  if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
+  if (rsi >= 70) return { color: '#f87171', label: `${rsi}`, badge: '과매수' };
+  if (rsi <= 30) return { color: '#60a5fa', label: `${rsi}`, badge: '과매도' };
+  return { color: '#4ade80', label: `${rsi}`, badge: '중립' };
+}
+function formatVolume(vol) {
+  if (!vol || vol <= 0) return '—';
+  if (vol >= 1_000_000_000) return `${(vol / 1_000_000_000).toFixed(2)}B`;
+  if (vol >= 1_000_000)     return `${(vol / 1_000_000).toFixed(2)}M`;
+  if (vol >= 1_000)         return `${(vol / 1_000).toFixed(1)}K`;
+  return `${vol}`;
+}
 
 /* ═══════════════════════════════════════════════════════
    대륙 SVG 경로  Equirectangular 720×400
@@ -361,6 +376,7 @@ function CompanySection({ matId, mat }) {
 
   const tickers = useMemo(() => extractPublicTickers(companies), [matId]); // eslint-disable-line
   const { mktcaps, loading, error, fresh } = useMarketCaps(tickers);
+  const { metrics: stockMetrics, loading: metricsLoading } = useStockMetrics(tickers);
 
   const sorted = useMemo(() => {
     if (!companies.length) return [];
@@ -404,6 +420,10 @@ function CompanySection({ matId, mat }) {
           const rank = idx + 1;
           const liveMktcap = co.liveCap ? formatMktcap(co.liveCap) : null;
           const isHov = hoveredRank === co.rank;
+          const fmpTicker = normalizeTicker(co.ticker);
+          const sm = fmpTicker ? stockMetrics[fmpTicker] : null;
+          const rsiStyle = getRsiStyle(sm?.rsi ?? null);
+          const volStr   = formatVolume(sm?.volume ?? null);
           return (
             <div key={co.rank}
               className={`raw-company-card${isHov ? ' hovered' : ''}`}
@@ -421,6 +441,29 @@ function CompanySection({ matId, mat }) {
               <div className="company-ticker">{co.ticker}</div>
               <div className="company-mktcap" style={{ color: mat?.color ?? 'var(--accent-light)' }}>
                 {liveMktcap ? <>{liveMktcap}<span className="mktcap-live-dot">●</span></> : co.mktcap}
+              </div>
+              <div className="stock-metrics-row">
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">거래량</span>
+                  <span className="stock-metric-value">
+                    {metricsLoading ? <span className="metrics-loading">…</span> : volStr}
+                  </span>
+                </div>
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">RSI(14)</span>
+                  {metricsLoading ? (
+                    <span className="stock-metric-value metrics-loading">…</span>
+                  ) : (
+                    <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
+                      {rsiStyle.label}
+                      {rsiStyle.badge && (
+                        <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
+                          {rsiStyle.badge}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="company-detail">{co.detail}</div>
               {/* 광산 목록 */}
@@ -460,6 +503,7 @@ function MapAndCompanies({ mat, matId }) {
 
   const tickers = useMemo(() => extractPublicTickers(companies), [matId]); // eslint-disable-line
   const { mktcaps, loading, error, fresh } = useMarketCaps(tickers);
+  const { metrics: stockMetrics, loading: metricsLoading } = useStockMetrics(tickers);
 
   // 정렬: staticRank가 있는 기업(중국 국영 등 API 미지원)은 순서 고정,
   // liveCap이 있는 기업끼리는 시총 내림차순, 나머지는 rank 순
@@ -571,6 +615,37 @@ function MapAndCompanies({ mat, matId }) {
                       : co.mktcap
                     }
                   </div>
+                  {(() => {
+                    const fmpTicker = normalizeTicker(co.ticker);
+                    const sm = fmpTicker ? stockMetrics[fmpTicker] : null;
+                    const rsiStyle = getRsiStyle(sm?.rsi ?? null);
+                    const volStr   = formatVolume(sm?.volume ?? null);
+                    return (
+                      <div className="stock-metrics-row">
+                        <div className="stock-metric-item">
+                          <span className="stock-metric-label">거래량</span>
+                          <span className="stock-metric-value">
+                            {metricsLoading ? <span className="metrics-loading">…</span> : volStr}
+                          </span>
+                        </div>
+                        <div className="stock-metric-item">
+                          <span className="stock-metric-label">RSI(14)</span>
+                          {metricsLoading ? (
+                            <span className="stock-metric-value metrics-loading">…</span>
+                          ) : (
+                            <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
+                              {rsiStyle.label}
+                              {rsiStyle.badge && (
+                                <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
+                                  {rsiStyle.badge}
+                                </span>
+                              )}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
                   <div className="company-detail">{co.detail}</div>
 
                   {/* 광산 목록 + 원소 태그 */}
