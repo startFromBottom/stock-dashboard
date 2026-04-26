@@ -4,8 +4,108 @@ import { useMemo, useState } from 'react';
 import { FLAG_BY_NAME } from '@/data/companies';
 import useMarketCaps from '@/hooks/useMarketCaps';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
+import { DC_GLOSSARY_ITEMS } from '@/data/dc-glossary';
 
 const RANK_LABELS = ['🥇 1위', '🥈 2위', '🥉 3위', '4위', '5위', '6위', '7위', '8위', '9위', '10위'];
+
+/* ══════════════════════════════════════════════════
+   HBM 스택 다이어그램 (메모리 컴포넌트 전용)
+══════════════════════════════════════════════════ */
+function GlossDiagramSVG({ type }) {
+  if (type === 'hbm-stack') return (
+    <svg viewBox="0 0 320 200" className="glos-diagram-svg">
+      <text x="160" y="16" textAnchor="middle" fill="#e2e8f0" fontSize="11" fontWeight="bold">HBM 수직 적층 구조</text>
+      <rect x="80" y="158" width="160" height="22" rx="4" fill="#0c2340" stroke="#0ea5e9" strokeWidth="2"/>
+      <text x="160" y="172" textAnchor="middle" fill="#38bdf8" fontSize="9">베이스 로직 다이</text>
+      {[0,1,2,3].map(i => (
+        <g key={i}>
+          <rect x="80" y={68+i*22} width="160" height="20" rx="3" fill="#1e3a5f" stroke="#3b82f6" strokeWidth="1.5"/>
+          <text x="160" y={80+i*22} textAnchor="middle" fill="#93c5fd" fontSize="8">D램 다이 #{4-i}</text>
+          {[95,110,125,140,155,170,185,200,215].map(x => (
+            <line key={x} x1={x} y1={88+i*22} x2={x} y2={90+i*22} stroke="#fbbf24" strokeWidth="1.5"/>
+          ))}
+        </g>
+      ))}
+      {[95,110,125,140,155,170,185,200,215].map(x => (
+        <ellipse key={x} cx={x} cy="156" rx="5" ry="4" fill="#fbbf24" opacity="0.9"/>
+      ))}
+      {[110,140,180,210].map(x => (
+        <line key={x} x1={x} y1="68" x2={x} y2="158" stroke="#fbbf24" strokeWidth="1" opacity="0.4" strokeDasharray="3,2"/>
+      ))}
+      <text x="60" y="108" fill="#fcd34d" fontSize="7" transform="rotate(-90,60,108)">TSV 관통배선</text>
+      <text x="160" y="195" textAnchor="middle" fill="#64748b" fontSize="8">HBM3e: 2048bit 버스 · 최대 1.2TB/s · B200에는 192GB 탑재</text>
+    </svg>
+  );
+  return null;
+}
+
+/* ══════════════════════════════════════════════════
+   컴포넌트별 핵심 용어 인라인 섹션
+══════════════════════════════════════════════════ */
+function GlossaryInlineSection({ categoryId }) {
+  const [open,       setOpen]       = useState(false);
+  const [openTermId, setOpenTermId] = useState(null);
+
+  const terms = DC_GLOSSARY_ITEMS.filter(g => g.category === categoryId);
+  if (terms.length === 0) return null;
+
+  return (
+    <div className="glos-inline-section">
+      <button
+        className="glos-inline-toggle"
+        onClick={() => { setOpen(v => !v); setOpenTermId(null); }}
+      >
+        <span className="glos-inline-toggle-left">
+          <span className="glos-inline-icon">📖</span>
+          <span className="glos-inline-title">핵심 용어</span>
+          <span className="glos-inline-count">{terms.length}개</span>
+        </span>
+        <span className="glos-inline-chevron">{open ? '▲ 접기' : '▼ 펼치기'}</span>
+      </button>
+
+      {open && (
+        <div className="glos-inline-list">
+          {terms.map(item => (
+            <div
+              key={item.id}
+              className={`glos-card${openTermId === item.id ? ' open' : ''}`}
+              onClick={() => setOpenTermId(openTermId === item.id ? null : item.id)}
+            >
+              <div className="glos-card-header">
+                <span className="glos-icon">{item.icon}</span>
+                <div className="glos-term-wrap">
+                  <span className="glos-term">{item.term}</span>
+                  {item.abbr && <span className="glos-abbr">{item.abbr}</span>}
+                </div>
+                {item.diagram && <span className="glos-diagram-badge">📊 그림</span>}
+                <span className="glos-chevron">{openTermId === item.id ? '▲' : '▼'}</span>
+              </div>
+              <p className="glos-short">{item.short}</p>
+              {openTermId === item.id && (
+                <div className="glos-body">
+                  <p className="glos-detail">{item.body}</p>
+                  {item.diagram && (
+                    <div className="glos-diagram-wrap">
+                      <GlossDiagramSVG type={item.diagram} />
+                    </div>
+                  )}
+                  {item.relatedTickers?.length > 0 && (
+                    <div className="glos-tickers">
+                      <span className="glos-tickers-label">관련 기업</span>
+                      {item.relatedTickers.map(t => (
+                        <span key={t} className="news-ticker-badge">{t}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function CompanyPanel({ comp }) {
   if (!comp) return null;
@@ -177,6 +277,9 @@ function PanelInner({ comp }) {
           )}
         </div>
       )}
+
+      {/* ── 핵심 용어 사전 ── */}
+      <GlossaryInlineSection categoryId={comp.id} />
     </div>
   );
 }

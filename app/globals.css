@@ -1339,3 +1339,185 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .raw-mat-info { flex-direction: column; }
   .raw-mat-info-right { flex: none; text-align: left; }
 }
+
+/* ════════════════════════════════════════
+   ⛏️ 원자재 기업 패널
+════════════════════════════════════════ */
+.raw-companies-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.raw-companies-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.raw-companies-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.raw-companies-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.raw-mine-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* 기업 카드 그리드 — 5열 */
+.raw-companies-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+/* 기업 카드 */
+.raw-company-card {
+  background: #0f172a;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+  cursor: default;
+}
+.raw-company-card:hover {
+  transform: translateY(-1px);
+}
+.raw-company-card.hovered {
+  transform: translateY(-2px);
+}
+
+/* 광산 칩 목록 */
+.raw-mine-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+
+.raw-mine-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid;
+  background: transparent;
+  line-height: 1.4;
+  flex-wrap: wrap;
+}
+
+.raw-mine-country {
+  font-size: 8px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+.raw-mine-country::before { content: '· '; }
+
+/* 중국 A주 고정 순위 카드 */
+.raw-company-card.static-rank {
+  border-left: 2px solid #ef4444;
+}
+
+/* 고정 순위 배지 */
+.raw-static-badge {
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: #2d0f0f;
+  color: #fca5a5;
+  border: 1px solid #7f1d1d;
+  white-space: nowrap;
+}
+
+/* API 미지원 안내 */
+.raw-api-note {
+  font-size: 9px;
+  color: #f87171;
+  background: #1a0a0a;
+  border: 1px solid #7f1d1d44;
+  border-radius: 3px;
+  padding: 2px 6px;
+  margin: 3px 0 4px;
+  line-height: 1.4;
+}
+
+/* 중국 A주 전체 알림 배너 */
+.raw-china-note {
+  font-size: 10px;
+  color: #fca5a5;
+  background: #1a0808;
+  border: 1px solid #7f1d1d55;
+  border-radius: 4px;
+  padding: 3px 8px;
+}
+
+/* 광산 아이템 (칩 + 원소 태그 묶음) */
+.raw-mine-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* 원소 태그 줄 */
+.raw-element-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding-left: 4px;
+}
+
+/* 원소 개별 태그 */
+.raw-element-tag {
+  font-size: 8px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid;
+  letter-spacing: 0.3px;
+  font-family: monospace;
+}
+
+/* 빈 상태 */
+.raw-companies-empty {
+  margin-top: 20px;
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+/* 반응형 */
+@media (max-width: 1100px) {
+  .raw-companies-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 860px) {
+  .raw-companies-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .raw-companies-grid { grid-template-columns: repeat(2, 1fr); }
+}
