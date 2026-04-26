@@ -10,6 +10,7 @@ import SpaceNewsSection from './SpaceNewsSection';
 import RawMaterialsMap from './RawMaterialsMap';
 import RawNewsSection from './RawNewsSection';
 import EnergyDashboard from './EnergyDashboard';
+import EnergyNewsSection from './EnergyNewsSection';
 import EtfPanel from './EtfPanel';
 
 /* ── 섹터 선택 ── */
@@ -48,6 +49,7 @@ const RAW_TABS = [
 /* ── 에너지 탭 ── */
 const ENERGY_TABS = [
   { id: 'chart', label: '⚡ 에너지원 & 기업' },
+  { id: 'news',  label: '📰 뉴스 & 리포트' },
 ];
 
 export default function Dashboard() {
@@ -194,6 +196,7 @@ export default function Dashboard() {
             ))}
           </nav>
           {energyTab === 'chart' && <EnergyDashboard />}
+          {energyTab === 'news'  && <EnergyNewsSection />}
         </>
       )}
     </div>
