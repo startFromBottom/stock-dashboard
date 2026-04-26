@@ -8,6 +8,7 @@ import SemiNewsSection from './SemiNewsSection';
 import SpaceDashboard from './SpaceDashboard';
 import SpaceNewsSection from './SpaceNewsSection';
 import RawMaterialsMap from './RawMaterialsMap';
+import RawNewsSection from './RawNewsSection';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
@@ -33,6 +34,12 @@ const SEMI_TABS = [
 const SPACE_TABS = [
   { id: 'chain', label: '🚀 밸류체인' },
   { id: 'news',  label: '📰 뉴스 & 레포트' },
+];
+
+/* ── 원자재 탭 ── */
+const RAW_TABS = [
+  { id: 'map',  label: '🗺️ 매장량 지도' },
+  { id: 'news', label: '📰 뉴스 & 리포트' },
 ];
 
 export default function Dashboard() {
@@ -141,7 +148,21 @@ export default function Dashboard() {
 
       {/* ── 원자재 섹션 ── */}
       {sector === 'raw' && (
-        <RawMaterialsMap />
+        <>
+          <nav className="tab-nav">
+            {RAW_TABS.map(t => (
+              <button
+                key={t.id}
+                className={`tab-btn${rawTab === t.id ? ' active' : ''}`}
+                onClick={() => setRawTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {rawTab === 'map'  && <RawMaterialsMap />}
+          {rawTab === 'news' && <RawNewsSection />}
+        </>
       )}
     </div>
   );

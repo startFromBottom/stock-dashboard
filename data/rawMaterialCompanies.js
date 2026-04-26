@@ -1166,5 +1166,317 @@ export const RAW_COMPANIES = {
       ir: BASE_IR('VRX.AX'), news: BASE_NEWS('VRX.AX'), x: BASE_X('VRX Silica'),
     },
   ],
+
+  // ════════════════════════════════════════
+  // 에너지 자원
+  // ════════════════════════════════════════
+
+  /* ── 석유 ── */
+  oil: [
+    {
+      rank: 1, staticRank: 1,
+      name: 'Saudi Aramco (أرامكو)', ticker: '2222.SR', flag: '🇸🇦',
+      mktcap: '~$1,800조', detail: '세계 최대 석유회사 — 확인매장량 2,600억 배럴',
+      note: 'Tadawul 상장, FMP 미지원 → 시총 하드코딩',
+      mines: [
+        { name: 'Ghawar Field', country: '사우디 동부주', ...xy(24.8, 49.2) },
+        { name: 'Safaniya Field', country: '사우디 페르시아만', ...xy(27.9, 48.7) },
+        { name: 'Shaybah Field', country: '사우디 루브알할리', ...xy(22.5, 54.0) },
+      ],
+      ir: 'https://www.aramco.com/en/investors', news: BASE_X('Saudi Aramco'), x: BASE_X('Saudi Aramco'),
+    },
+    {
+      rank: 2, name: 'ExxonMobil', ticker: 'XOM', flag: '🇺🇸',
+      mktcap: '~$500조', detail: '美 최대 메이저 — 퍼미안·가이아나·LNG',
+      mines: [
+        { name: 'Permian Basin', country: '미국 텍사스', ...xy(31.5, -103.0) },
+        { name: 'Stabroek Block', country: '가이아나', ...xy(7.0, -58.0) },
+        { name: 'Mozambique LNG', country: '모잠비크', ...xy(-13.0, 40.7) },
+      ],
+      ir: BASE_IR('XOM'), news: BASE_NEWS('XOM'), x: BASE_X('ExxonMobil'),
+    },
+    {
+      rank: 3, name: 'Chevron', ticker: 'CVX', flag: '🇺🇸',
+      mktcap: '~$280조', detail: '카자흐스탄 텡기즈·퍼미안·호주 LNG',
+      mines: [
+        { name: 'Tengiz Field', country: '카자흐스탄', ...xy(45.5, 53.1) },
+        { name: 'Permian Basin', country: '미국 텍사스', ...xy(32.0, -102.0) },
+        { name: 'Gorgon LNG', country: '호주 WA', ...xy(-22.0, 114.0) },
+      ],
+      ir: BASE_IR('CVX'), news: BASE_NEWS('CVX'), x: BASE_X('Chevron'),
+    },
+    {
+      rank: 4, name: 'Shell', ticker: 'SHEL', flag: '🇬🇧',
+      mktcap: '~$230조', detail: '세계 최대 LNG 거래 — 심해유전·풍력·충전',
+      mines: [
+        { name: 'Prelude FLNG', country: '호주 북서', ...xy(-14.0, 123.5) },
+        { name: 'Brent Field', country: '영국 북해', ...xy(61.0, 1.7) },
+        { name: 'Pearl GTL', country: '카타르', ...xy(25.1, 51.5) },
+      ],
+      ir: BASE_IR('SHEL'), news: BASE_NEWS('SHEL'), x: BASE_X('Shell'),
+    },
+    {
+      rank: 5, name: 'BP', ticker: 'BP', flag: '🇬🇧',
+      mktcap: '~$100조', detail: '북해·아제르바이잔 ACG·이라크 루마일라',
+      mines: [
+        { name: 'ACG Field', country: '아제르바이잔', ...xy(40.6, 50.4) },
+        { name: 'Rumaila Field', country: '이라크', ...xy(30.4, 47.4) },
+        { name: 'Clair Field', country: '영국 북해', ...xy(60.4, -1.8) },
+      ],
+      ir: BASE_IR('BP'), news: BASE_NEWS('BP'), x: BASE_X('BP'),
+    },
+    {
+      rank: 6, staticRank: 2,
+      name: '中国石油 PetroChina', ticker: '601857.SS', flag: '🇨🇳',
+      mktcap: '~$220조', detail: '중국 최대 E&P — 다칭·신장·중앙아시아 파이프라인',
+      note: 'SSE 상장(A주), FMP 미지원 → 시총 하드코딩',
+      mines: [
+        { name: 'Daqing Oil Field', country: '중국 헤이룽장', ...xy(46.6, 125.0) },
+        { name: 'Tarim Basin', country: '중국 신장', ...xy(39.0, 83.0) },
+        { name: 'Karamay Field', country: '중국 신장', ...xy(45.6, 84.9) },
+      ],
+      ir: 'https://www.petrochina.com.cn', news: BASE_X('PetroChina'), x: BASE_X('PetroChina'),
+    },
+    {
+      rank: 7, name: 'TotalEnergies', ticker: 'TTE', flag: '🇫🇷',
+      mktcap: '~$160조', detail: '프랑스 메이저 — 아프리카·LNG·재생에너지',
+      mines: [
+        { name: 'Kashagan Field', country: '카자흐스탄', ...xy(45.4, 52.8) },
+        { name: 'Egina Field', country: '나이지리아 심해', ...xy(3.6, 5.0) },
+        { name: 'Papua LNG', country: '파푸아뉴기니', ...xy(-6.3, 144.0) },
+      ],
+      ir: BASE_IR('TTE'), news: BASE_NEWS('TTE'), x: BASE_X('TotalEnergies'),
+    },
+    {
+      rank: 8, staticRank: 3,
+      name: 'Rosneft (Роснефть)', ticker: 'ROSN.ME', flag: '🇷🇺',
+      mktcap: '~$60조', detail: '러시아 최대 석유사 — 서시베리아·사할린',
+      note: '모스크바 거래소 상장, 서방 제재로 시총 불안정 → 하드코딩',
+      mines: [
+        { name: 'Yuganskneftegas', country: '러시아 서시베리아', ...xy(61.1, 72.4) },
+        { name: 'Vankor Field', country: '러시아 크라스노야르스크', ...xy(67.0, 83.3) },
+        { name: 'Sakhalin-1', country: '러시아 사할린', ...xy(52.5, 143.0) },
+      ],
+      ir: 'https://www.rosneft.com/Investors/', news: BASE_X('Rosneft'), x: BASE_X('Rosneft'),
+    },
+    {
+      rank: 9, name: 'ConocoPhillips', ticker: 'COP', flag: '🇺🇸',
+      mktcap: '~$130조', detail: '미국 최대 독립계 E&P — 알래스카·퍼미안·노르웨이',
+      mines: [
+        { name: 'Willow Project', country: '미국 알래스카', ...xy(70.3, -152.0) },
+        { name: 'Eagle Ford', country: '미국 텍사스', ...xy(28.8, -99.0) },
+        { name: 'Ekofisk Field', country: '노르웨이 북해', ...xy(56.5, 3.2) },
+      ],
+      ir: BASE_IR('COP'), news: BASE_NEWS('COP'), x: BASE_X('ConocoPhillips'),
+    },
+    {
+      rank: 10, name: 'Equinor', ticker: 'EQNR', flag: '🇳🇴',
+      mktcap: '~$80조', detail: '노르웨이 국영 — 북해 최대 운영사, 해상 풍력 선도',
+      mines: [
+        { name: 'Johan Sverdrup', country: '노르웨이 북해', ...xy(58.9, 2.4) },
+        { name: 'Sleipner Field', country: '노르웨이 북해', ...xy(58.4, 1.9) },
+        { name: 'Snøhvit LNG', country: '노르웨이 바렌츠해', ...xy(71.3, 22.2) },
+      ],
+      ir: BASE_IR('EQNR'), news: BASE_NEWS('EQNR'), x: BASE_X('Equinor'),
+    },
+  ],
+
+  /* ── 천연가스 ── */
+  naturalgas: [
+    {
+      rank: 1, staticRank: 1,
+      name: 'Gazprom (Газпром)', ticker: 'GAZP.ME', flag: '🇷🇺',
+      mktcap: '~$50조', detail: '세계 최대 천연가스 매장량 — 시베리아~유럽 파이프라인',
+      note: '모스크바 거래소 상장, 서방 제재로 데이터 제한 → 하드코딩',
+      mines: [
+        { name: 'Urengoy Gas Field', country: '러시아 서시베리아', ...xy(66.1, 76.6) },
+        { name: 'Yamburg Field', country: '러시아 야말', ...xy(67.9, 75.1) },
+        { name: 'Bovanenkovo Field', country: '러시아 야말반도', ...xy(70.3, 68.2) },
+      ],
+      ir: 'https://www.gazprom.com/investors/', news: BASE_X('Gazprom'), x: BASE_X('Gazprom'),
+    },
+    {
+      rank: 2, name: 'QatarEnergy', ticker: 'Private', flag: '🇶🇦',
+      mktcap: '비상장 (국영)', detail: '세계 최대 LNG 수출국 — 노스돔 세계 최대 가스전',
+      mines: [
+        { name: 'North Dome Field', country: '카타르', ...xy(25.9, 51.8) },
+        { name: 'Ras Laffan LNG', country: '카타르', ...xy(25.9, 51.6) },
+      ],
+      ir: 'https://www.qatarenergy.qa', news: BASE_X('QatarEnergy'), x: BASE_X('QatarEnergy'),
+    },
+    {
+      rank: 3, name: 'ExxonMobil', ticker: 'XOM', flag: '🇺🇸',
+      mktcap: '~$500조', detail: '퍼미안 연계 가스·LNG·Papua New Guinea',
+      mines: [
+        { name: 'PNG LNG', country: '파푸아뉴기니', ...xy(-6.5, 143.8) },
+        { name: 'Permian Gas', country: '미국 텍사스', ...xy(31.5, -103.0) },
+      ],
+      ir: BASE_IR('XOM'), news: BASE_NEWS('XOM'), x: BASE_X('ExxonMobil'),
+    },
+    {
+      rank: 4, name: 'Shell', ticker: 'SHEL', flag: '🇬🇧',
+      mktcap: '~$230조', detail: '세계 1위 LNG 트레이더 — Prelude FLNG',
+      mines: [
+        { name: 'Prelude FLNG', country: '호주 북서', ...xy(-14.0, 123.5) },
+        { name: 'QGC (Queensland)', country: '호주 퀸즐랜드', ...xy(-26.5, 150.5) },
+      ],
+      ir: BASE_IR('SHEL'), news: BASE_NEWS('SHEL'), x: BASE_X('Shell'),
+    },
+    {
+      rank: 5, name: 'Chevron', ticker: 'CVX', flag: '🇺🇸',
+      mktcap: '~$280조', detail: '고르곤·휘트스톤 LNG — 호주 최대 LNG',
+      mines: [
+        { name: 'Gorgon LNG', country: '호주 WA', ...xy(-22.0, 114.0) },
+        { name: 'Wheatstone LNG', country: '호주 WA', ...xy(-21.5, 115.0) },
+      ],
+      ir: BASE_IR('CVX'), news: BASE_NEWS('CVX'), x: BASE_X('Chevron'),
+    },
+    {
+      rank: 6, name: 'TotalEnergies', ticker: 'TTE', flag: '🇫🇷',
+      mktcap: '~$160조', detail: '모잠비크·카타르·호주 LNG 포트폴리오',
+      mines: [
+        { name: 'Mozambique LNG', country: '모잠비크', ...xy(-13.0, 40.7) },
+        { name: 'Ichthys LNG', country: '호주 NT', ...xy(-14.5, 124.0) },
+      ],
+      ir: BASE_IR('TTE'), news: BASE_NEWS('TTE'), x: BASE_X('TotalEnergies'),
+    },
+    {
+      rank: 7, name: 'Equinor', ticker: 'EQNR', flag: '🇳🇴',
+      mktcap: '~$80조', detail: '스노히트 LNG·슬라이프너 CCS',
+      mines: [
+        { name: 'Snøhvit LNG', country: '노르웨이 바렌츠해', ...xy(71.3, 22.2) },
+        { name: 'Troll Field', country: '노르웨이 북해', ...xy(60.6, 3.7) },
+      ],
+      ir: BASE_IR('EQNR'), news: BASE_NEWS('EQNR'), x: BASE_X('Equinor'),
+    },
+    {
+      rank: 8, name: 'Woodside Energy', ticker: 'WDS', flag: '🇦🇺',
+      mktcap: '~$30조', detail: '호주 LNG 선두 — Pluto·Northwest Shelf',
+      mines: [
+        { name: 'Pluto LNG', country: '호주 WA', ...xy(-20.6, 116.7) },
+        { name: 'Northwest Shelf', country: '호주 WA', ...xy(-20.3, 116.8) },
+      ],
+      ir: BASE_IR('WDS'), news: BASE_NEWS('WDS'), x: BASE_X('Woodside Energy'),
+    },
+    {
+      rank: 9, staticRank: 2,
+      name: 'NOVATEK (НОВАТЭК)', ticker: 'NVTK.ME', flag: '🇷🇺',
+      mktcap: '~$40조', detail: '러시아 독립 가스사 — 야말 LNG·Arctic LNG 2',
+      note: '모스크바 거래소 상장, 서방 제재 영향 → 하드코딩',
+      mines: [
+        { name: 'Yamal LNG', country: '러시아 야말반도', ...xy(71.4, 72.3) },
+        { name: 'Arctic LNG 2', country: '러시아 기단반도', ...xy(71.8, 82.0) },
+      ],
+      ir: 'https://www.novatek.ru/en/investors/', news: BASE_X('NOVATEK'), x: BASE_X('NOVATEK'),
+    },
+    {
+      rank: 10, name: 'ConocoPhillips', ticker: 'COP', flag: '🇺🇸',
+      mktcap: '~$130조', detail: '알래스카 LNG·퍼미안 가스 연계',
+      mines: [
+        { name: 'Alaska LNG Project', country: '미국 알래스카', ...xy(70.3, -152.0) },
+        { name: 'Montney (Canada)', country: '캐나다 BC주', ...xy(56.0, -122.0) },
+      ],
+      ir: BASE_IR('COP'), news: BASE_NEWS('COP'), x: BASE_X('ConocoPhillips'),
+    },
+  ],
+
+  /* ── 석탄 ── */
+  coal: [
+    {
+      rank: 1, staticRank: 1,
+      name: '中国神华 China Shenhua', ticker: '601088.SS', flag: '🇨🇳',
+      mktcap: '~$100조', detail: '세계 최대 석탄 생산사 — 내몽골·산시성 열탄',
+      note: 'SSE 상장(A주), FMP 미지원 → 시총 하드코딩',
+      mines: [
+        { name: 'Shendong Mine', country: '중국 내몽골/산시', ...xy(39.4, 110.5) },
+        { name: 'Wanli Mine', country: '중국 내몽골', ...xy(40.2, 111.8) },
+      ],
+      ir: 'https://www.csec.com', news: BASE_X('China Shenhua'), x: BASE_X('China Shenhua'),
+    },
+    {
+      rank: 2, name: 'Coal India', ticker: 'COALINDIA.NS', flag: '🇮🇳',
+      mktcap: '~$30조', detail: '세계 최대 석탄 채굴 기업 — 인도 정부 소유 90%',
+      mines: [
+        { name: 'Jharia Coalfield', country: '인도 자르칸드', ...xy(23.7, 86.4) },
+        { name: 'Korba Coalfield', country: '인도 차티스가르', ...xy(22.4, 82.7) },
+        { name: 'Singareni Collieries', country: '인도 텔랑가나', ...xy(17.9, 80.1) },
+      ],
+      ir: BASE_IR('COALINDIA.NS'), news: BASE_NEWS('COALINDIA.NS'), x: BASE_X('Coal India'),
+    },
+    {
+      rank: 3, name: 'Glencore', ticker: 'GLEN.L', flag: '🇨🇭',
+      mktcap: '~$60조', detail: '세계 최대 석탄 트레이더 — 호주·콜롬비아·남아공',
+      mines: [
+        { name: 'Hail Creek Mine', country: '호주 퀸즐랜드', ...xy(-21.5, 148.3) },
+        { name: 'Cerrejón Mine', country: '콜롬비아', ...xy(11.1, -72.7) },
+        { name: 'Prodeco Mine', country: '콜롬비아', ...xy(10.5, -73.5) },
+      ],
+      ir: BASE_IR('GLEN.L'), news: BASE_NEWS('GLEN.L'), x: BASE_X('Glencore'),
+    },
+    {
+      rank: 4, name: 'Peabody Energy', ticker: 'BTU', flag: '🇺🇸',
+      mktcap: '~$4조', detail: '美 최대 석탄사 — 와이오밍 파우더리버·호주 메탈코크',
+      mines: [
+        { name: 'North Antelope Rochelle', country: '미국 와이오밍', ...xy(43.8, -105.4) },
+        { name: 'Wilpinjong Mine', country: '호주 NSW', ...xy(-32.5, 149.8) },
+      ],
+      ir: BASE_IR('BTU'), news: BASE_NEWS('BTU'), x: BASE_X('Peabody Energy'),
+    },
+    {
+      rank: 5, name: 'Yancoal Australia', ticker: 'YAL.AX', flag: '🇦🇺',
+      mktcap: '~$5조', detail: '호주 최대 순수 석탄사 — 헌터밸리·NSW 열탄',
+      mines: [
+        { name: 'Hunter Valley Ops', country: '호주 NSW', ...xy(-32.4, 151.0) },
+        { name: 'Mount Thorley', country: '호주 NSW', ...xy(-32.7, 151.2) },
+      ],
+      ir: BASE_IR('YAL.AX'), news: BASE_NEWS('YAL.AX'), x: BASE_X('Yancoal'),
+    },
+    {
+      rank: 6, name: 'Whitehaven Coal', ticker: 'WHC.AX', flag: '🇦🇺',
+      mktcap: '~$7조', detail: '호주 고품위 반무연탄 — 아시아 수출 전문',
+      mines: [
+        { name: 'Narrabri Mine', country: '호주 NSW', ...xy(-30.3, 149.7) },
+        { name: 'Maules Creek Mine', country: '호주 NSW', ...xy(-30.5, 150.2) },
+      ],
+      ir: BASE_IR('WHC.AX'), news: BASE_NEWS('WHC.AX'), x: BASE_X('Whitehaven Coal'),
+    },
+    {
+      rank: 7, name: 'Arch Resources', ticker: 'ARCH', flag: '🇺🇸',
+      mktcap: '~$3조', detail: '미국 메탈코킹콜 선두 — 와이오밍·웨스트버지니아',
+      mines: [
+        { name: 'Black Thunder Mine', country: '미국 와이오밍', ...xy(43.5, -105.2) },
+        { name: 'Leer Mine (WV)', country: '미국 웨스트버지니아', ...xy(39.5, -80.5) },
+      ],
+      ir: BASE_IR('ARCH'), news: BASE_NEWS('ARCH'), x: BASE_X('Arch Resources'),
+    },
+    {
+      rank: 8, name: 'South32', ticker: 'S32.AX', flag: '🇦🇺',
+      mktcap: '~$11조', detail: '호주·남아공 석탄+알루미늄+아연 다각화',
+      mines: [
+        { name: 'Illawarra Metallurgical Coal', country: '호주 NSW', ...xy(-34.4, 150.9) },
+        { name: 'South Africa Energy Coal', country: '남아공', ...xy(-26.3, 29.5) },
+      ],
+      ir: BASE_IR('S32.AX'), news: BASE_NEWS('S32.AX'), x: BASE_X('South32'),
+    },
+    {
+      rank: 9, staticRank: 2,
+      name: 'SUEK (СУЭК)', ticker: 'Private', flag: '🇷🇺',
+      mktcap: '비상장', detail: '러시아 최대 석탄사 — 시베리아 크라스노야르스크',
+      note: '비상장 러시아 국영기업',
+      mines: [
+        { name: 'Borodinsky Mine', country: '러시아 크라스노야르스크', ...xy(55.9, 94.0) },
+        { name: 'Tugnuisky Mine', country: '러시아 부랴티아', ...xy(51.1, 107.2) },
+      ],
+      ir: 'https://www.suek.com', news: BASE_X('SUEK Coal'), x: BASE_X('SUEK'),
+    },
+    {
+      rank: 10, name: 'CONSOL Energy', ticker: 'CEIX', flag: '🇺🇸',
+      mktcap: '~$4조', detail: '애팔래치아 고품위 석탄 — 수출 전문',
+      mines: [
+        { name: 'Pennsylvania Mining Complex', country: '미국 펜실베이니아', ...xy(40.0, -80.0) },
+      ],
+      ir: BASE_IR('CEIX'), news: BASE_NEWS('CEIX'), x: BASE_X('CONSOL Energy'),
+    },
+  ],
 };
 

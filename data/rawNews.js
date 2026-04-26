@@ -1,0 +1,456 @@
+// ── 원자재·에너지 자원 뉴스 & 리포트 ──
+// 출처: USGS, IEA, Bloomberg, Reuters, 각사 IR 2024~2026
+// 카테고리: 광물 그룹 id 또는 개별 material id 기준
+
+export const RAW_NEWS_TYPE_LABEL = {
+  news:         { label: '📰 뉴스',    color: '#38bdf8', bg: '#0c2340' },
+  report:       { label: '📊 리포트',  color: '#a78bfa', bg: '#1e1b4b' },
+  announcement: { label: '📣 발표',    color: '#34d399', bg: '#052e16' },
+  regulation:   { label: '⚖️ 규제',   color: '#fb923c', bg: '#431407' },
+  market:       { label: '💹 시장',    color: '#fbbf24', bg: '#1c1500' },
+};
+
+// 카테고리: group id (rare-earth / precious / battery / industrial / tech / energy)
+//           또는 material id (neodymium / lithium / copper / oil / coal ...)
+export const RAW_CATEGORY_LABEL = {
+  // 그룹 레벨
+  'rare-earth': { icon: '⚛️',  name: '희토류',      group: true },
+  'precious':   { icon: '🥇',  name: '귀금속',      group: true },
+  'battery':    { icon: '🔋',  name: '배터리 금속', group: true },
+  'industrial': { icon: '⚙️',  name: '산업 금속',   group: true },
+  'tech':       { icon: '💡',  name: '첨단 금속',   group: true },
+  'energy':     { icon: '🛢️',  name: '에너지 자원', group: true },
+  // 개별 소재 레벨
+  'neodymium':  { icon: '🧲',  name: '네오디뮴',    group: false },
+  'dysprosium': { icon: '🌡️', name: '디스프로슘',  group: false },
+  'terbium':    { icon: '⚡',  name: '테르븀',      group: false },
+  'lithium':    { icon: '🔋',  name: '리튬',        group: false },
+  'cobalt':     { icon: '🔵',  name: '코발트',      group: false },
+  'nickel':     { icon: '⚪',  name: '니켈',        group: false },
+  'copper':     { icon: '🟤',  name: '구리',        group: false },
+  'iron':       { icon: '⚫',  name: '철강',        group: false },
+  'gold':       { icon: '🥇',  name: '금',          group: false },
+  'silver':     { icon: '🥈',  name: '은',          group: false },
+  'gallium':    { icon: '💡',  name: '갈륨',        group: false },
+  'germanium':  { icon: '💡',  name: '게르마늄',    group: false },
+  'oil':        { icon: '🛢️',  name: '석유',        group: false },
+  'naturalgas': { icon: '🔥',  name: '천연가스',    group: false },
+  'coal':       { icon: '⚫',  name: '석탄',        group: false },
+};
+
+export function countByCat(items) {
+  const map = {};
+  for (const n of items) {
+    map[n.category] = (map[n.category] ?? 0) + 1;
+  }
+  return map;
+}
+
+export const RAW_NEWS_ITEMS = [
+
+  // ══════════════════════════════════════
+  // 희토류 (rare-earth)
+  // ══════════════════════════════════════
+  {
+    id: 're-001',
+    tickers: ['MP', 'LYSCF', '600111.SS'],
+    category: 'rare-earth',
+    type: 'regulation',
+    title: '중국, 희토류 7종 수출 통제 전면 시행 — 허가제 2025.04 발효',
+    summary: '중국 상무부가 사마륨·가돌리늄·테르븀·디스프로슘·루테튬·스칸듐·이트륨 7개 희토류 원소에 대해 수출 허가제를 2025년 4월 4일부터 전면 시행. 미국·EU 국방·반도체 공급망에 직접 타격. MP Materials·Lynas 주가 급등.',
+    date: '2025-04-04',
+    source: 'Reuters / 중국 상무부',
+    url: 'https://www.reuters.com/markets/commodities/china-restricts-exports-seven-rare-earth-elements-2025-04-04/',
+  },
+  {
+    id: 're-002',
+    tickers: ['MP'],
+    category: 'rare-earth',
+    type: 'news',
+    title: 'MP Materials, 텍사스 자석 공장 가동 — 미국 최초 NdFeB 양산',
+    summary: 'MP Materials가 텍사스 포트워스 자석 공장을 2025년 말 가동하며 미국 내 NdFeB 영구자석 생산 공급망 구축. 마운틴패스(캘리포니아)에서 정광 생산 → 분리 → 자석 제조까지 수직 계열화 완성. GM·Apple이 장기 공급 계약 체결.',
+    date: '2025-09-15',
+    source: 'MP Materials IR',
+    url: 'https://www.mpmaterials.com/investors',
+  },
+  {
+    id: 're-003',
+    tickers: ['LYSCF'],
+    category: 'rare-earth',
+    type: 'announcement',
+    title: 'Lynas, 호주 크랠리 분리·정제 시설 완공 — 탈중국 공급망 핵심',
+    summary: 'Lynas Rare Earths가 호주 크랠리(Kalgoorlie) 희토류 분리·정제 설비 완공. 말레이시아 처리 의존도를 낮추고 호주 국내 완결형 가치사슬 구축. 미국 DoD가 시설 건설 자금 일부 지원, 전략적 파트너십 강화.',
+    date: '2025-07-22',
+    source: 'Lynas Rare Earths Newsroom',
+    url: 'https://www.lynasrareearths.com/news',
+  },
+  {
+    id: 're-004',
+    tickers: ['MP', 'LYSCF', 'NBO.TO'],
+    category: 'neodymium',
+    type: 'market',
+    title: '네오디뮴-프라세오디뮴(NdPr) 산화물 가격 2025년 +38% 급등',
+    summary: '중국 수출 규제·EV 모터 수요 증가로 NdPr 산화물 가격이 2025년 초 대비 38% 상승, kg당 $82 돌파. IEA는 2030년까지 네오디뮴 수요가 현재의 2.5배 도달 전망. 서방 광산 업체들 증설 투자 가속.',
+    date: '2025-11-08',
+    source: 'Metal Bulletin / IEA',
+    url: 'https://www.iea.org/reports/critical-minerals-2025',
+  },
+  {
+    id: 're-005',
+    tickers: ['HREE.V', '600111.SS'],
+    category: 'dysprosium',
+    type: 'report',
+    title: 'HREE 수급 위기 심화 — 디스프로슘·테르븀 2030년 공급 부족 30% 예상',
+    summary: 'Adamas Intelligence 보고서: 중희토류(HREE) 디스프로슘·테르븀은 2030년까지 수요가 공급을 30% 초과할 전망. 중국 이온흡착 광산 외 대체 공급원 부재, EV 모터 고온 환경 요구사항 증가가 주요인.',
+    date: '2025-08-14',
+    source: 'Adamas Intelligence',
+    url: 'https://www.adamasintelligence.com',
+  },
+  {
+    id: 're-006',
+    tickers: ['USA', 'UUUU'],
+    category: 'rare-earth',
+    type: 'regulation',
+    title: '미국 DARPA, 도시광산 희토류 회수 기술 $1.5억 투자',
+    summary: '미 국방부 DARPA가 전자폐기물·영구자석 스크랩에서 희토류를 회수하는 도시광산(Urban Mining) 기술에 1억 5000만 달러 투자 결정. 2030년까지 재활용 희토류로 국방 수요의 20% 충족 목표.',
+    date: '2026-01-20',
+    source: 'DARPA Newsroom',
+    url: 'https://www.darpa.mil',
+  },
+
+  // ══════════════════════════════════════
+  // 배터리 금속 (battery)
+  // ══════════════════════════════════════
+  {
+    id: 'bat-001',
+    tickers: ['ALB', 'SQM', 'PLL'],
+    category: 'lithium',
+    type: 'market',
+    title: '리튬 가격 2024~2025 폭락 후 바닥 다지기 — 공급 과잉 해소 시점 논쟁',
+    summary: '리튬 탄산염 가격이 2022년 고점 대비 85% 하락 후 2025년 하반기부터 안정화 조짐. 칠레·호주 주요 광산 감산·광산 프로젝트 취소로 공급 과잉 해소 기대. Albemarle·SQM은 2026년 반등 전망.',
+    date: '2025-10-02',
+    source: 'Bloomberg Commodities',
+    url: 'https://www.bloomberg.com/news/lithium',
+  },
+  {
+    id: 'bat-002',
+    tickers: ['ALB', 'SQM'],
+    category: 'lithium',
+    type: 'report',
+    title: 'IEA 핵심광물 보고서 2025: 리튬 2035년 수요 4배, 공급 투자 3배 필요',
+    summary: 'IEA "Critical Minerals 2025" 보고서: 2035년 리튬 수요는 현재의 4배, 코발트·니켈·망간도 2~3배 증가 전망. 현재 투자 수준의 3배가 필요하며, 특히 정제·분리 단계의 중국 집중(75%↑)이 병목.',
+    date: '2025-05-17',
+    source: 'IEA',
+    url: 'https://www.iea.org/reports/critical-minerals-2025',
+  },
+  {
+    id: 'bat-003',
+    tickers: ['GLNCY', 'COBAF'],
+    category: 'cobalt',
+    type: 'market',
+    title: '코발트 가격 DRC 공급 과잉으로 10년 최저 — LFP 배터리 전환 가속',
+    summary: '콩고민주공화국(DRC) 코발트 생산량 급증으로 가격이 2024년 kg당 $25 이하로 하락, 10년래 최저. Tesla·BYD의 LFP(리튬인산철) 배터리 전환 가속으로 코발트 프리(free) 배터리 비중 급증. Glencore 등 광산사 감산 대응.',
+    date: '2024-11-28',
+    source: 'S&P Global Commodity Insights',
+    url: 'https://www.spglobal.com/commodityinsights',
+  },
+  {
+    id: 'bat-004',
+    tickers: ['VALE', 'NICKEL.L', 'MXCHF'],
+    category: 'nickel',
+    type: 'market',
+    title: '니켈 2025년 인도네시아 NPI 공급 과잉 지속 — 가격 압박 지속',
+    summary: '인도네시아 니켈 선철(NPI) 생산이 계속 늘며 니켈 가격 $15,000/톤 이하 유지. Norilsk·Vale 등 고비용 황화니켈 광산 채산성 악화. 배터리용 황산니켈(Class 1) 전환 프리미엄이 유일한 활로.',
+    date: '2025-03-10',
+    source: 'Wood Mackenzie',
+    url: 'https://www.woodmac.com',
+  },
+  {
+    id: 'bat-005',
+    tickers: ['ALB', 'LTHM', 'SQM'],
+    category: 'battery',
+    type: 'announcement',
+    title: '칠레, 리튬 국유화 추진 — SQM·Albemarle 2030년 계약 종료 후 국영화',
+    summary: '칠레 정부가 아타카마 리튬 염호에 대한 국가 주도 통제를 강화, 2030년 이후 SQM·Albemarle 계약 갱신 시 국영 Codelco와 합작법인 필수화. 자원 민족주의 확산이 서방 배터리 공급망 리스크.',
+    date: '2024-09-05',
+    source: 'Financial Times',
+    url: 'https://www.ft.com/content/lithium-chile',
+  },
+
+  // ══════════════════════════════════════
+  // 귀금속 (precious)
+  // ══════════════════════════════════════
+  {
+    id: 'pre-001',
+    tickers: ['GLD', 'NEM', 'AEM', 'GOLD'],
+    category: 'gold',
+    type: 'market',
+    title: '금값 2025년 사상 최초 $3,000/oz 돌파 — 지정학 리스크·달러 약세 복합',
+    summary: '금 현물 가격이 2025년 3월 $3,000/oz를 사상 처음 돌파. 미-중 무역 갈등 심화, 연준 금리 인하 기대, 중앙은행 금 매입 역대 최고(2024년 1,045톤)가 복합 작용. World Gold Council은 2025년 중앙은행 매입 900~1,000톤 전망.',
+    date: '2025-03-14',
+    source: 'World Gold Council / Bloomberg',
+    url: 'https://www.gold.org/goldhub/research/gold-demand-trends',
+  },
+  {
+    id: 'pre-002',
+    tickers: ['GLD', 'NEM', 'GOLD'],
+    category: 'gold',
+    type: 'market',
+    title: '금값 $3,500 돌파 — 2026년 초 사상 최고치 경신 행진',
+    summary: '금 선물이 2026년 4월 $3,500/oz를 돌파하며 랠리 지속. 중앙은행 매입 지속, 미국 관세 불확실성에 따른 안전자산 수요 폭증. Goldman Sachs는 2025년 말 $3,700 목표가 제시.',
+    date: '2026-04-16',
+    source: 'Reuters / Goldman Sachs',
+    url: 'https://www.reuters.com/markets/commodities/gold-prices',
+  },
+  {
+    id: 'pre-003',
+    tickers: ['SLV', 'PAAS', 'WPM'],
+    category: 'silver',
+    type: 'market',
+    title: '은 가격 태양광 수요에 $35/oz 돌파 — 산업 수요 역대 최고',
+    summary: '은 가격이 태양광 패널 소재 수요 폭증으로 $35/oz를 돌파. Silver Institute에 따르면 태양광용 은 수요가 2024년 232Moz로 전체 산업 수요의 20% 돌파. EV·5G 전자기기 수요도 가세.',
+    date: '2025-10-20',
+    source: 'Silver Institute / Kitco',
+    url: 'https://www.silverinstitute.org/world-silver-survey/',
+  },
+  {
+    id: 'pre-004',
+    tickers: ['PALL', 'IMPUY', 'ANGPY'],
+    category: 'precious',
+    type: 'market',
+    title: '팔라듐 가격 EV 전환·러시아 제재로 급락 — 백금 상대적 강세',
+    summary: '팔라듐(Pd) 가격이 EV 전환으로 내연기관 촉매 수요 감소, 러시아 Norilsk 제재 불확실성 속 $900/oz 이하 추락. 반면 수소연료전지용 백금(Pt) 수요 급증 기대로 Pt/Pd 비율 역전 현상.',
+    date: '2025-06-11',
+    source: 'Johnson Matthey Pgm Market Report',
+    url: 'https://matthey.com/en/pgm-market-report',
+  },
+
+  // ══════════════════════════════════════
+  // 산업 금속 (industrial)
+  // ══════════════════════════════════════
+  {
+    id: 'ind-001',
+    tickers: ['FCX', 'SCCO', 'BHP'],
+    category: 'copper',
+    type: 'market',
+    title: '구리 가격 AI 데이터센터·전력망 수요로 $10,000/톤 재돌파',
+    summary: '구리 LME 가격이 AI 데이터센터 전력망 확충, EV 충전 인프라, 재생에너지 그리드 투자 폭증으로 $10,000/톤을 재돌파. S&P Global: 2035년까지 구리 수요 연간 500만 톤 추가 필요, 현재 파이프라인으로는 공급 불가.',
+    date: '2025-05-20',
+    source: 'S&P Global / LME',
+    url: 'https://www.spglobal.com/commodityinsights/copper-demand',
+  },
+  {
+    id: 'ind-002',
+    tickers: ['FCX', 'SCCO'],
+    category: 'copper',
+    type: 'report',
+    title: 'Goldman Sachs "구리는 새로운 석유" — 2025~2030 구조적 공급 부족 경고',
+    summary: 'Goldman Sachs 원자재 리포트: 구리는 에너지 전환의 핵심 금속으로 2025~2030년 구조적 공급 부족이 불가피. 신규 광산 개발 리드타임 15~20년, 탐사 투자 2010년대 대비 50% 감소. 2030년 구리 가격 $15,000/톤 전망.',
+    date: '2025-04-28',
+    source: 'Goldman Sachs Commodities Research',
+    url: 'https://www.goldmansachs.com/intelligence/pages/copper-new-oil.html',
+  },
+  {
+    id: 'ind-003',
+    tickers: ['VALE', 'BHP', 'RIO'],
+    category: 'iron',
+    type: 'market',
+    title: '철광석 가격 중국 부동산 침체로 $90/톤 하락 — 철강 수요 부진',
+    summary: '중국 부동산 시장 침체 장기화로 철광석 가격이 $90/톤 이하로 하락. BHP·Vale 등 대형 광산사 마진 압박 심화. 단, 인도 인프라 투자 증가와 글로벌 그린수소 제철 전환 수요가 중장기 반등 기대.',
+    date: '2025-08-30',
+    source: 'Fastmarkets',
+    url: 'https://www.fastmarkets.com/insights/iron-ore',
+  },
+  {
+    id: 'ind-004',
+    tickers: ['BHP', 'VALE', 'RIO', 'FCX'],
+    category: 'industrial',
+    type: 'report',
+    title: 'IEA: 에너지 전환에 2030년까지 광물 투자 $800억 부족',
+    summary: 'IEA 에너지 전환 광물 투자 분석: 태양광·풍력·EV·전력망 목표 달성을 위해 2030년까지 매년 $800억의 광물 투자가 추가로 필요. 구리·리튬·코발트·니켈 중심으로 공급 갭 확대 경고.',
+    date: '2025-09-24',
+    source: 'IEA',
+    url: 'https://www.iea.org/reports/energy-transition-mineral-investment',
+  },
+
+  // ══════════════════════════════════════
+  // 첨단 금속 (tech)
+  // ══════════════════════════════════════
+  {
+    id: 'tec-001',
+    tickers: ['CHEMI.HK'],
+    category: 'gallium',
+    type: 'regulation',
+    title: '중국, 갈륨·게르마늄 수출 전면 허가제 — 반도체·군사 전략물자 지정',
+    summary: '중국이 2023년 8월부터 갈륨·게르마늄 수출에 허가제를 도입한 데 이어 2024년 쿼터 강화. 중국은 전세계 갈륨의 80%, 게르마늄의 60% 공급국. GaAs·GaN 반도체, 위성통신 부품, 적외선 광학 장비에 필수.',
+    date: '2024-08-01',
+    source: '중국 상무부 / CSIS',
+    url: 'https://www.csis.org/analysis/china-gallium-germanium-export-controls',
+  },
+  {
+    id: 'tec-002',
+    tickers: ['INDM.L', 'AVGR'],
+    category: 'tech',
+    type: 'announcement',
+    title: '미국·EU, 핵심광물 파트너십(CMSP) 발효 — 갈륨·인듐·게르마늄 공동 비축',
+    summary: '미국·EU·일본·한국이 핵심광물 공급망 협정(CMSP)에 서명, 갈륨·인듐·게르마늄·흑연 공동 비축 및 생산국 다변화 추진. 중국 의존도를 2030년까지 50% 이하로 낮추는 로드맵 포함.',
+    date: '2025-02-14',
+    source: 'European Commission / US DoC',
+    url: 'https://trade.ec.europa.eu/critical-raw-materials',
+  },
+  {
+    id: 'tec-003',
+    tickers: ['U.S. Silica (SLCA)'],
+    category: 'tech',
+    type: 'market',
+    title: '반도체용 고순도 규사 수요 AI 칩 팹 증설로 급증 — TSMC·삼성 확보 경쟁',
+    summary: 'TSMC·삼성·인텔의 첨단 팹 증설로 반도체 등급 고순도 규사 수요가 2025년 전년비 22% 증가. 특히 2nm 이하 공정에서 SiO2 순도 99.9999% 이상 요구. 미국·호주 규사 광산업체들 증설 투자 러시.',
+    date: '2025-07-07',
+    source: 'SEMI Industry Research',
+    url: 'https://www.semi.org/en/industry-research',
+  },
+
+  // ══════════════════════════════════════
+  // 에너지 자원 — 석유 (oil)
+  // ══════════════════════════════════════
+  {
+    id: 'oil-001',
+    tickers: ['XOM', 'CVX', 'COP'],
+    category: 'oil',
+    type: 'market',
+    title: 'OPEC+ 감산 연장 — 2025년 하반기 원유 공급 하루 220만 배럴 축소',
+    summary: 'OPEC+가 2025년 하반기에도 하루 220만 배럴 자발적 감산을 유지키로 결정. 사우디·러시아 주도로 배럴당 $80 방어선 유지 시도. 반면 미국 셰일 증산과 수요 둔화 우려가 상충.',
+    date: '2025-06-02',
+    source: 'OPEC Secretariat',
+    url: 'https://www.opec.org/opec_web/en/press_room/7517.htm',
+  },
+  {
+    id: 'oil-002',
+    tickers: ['XOM', 'CVX', 'COP', 'PXD'],
+    category: 'oil',
+    type: 'news',
+    title: '미국 셰일 혁명 2.0 — 퍼미안 생산 2025년 일산 700만 배럴 돌파',
+    summary: '미국 퍼미안 분지 원유 생산량이 2025년 하루 700만 배럴을 돌파, 단일 유전으로는 세계 최대. ExxonMobil의 Pioneer 인수 시너지·기술 혁신(드릴링 자동화, AI 예측)이 생산성 향상 견인. 미국 전체 석유 생산 사상 최고 1,330만 b/d 달성.',
+    date: '2025-08-14',
+    source: 'EIA (미국 에너지정보청)',
+    url: 'https://www.eia.gov/petroleum/drilling/',
+  },
+  {
+    id: 'oil-003',
+    tickers: ['XOM', 'CVX'],
+    category: 'oil',
+    type: 'report',
+    title: 'IEA 석유 수요 전망: 2030년 전후 피크 오일 도래 전망',
+    summary: 'IEA World Energy Outlook 2025: 전기차·에너지 효율 개선으로 원유 수요가 2030년 전후 정점에 달한 뒤 완만히 감소 전망. 단 개발도상국 항공·석유화학 수요가 감소 속도를 늦추는 변수. 석유 메이저들의 투자 전략 변화 가속.',
+    date: '2025-10-16',
+    source: 'IEA World Energy Outlook 2025',
+    url: 'https://www.iea.org/reports/world-energy-outlook-2025',
+  },
+  {
+    id: 'oil-004',
+    tickers: ['XOM', 'SHEL', 'TTE'],
+    category: 'oil',
+    type: 'news',
+    title: '가이아나 스타브로크 블록 생산 40만 배럴 돌파 — 남미 新 석유 허브',
+    summary: 'ExxonMobil 운영 가이아나 스타브로크 블록 생산량이 40만 b/d를 돌파, 2030년 100만 b/d 목표. 발견 매장량 110억 배럴로 세계 최대 심해 유전 중 하나. 가이아나 GDP 성장률 세계 1위 기여.',
+    date: '2025-11-30',
+    source: 'ExxonMobil IR',
+    url: 'https://corporate.exxonmobil.com/news/guyana',
+  },
+
+  // ══════════════════════════════════════
+  // 에너지 자원 — 천연가스 (naturalgas)
+  // ══════════════════════════════════════
+  {
+    id: 'gas-001',
+    tickers: ['SHEL', 'CVX', 'WDS'],
+    category: 'naturalgas',
+    type: 'market',
+    title: 'LNG 가격 유럽 수요 폭증·러시아 공급 차단으로 고공 행진',
+    summary: '러-우 전쟁 이후 유럽의 파이프라인 가스 러시아 의존도가 2021년 40%에서 2025년 10% 이하로 급감. 대신 미국·카타르·호주 LNG 수입 폭증. JKM(아시아 LNG 가격)·TTF(유럽 가스가격) 간 프리미엄 구조 고착화.',
+    date: '2025-04-03',
+    source: 'S&P Global Platts',
+    url: 'https://www.spglobal.com/commodityinsights/lng',
+  },
+  {
+    id: 'gas-002',
+    tickers: ['COP', 'XOM', 'SHEL'],
+    category: 'naturalgas',
+    type: 'announcement',
+    title: '미국 LNG 수출 2025년 세계 1위 등극 — 카타르·호주 제치고 12억 ㎥/일',
+    summary: '미국이 2025년 LNG 수출량 기준 세계 최대 수출국으로 부상. Sabine Pass·Corpus Christi·Freeport·Cameron 등 7개 터미널 풀가동. Biden 정부의 수출 승인 보류 해제 후 신규 프로젝트 속도 가속.',
+    date: '2025-03-21',
+    source: 'EIA / Reuters',
+    url: 'https://www.eia.gov/naturalgas/ngl/nglviewer.php',
+  },
+  {
+    id: 'gas-003',
+    tickers: ['EQNR', 'SHEL'],
+    category: 'naturalgas',
+    type: 'news',
+    title: '노르웨이-EU, 가스 파이프라인 공급 계약 갱신 — 2040년까지 안정 공급',
+    summary: '노르웨이 Equinor가 EU와 2040년까지 가스 장기 공급 계약을 갱신. Troll·Oseberg·Johan Sverdrup 등 북해 가스전 추가 개발로 연간 공급량 유지. 유럽 에너지 안보의 핵심 파트너로 노르웨이 위상 강화.',
+    date: '2025-09-09',
+    source: 'Equinor IR',
+    url: 'https://www.equinor.com/news',
+  },
+  {
+    id: 'gas-004',
+    tickers: ['WDS', 'CVX', 'BHP'],
+    category: 'naturalgas',
+    type: 'announcement',
+    title: '호주 Browse Basin LNG 최종투자결정(FID) — $30억 신규 프로젝트',
+    summary: 'Woodside Energy가 서호주 Browse Basin 가스전 개발 최종투자결정을 내리고 $30억 규모 LNG 프로젝트 착공. 2030년 생산 목표, 일본·한국·중국에 25년 장기 공급 계약. 호주의 LNG 공급 세계 2위 지위 강화.',
+    date: '2026-02-08',
+    source: 'Woodside Energy IR',
+    url: 'https://www.woodside.com/investors',
+  },
+
+  // ══════════════════════════════════════
+  // 에너지 자원 — 석탄 (coal)
+  // ══════════════════════════════════════
+  {
+    id: 'coa-001',
+    tickers: ['BTU', 'ARCH', 'WHC.AX'],
+    category: 'coal',
+    type: 'market',
+    title: '코킹콜(원료탄) 가격 인도 철강 수요로 $250/톤 회복',
+    summary: '인도의 철강 수요 급증과 호주·미국 메탈코킹콜(원료탄) 공급 타이트로 가격이 $250/톤 수준 회복. 중국의 호주산 석탄 수입 재개 이후 구조가 바뀌어 인도·동남아가 새로운 수요처로 부상.',
+    date: '2025-07-18',
+    source: 'Platts Coking Coal',
+    url: 'https://www.spglobal.com/commodityinsights/coking-coal',
+  },
+  {
+    id: 'coa-002',
+    tickers: ['COALINDIA.NS', '601088.SS'],
+    category: 'coal',
+    type: 'news',
+    title: '인도 석탄 수입 2025년 사상 최고 — Coal India 생산 부족분 보완',
+    summary: '인도의 석탄 수입량이 2025 회계연도 2.7억 톤으로 사상 최고. 급증하는 전력 수요를 Coal India 국내 생산만으로 감당 못해 호주·인도네시아·남아공산 수입 확대. 인도 정부, 2030년까지 Coal India 생산 10억 톤 목표 설정.',
+    date: '2025-05-08',
+    source: 'Ministry of Coal India',
+    url: 'https://coal.nic.in/en/press-release',
+  },
+  {
+    id: 'coa-003',
+    tickers: ['BHP', 'GLEN.L', 'WHC.AX'],
+    category: 'coal',
+    type: 'regulation',
+    title: 'G7, 2035년 석탄 발전 단계적 퇴출 합의 — 신흥국 제외 조항 논란',
+    summary: 'G7 에너지부 장관 회의에서 2035년까지 석탄 발전 단계적 퇴출에 원칙 합의. 단 "에너지 안보 위기 시 예외" 조항 및 개발도상국 적용 제외로 실효성 논란. 유럽 탄소국경세(CBAM)와 연계, 석탄 수출국에 대한 무역 압박 가중.',
+    date: '2025-06-27',
+    source: 'G7 Energy Ministers Communiqué',
+    url: 'https://www.g7italy.it/en/energy',
+  },
+  {
+    id: 'coa-004',
+    tickers: ['BTU', 'ARCH'],
+    category: 'coal',
+    type: 'report',
+    title: 'IEA: 글로벌 석탄 수요 2025년 사상 최고 후 완만한 감소 전망',
+    summary: 'IEA Coal 2025 보고서: 글로벌 석탄 수요는 2025년 역대 최고인 87억 톤을 기록한 뒤 완만한 감소세 진입 예상. 아시아 신흥국(인도·인도네시아·베트남)의 수요 증가가 선진국 감소를 상쇄. 탈석탄보다 연료 전환 속도가 느린 현실 반영.',
+    date: '2025-12-04',
+    source: 'IEA Coal 2025',
+    url: 'https://www.iea.org/reports/coal-2025',
+  },
+];
