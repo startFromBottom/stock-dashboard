@@ -158,9 +158,9 @@ const ZONE_DEFS = [
     label: '🏗️ 건설/엔지니어링',
     layer: '🏭 물리 인프라 레이어',
     role: '데이터센터 부지 선정·설계·전기/기계 시공 전담. AI 붐으로 글로벌 착공 물량이 폭증해 수주 잔고가 사상 최고치.',
-    x: FAC_X, y: R3_Y, w: FAC_W, h: R3_H,
+    x: 0, y: R3_Y, w: W, h: R3_H,
     rx: 0,
-    svgLabel: { x: FAC_X + FAC_W / 2, y: R3_Y + R3_H / 2 },
+    svgLabel: { x: W / 2, y: R3_Y + R3_H / 2 },
   },
 ];
 

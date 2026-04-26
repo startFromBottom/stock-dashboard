@@ -11,6 +11,10 @@ import RawMaterialsMap from './RawMaterialsMap';
 import RawNewsSection from './RawNewsSection';
 import EnergyDashboard from './EnergyDashboard';
 import EnergyNewsSection from './EnergyNewsSection';
+import BiotechDashboard from './BiotechDashboard';
+import BiotechNewsSection from './BiotechNewsSection';
+import FintechDashboard from './FintechDashboard';
+import FintechNewsSection from './FintechNewsSection';
 import EtfPanel from './EtfPanel';
 
 /* ── 섹터 선택 ── */
@@ -20,6 +24,8 @@ const SECTORS = [
   { id: 'space',   label: '우주',           icon: '🚀' },
   { id: 'raw',     label: '원자재',         icon: '⛏️' },
   { id: 'energy',  label: '에너지',         icon: '⚡' },
+  { id: 'biotech', label: '바이오테크',     icon: '🧬' },
+  { id: 'fintech', label: '핀테크',         icon: '💳' },
 ];
 
 /* ── 데이터센터 탭 ── */
@@ -52,31 +58,46 @@ const ENERGY_TABS = [
   { id: 'news',  label: '📰 뉴스 & 리포트' },
 ];
 
+/* ── 바이오테크 탭 ── */
+const BIOTECH_TABS = [
+  { id: 'chain', label: '🧬 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 리포트' },
+];
+
+/* ── 핀테크 탭 ── */
+const FINTECH_TABS = [
+  { id: 'chain', label: '💳 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 리포트' },
+];
+
 export default function Dashboard() {
-  const [sector,    setSector]    = useState('ai-dc');
-  const [dcTab,     setDcTab]     = useState('illust');
-  const [semiTab,   setSemiTab]   = useState('chain');
-  const [spaceTab,  setSpaceTab]  = useState('chain');
-  const [rawTab,    setRawTab]    = useState('map');
-  const [energyTab, setEnergyTab] = useState('chart');
+  const [sector,     setSector]     = useState('ai-dc');
+  const [dcTab,      setDcTab]      = useState('illust');
+  const [semiTab,    setSemiTab]    = useState('chain');
+  const [spaceTab,   setSpaceTab]   = useState('chain');
+  const [rawTab,     setRawTab]     = useState('map');
+  const [energyTab,  setEnergyTab]  = useState('chart');
+  const [biotechTab, setBiotechTab] = useState('chain');
 
   const now = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric', month: 'long', day: 'numeric',
   });
 
   const headerTitle =
-    sector === 'ai-dc'  ? <>🏢 AI 데이터센터 <span>인프라</span></> :
-    sector === 'semi'   ? <>🔬 반도체 <span>밸류체인</span></> :
-    sector === 'space'  ? <>🚀 우주 섹터 <span>밸류체인</span></> :
-    sector === 'energy' ? <>⚡ 에너지 <span>섹터</span></> :
-                          <>⛏️ 원자재 <span>매장량 분포</span></>;
+    sector === 'ai-dc'   ? <>🏢 AI 데이터센터 <span>인프라</span></> :
+    sector === 'semi'    ? <>🔬 반도체 <span>밸류체인</span></> :
+    sector === 'space'   ? <>🚀 우주 섹터 <span>밸류체인</span></> :
+    sector === 'energy'  ? <>⚡ 에너지 <span>섹터</span></> :
+    sector === 'biotech' ? <>🧬 바이오테크 <span>AI 신약개발</span></> :
+                           <>⛏️ 원자재 <span>매장량 분포</span></>;
 
   const headerDesc =
-    sector === 'ai-dc'  ? 'AI 데이터센터 레이어별 구성 요소 · 시가총액 Top 10 기업 · 최신 뉴스 & 리포트' :
-    sector === 'semi'   ? '실리콘 원자재 → EDA/IP → 소재 → 장비 → 파운드리 → 팹리스 → 패키징 → 테스트 → 유통 · 각 단계 Top 10 기업' :
-    sector === 'space'  ? '소재·부품·엔진 → 발사체·론치 → 위성 제작·운용 → 우주 데이터·분석 → 국방·응용 · 각 레이어 Top 기업' :
-    sector === 'energy' ? '화석연료 · 원자력 · 수력 · 풍력 · 태양광 · SMR · 연료전지 · 지열 · 바이오매스 · 조력 — IEA 2024 발전 비중 & 메이저 기업' :
-                          '희토류 · 구리 · 금&은&백금 · 모래(규사) · 철 — 대륙별 전세계 매장량 비중 시각화 · USGS 2024 기준';
+    sector === 'ai-dc'   ? 'AI 데이터센터 레이어별 구성 요소 · 시가총액 Top 10 기업 · 최신 뉴스 & 리포트' :
+    sector === 'semi'    ? '실리콘 원자재 → EDA/IP → 소재 → 장비 → 파운드리 → 팹리스 → 패키징 → 테스트 → 유통 · 각 단계 Top 10 기업' :
+    sector === 'space'   ? '소재·부품·엔진 → 발사체·론치 → 위성 제작·운용 → 우주 데이터·분석 → 국방·응용 · 각 레이어 Top 기업' :
+    sector === 'energy'  ? '화석연료 · 원자력 · 수력 · 풍력 · 태양광 · SMR · 연료전지 · 지열 · 바이오매스 · 조력 — IEA 2024 발전 비중 & 메이저 기업' :
+    sector === 'biotech' ? 'AI 신약설계 플랫폼 → 유전체·데이터 → 치료 모달리티 → CRO → CDMO → 빅파마 → 진단·의료기기 · 각 레이어 Top 기업' :
+                           '희토류 · 구리 · 금&은&백금 · 모래(규사) · 철 — 대륙별 전세계 매장량 비중 시각화 · USGS 2024 기준';
 
   return (
     <div className="page-wrap">
@@ -197,6 +218,25 @@ export default function Dashboard() {
           </nav>
           {energyTab === 'chart' && <EnergyDashboard />}
           {energyTab === 'news'  && <EnergyNewsSection />}
+        </>
+      )}
+
+      {/* ── 바이오테크 섹션 ── */}
+      {sector === 'biotech' && (
+        <>
+          <nav className="tab-nav">
+            {BIOTECH_TABS.map(t => (
+              <button
+                key={t.id}
+                className={`tab-btn${biotechTab === t.id ? ' active' : ''}`}
+                onClick={() => setBiotechTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {biotechTab === 'chain' && <BiotechDashboard />}
+          {biotechTab === 'news'  && <BiotechNewsSection />}
         </>
       )}
     </div>
