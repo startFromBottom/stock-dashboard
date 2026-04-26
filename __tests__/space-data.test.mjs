@@ -20,13 +20,19 @@ import {
 } from '../data/space-news.js';
 
 // ─── 상수 ────────────────────────────────────────────────────
-const EXPECTED_LAYER_IDS    = ['launch', 'satellite', 'data', 'defense', 'materials'];
+// 새 구조: 물리 인프라(materials→launch→satellite) + 서비스 계층(services) + 수평 응용처(defense)
+const EXPECTED_LAYER_IDS    = ['materials', 'launch', 'satellite', 'services', 'defense'];
 const EXPECTED_COMPONENT_IDS = [
-  'launch_vehicle',
-  'sat_manufacturer', 'sat_comms',
-  'earth_observation', 'space_analytics',
-  'defense_space',
+  // materials
   'propulsion', 'advanced_materials', 'precision_parts',
+  // launch
+  'launch_vehicle',
+  // satellite
+  'sat_manufacturer',
+  // services (서비스 계층 서브 컴포넌트)
+  'sat_comms', 'earth_observation', 'space_analytics',
+  // defense
+  'defense_space',
 ];
 const VALID_TYPES = ['news', 'announcement', 'report'];
 const VALID_CATEGORIES = Object.keys(SPACE_CATEGORY_LABEL);
@@ -45,18 +51,37 @@ describe('SPACE_LAYERS 구조', () => {
     assert.equal(SPACE_LAYERS.length, 5);
   });
 
-  test('레이어 id가 정해진 목록과 일치한다', () => {
+  test('레이어 id가 정해진 목록과 순서대로 일치한다', () => {
     const ids = SPACE_LAYERS.map(l => l.id);
     assert.deepEqual(ids, EXPECTED_LAYER_IDS);
   });
 
-  test('모든 레이어에 id·layer·components 필드가 있다', () => {
+  test('모든 레이어에 id·layer·group·components 필드가 있다', () => {
+    const VALID_GROUPS = ['infra', 'service', 'application'];
     for (const layer of SPACE_LAYERS) {
       assert.ok(layer.id,         `레이어 id 누락: ${JSON.stringify(layer)}`);
       assert.ok(layer.layer,      `레이어 layer 누락: ${layer.id}`);
+      assert.ok(VALID_GROUPS.includes(layer.group), `레이어 group 유효하지 않음: ${layer.id} group=${layer.group}`);
       assert.ok(Array.isArray(layer.components), `components가 배열 아님: ${layer.id}`);
       assert.ok(layer.components.length > 0,    `components가 비어 있음: ${layer.id}`);
     }
+  });
+
+  test('group 필드가 올바른 구조로 배치돼 있다 (infra→service→application)', () => {
+    const groups = SPACE_LAYERS.map(l => l.group);
+    // 인프라가 앞에, 서비스가 중간, 응용이 끝
+    const infraLayers = SPACE_LAYERS.filter(l => l.group === 'infra');
+    const serviceLayers = SPACE_LAYERS.filter(l => l.group === 'service');
+    const appLayers = SPACE_LAYERS.filter(l => l.group === 'application');
+    assert.ok(infraLayers.length >= 1, '인프라(infra) 레이어 없음');
+    assert.ok(serviceLayers.length >= 1, '서비스(service) 레이어 없음');
+    assert.ok(appLayers.length >= 1, '응용(application) 레이어 없음');
+    // 순서: 모든 infra가 service 앞에, service가 application 앞에
+    const firstServiceIdx = groups.indexOf('service');
+    const firstAppIdx = groups.indexOf('application');
+    const lastInfraIdx = groups.lastIndexOf('infra');
+    assert.ok(lastInfraIdx < firstServiceIdx, 'infra 레이어가 service보다 앞에 있어야 함');
+    assert.ok(firstServiceIdx < firstAppIdx, 'service 레이어가 application보다 앞에 있어야 함');
   });
 
   test('9개 컴포넌트가 모두 존재한다', () => {

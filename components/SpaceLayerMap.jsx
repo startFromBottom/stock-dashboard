@@ -4,12 +4,16 @@ import { useState } from 'react';
 import { SPACE_LAYERS } from '@/data/spaceCompanies';
 import SpaceCompanyPanel from './SpaceCompanyPanel';
 
-export default function SpaceLayerMap({ filterLayerId } = {}) {
+export default function SpaceLayerMap({ filterLayerId, filterComponentId } = {}) {
   const [activeComp, setActiveComp] = useState(null);
 
   // filterLayerId가 있으면 해당 레이어만, 없으면 전체 표시
   const visibleLayers = filterLayerId
-    ? SPACE_LAYERS.filter(l => l.id === filterLayerId)
+    ? SPACE_LAYERS.filter(l => l.id === filterLayerId).map(layer =>
+        filterComponentId
+          ? { ...layer, components: layer.components.filter(c => c.id === filterComponentId) }
+          : layer
+      )
     : SPACE_LAYERS;
 
   const handleSelect = (comp) => {
