@@ -10,6 +10,7 @@ import SpaceNewsSection from './SpaceNewsSection';
 import RawMaterialsMap from './RawMaterialsMap';
 import RawNewsSection from './RawNewsSection';
 import EnergyDashboard from './EnergyDashboard';
+import EtfPanel from './EtfPanel';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
@@ -98,6 +99,9 @@ export default function Dashboard() {
           </button>
         ))}
       </div>
+
+      {/* ── ETF 패널 (섹터 공통) ── */}
+      <EtfPanel sectorId={sector} />
 
       {/* ── AI 데이터센터 섹션 ── */}
       {sector === 'ai-dc' && (

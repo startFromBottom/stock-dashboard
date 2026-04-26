@@ -788,11 +788,172 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--text-secondary);
 }
 
+/* ════════════════════════════════════════
+   ETF 패널
+════════════════════════════════════════ */
+.etf-panel {
+  background: #0f1e35;
+  border: 1px solid #1e3a5f;
+  border-radius: var(--radius);
+  padding: 16px 18px 18px;
+  margin-bottom: 20px;
+}
+.etf-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.etf-panel-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+.etf-panel-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.etf-panel-note {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ETF 그리드 */
+.etf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+/* ETF 카드 */
+.etf-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: #0a1628;
+  border: 1px solid #1e3355;
+  border-radius: 8px;
+  padding: 12px 13px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+.etf-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* 상단: 티커 + 가격 */
+.etf-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+}
+.etf-ticker-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.etf-ticker {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--accent-light);
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+.etf-issuer {
+  font-size: 9px;
+  color: var(--text-muted);
+}
+.etf-price-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.etf-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: monospace;
+}
+.etf-change {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: monospace;
+}
+.etf-price-loading {
+  font-size: 12px;
+  color: var(--text-muted);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+/* ETF 이름 */
+.etf-name {
+  font-size: 10px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-top: 1px;
+}
+
+/* 포커스 태그 */
+.etf-focus-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 600;
+  color: #818cf8;
+  background: #1e1b4b;
+  border: 1px solid #3730a3;
+  border-radius: 4px;
+  padding: 1px 6px;
+  width: fit-content;
+}
+
+/* 설명 */
+.etf-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* 하단 메타 */
+.etf-meta-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.etf-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.etf-meta-label {
+  font-size: 8px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.etf-meta-value {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+
 /* ── 반응형 ── */
 @media (max-width: 900px) {
   .sector-nav { gap: 6px; }
   .sector-btn { padding: 5px 14px; font-size: 12px; }
   .semi-chain-wrap { border-radius: 8px; }
+  .etf-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
 }
 
 /* ── Responsive (기존 - 중복 제거됨, 위 섹션에 통합) ── */
