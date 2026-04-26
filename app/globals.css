@@ -255,6 +255,56 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .company-mktcap { font-size: 12px; font-weight: 700; color: var(--accent-light); margin-bottom: 6px; }
 .company-detail { font-size: 10.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px; }
 
+/* ── 거래량 + RSI 행 ── */
+.stock-metrics-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.stock-metric-item {
+  flex: 1;
+  background: #0d1b2e;
+  border: 1px solid #1e3a5f;
+  border-radius: 6px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.stock-metric-label {
+  font-size: 9px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.stock-metric-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-light);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: monospace;
+}
+.rsi-badge {
+  font-size: 8px;
+  font-weight: 600;
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 1px 4px;
+  font-family: sans-serif;
+  letter-spacing: 0.02em;
+}
+.metrics-loading {
+  color: var(--text-muted) !important;
+  font-size: 11px;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
 .company-links {
   display: flex;
   gap: 6px;

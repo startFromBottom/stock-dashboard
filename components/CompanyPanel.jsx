@@ -3,10 +3,29 @@
 import { useMemo, useState } from 'react';
 import { FLAG_BY_NAME } from '@/data/companies';
 import useMarketCaps from '@/hooks/useMarketCaps';
+import useStockMetrics from '@/hooks/useStockMetrics';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
 import { DC_GLOSSARY_ITEMS } from '@/data/dc-glossary';
 
 const RANK_LABELS = ['🥇 1위', '🥈 2위', '🥉 3위', '4위', '5위', '6위', '7위', '8위', '9위', '10위'];
+
+/* ══════════════════════════════════════════════════
+   RSI 유틸
+══════════════════════════════════════════════════ */
+function getRsiStyle(rsi) {
+  if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
+  if (rsi >= 70) return { color: '#f87171', label: `${rsi}`, badge: '과매수' };
+  if (rsi <= 30) return { color: '#60a5fa', label: `${rsi}`, badge: '과매도' };
+  return { color: '#4ade80', label: `${rsi}`, badge: '중립' };
+}
+
+function formatVolume(vol) {
+  if (!vol || vol <= 0) return '—';
+  if (vol >= 1_000_000_000) return `${(vol / 1_000_000_000).toFixed(2)}B`;
+  if (vol >= 1_000_000)     return `${(vol / 1_000_000).toFixed(2)}M`;
+  if (vol >= 1_000)         return `${(vol / 1_000).toFixed(1)}K`;
+  return `${vol}`;
+}
 
 /* ══════════════════════════════════════════════════
    HBM 스택 다이어그램 (메모리 컴포넌트 전용)
@@ -125,6 +144,7 @@ function PanelInner({ comp }) {
   );
 
   const { mktcaps, loading, error, fresh } = useMarketCaps(tickers);
+  const { metrics: stockMetrics, loading: metricsLoading } = useStockMetrics(tickers);
 
   // 전체 후보풀을 시총으로 정렬
   const sortedPool = useMemo(() => {
@@ -190,6 +210,12 @@ function PanelInner({ comp }) {
           const liveMktcap = c.liveCap ? formatMktcap(c.liveCap) : null;
           const displayRank = idx + 1;
 
+          // 거래량 + RSI
+          const fmpTicker = normalizeTicker(c.ticker);
+          const sm = fmpTicker ? stockMetrics[fmpTicker] : null;
+          const rsiStyle = getRsiStyle(sm?.rsi ?? null);
+          const volStr   = formatVolume(sm?.volume ?? null);
+
           return (
             <div key={`top-${c.rank}-${c.name}`} className="company-card">
               <span className={`rank-badge rank-${displayRank}`}>
@@ -216,6 +242,32 @@ function PanelInner({ comp }) {
                   c.mktcap
                 )}
               </div>
+
+              {/* ── 거래량 + RSI 행 ── */}
+              <div className="stock-metrics-row">
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">거래량</span>
+                  <span className="stock-metric-value">
+                    {metricsLoading ? <span className="metrics-loading">…</span> : volStr}
+                  </span>
+                </div>
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">RSI(14)</span>
+                  {metricsLoading ? (
+                    <span className="stock-metric-value metrics-loading">…</span>
+                  ) : (
+                    <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
+                      {rsiStyle.label}
+                      {rsiStyle.badge && (
+                        <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
+                          {rsiStyle.badge}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
+              </div>
+
               <div className="company-detail">{c.detail}</div>
               <div className="company-links">
                 <a href={c.ir}   target="_blank" rel="noopener noreferrer" className="link-btn">📊 IR</a>
