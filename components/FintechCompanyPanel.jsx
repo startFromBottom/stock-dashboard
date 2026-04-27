@@ -46,9 +46,7 @@ function PanelInner({ comp }) {
       const liveCap = fmpTicker ? mktcaps[fmpTicker] : undefined;
       return { ...c, liveCap };
     });
-
     if (Object.keys(mktcaps).length === 0) return withLive;
-
     return [...withLive].sort((a, b) => {
       if (a.liveCap && b.liveCap) return b.liveCap - a.liveCap;
       if (a.liveCap) return -1;
@@ -80,89 +78,72 @@ function PanelInner({ comp }) {
             )}
           </div>
         </div>
-        {fresh && (
-          <div className="panel-refresh-note">{now} 기준 실시간</div>
-        )}
+        {fresh && <div className="panel-refresh-note">{now} 기준 실시간</div>}
       </div>
 
       {/* ── Top 10 그리드 ── */}
       <div className="companies-grid">
         {top10.map((c, idx) => {
-          const flag = FINTECH_FLAG_BY_NAME[c.name] ?? '🌐';
+          const flag       = FINTECH_FLAG_BY_NAME[c.name] ?? '🌐';
           const liveMktcap = c.liveCap ? formatMktcap(c.liveCap) : null;
           const displayRank = idx + 1;
-
-          const fmpTicker = normalizeTicker(c.ticker);
-          const sm = fmpTicker ? stockMetrics[fmpTicker] : null;
-          const rsiStyle = getRsiStyle(sm?.rsi ?? null);
-          const volStr   = formatVolume(sm?.volume ?? null);
+          const fmpTicker  = normalizeTicker(c.ticker);
+          const sm         = fmpTicker ? stockMetrics[fmpTicker] : null;
+          const rsiStyle   = getRsiStyle(sm?.rsi ?? null);
+          const volStr     = formatVolume(sm?.volume ?? null);
 
           return (
-            <div key={c.name} className="company-card">
-              {/* 순위 배지 */}
-              <div className="rank-badge">
-                {displayRank <= 3
-                  ? RANK_LABELS[displayRank - 1]
-                  : `${displayRank}위`}
-              </div>
-
-              {/* 기업명 + 국적 */}
-              <div className="company-name-row">
-                <span className="company-flag">{flag}</span>
-                <span className="company-name">{c.name}</span>
-              </div>
-
-              {/* 티커 */}
-              <div className="company-ticker">
-                {c.ticker === 'Private' ? (
-                  <span className="ticker-private">비상장</span>
-                ) : (
-                  <a
-                    href={`https://finance.yahoo.com/quote/${c.ticker}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ticker-link"
-                  >
-                    {c.ticker}
-                  </a>
-                )}
-              </div>
-
-              {/* 시총 */}
-              <div className="company-mktcap">
-                {liveMktcap
-                  ? <><span className="live-dot">●</span> {liveMktcap}</>
-                  : c.mktcap}
-              </div>
-
-              {/* 주가 지표 (상장사만) */}
-              {sm && (
-                <div className="stock-metrics-row">
-                  <span style={{ color: rsiStyle.color, fontSize: '0.72rem' }}>
-                    RSI {rsiStyle.label}
-                    {rsiStyle.badge && (
-                      <span className="rsi-badge" style={{ background: rsiStyle.color }}>
-                        {rsiStyle.badge}
-                      </span>
-                    )}
+            <div key={`top-${c.rank}-${c.name}`} className="company-card">
+              <span className={`rank-badge rank-${displayRank}`}>
+                {RANK_LABELS[displayRank - 1] ?? `${displayRank}위`}
+                {fresh && displayRank !== c.rank && (
+                  <span className={`rank-change ${displayRank < c.rank ? 'rank-up' : 'rank-down'}`}>
+                    {displayRank < c.rank ? ` ▲${c.rank - displayRank}` : ` ▼${displayRank - c.rank}`}
                   </span>
-                  {sm.pe !== null && sm.pe !== undefined && (
-                    <span className="pe-badge">P/E {sm.pe}</span>
-                  )}
-                  {sm.volume > 0 && (
-                    <span className="vol-badge">Vol {volStr}</span>
+                )}
+              </span>
+              <div className="company-name">
+                <span className="company-flag">{flag}</span>
+                {c.name}
+              </div>
+              <div className="company-ticker">
+                {c.ticker === 'Private'
+                  ? <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>비상장</span>
+                  : c.ticker}
+              </div>
+              <div className="company-mktcap">
+                {liveMktcap ? (
+                  <>{liveMktcap}<span className="mktcap-live-dot" title="실시간 데이터">●</span></>
+                ) : c.mktcap}
+              </div>
+              <div className="stock-metrics-row">
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">거래량</span>
+                  <span className="stock-metric-value">
+                    {metricsLoading ? <span className="metrics-loading">…</span> : volStr}
+                  </span>
+                </div>
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">RSI(14)</span>
+                  {metricsLoading ? (
+                    <span className="stock-metric-value metrics-loading">…</span>
+                  ) : (
+                    <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
+                      {rsiStyle.label}
+                      {rsiStyle.badge && (
+                        <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
+                          {rsiStyle.badge}
+                        </span>
+                      )}
+                    </span>
                   )}
                 </div>
-              )}
-
-              {/* 기업 상세 설명 */}
+              </div>
               <div className="company-detail">{c.detail}</div>
-
-              {/* 링크 */}
               <div className="company-links">
-                <a href={c.ir}   target="_blank" rel="noopener noreferrer">IR</a>
-                <a href={c.news} target="_blank" rel="noopener noreferrer">뉴스</a>
-                <a href={c.x}    target="_blank" rel="noopener noreferrer">X</a>
+                <a href={c.ir}   target="_blank" rel="noopener noreferrer" className="link-btn">📊 IR</a>
+                <a href={c.news} target="_blank" rel="noopener noreferrer" className="link-btn">📰 뉴스</a>
+                <a href={c.x}    target="_blank" rel="noopener noreferrer" className="link-btn">𝕏 X</a>
               </div>
             </div>
           );
@@ -171,58 +152,43 @@ function PanelInner({ comp }) {
 
       {/* ── 더보기 (11위~) ── */}
       {rest.length > 0 && (
-        <div style={{ marginTop: 12, textAlign: 'center' }}>
+        <div className="more-section">
           <button
-            className="show-more-btn"
+            className="more-toggle-btn"
             onClick={() => setShowMore(v => !v)}
           >
-            {showMore ? '▲ 접기' : `▼ ${rest.length}개 더보기`}
+            {showMore
+              ? '▲ 접기'
+              : `▼ 후보풀 더보기 (${rest.length}개 — 현재 Top 10 외)`}
           </button>
           {showMore && (
-            <div className="companies-grid" style={{ marginTop: 12 }}>
+            <div className="more-grid">
               {rest.map((c, idx) => {
-                const flag = FINTECH_FLAG_BY_NAME[c.name] ?? '🌐';
+                const flag       = FINTECH_FLAG_BY_NAME[c.name] ?? '🌐';
                 const liveMktcap = c.liveCap ? formatMktcap(c.liveCap) : null;
                 const displayRank = top10.length + idx + 1;
-                const fmpTicker = normalizeTicker(c.ticker);
-                const sm = fmpTicker ? stockMetrics[fmpTicker] : null;
-                const rsiStyle = getRsiStyle(sm?.rsi ?? null);
-                const volStr   = formatVolume(sm?.volume ?? null);
-
                 return (
-                  <div key={c.name} className="company-card">
-                    <div className="rank-badge">{displayRank}위</div>
-                    <div className="company-name-row">
+                  <div key={`more-${c.rank}-${c.name}`} className="company-card more-card">
+                    <span className="rank-badge rank-more">{displayRank}위</span>
+                    <div className="company-name">
                       <span className="company-flag">{flag}</span>
-                      <span className="company-name">{c.name}</span>
+                      {c.name}
                     </div>
                     <div className="company-ticker">
-                      {c.ticker === 'Private' ? (
-                        <span className="ticker-private">비상장</span>
-                      ) : (
-                        <a href={`https://finance.yahoo.com/quote/${c.ticker}`} target="_blank" rel="noopener noreferrer" className="ticker-link">
-                          {c.ticker}
-                        </a>
-                      )}
+                      {c.ticker === 'Private'
+                        ? <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>비상장</span>
+                        : c.ticker}
                     </div>
-                    <div className="company-mktcap">
-                      {liveMktcap ? <><span className="live-dot">●</span> {liveMktcap}</> : c.mktcap}
+                    <div className="company-mktcap" style={{ color: 'var(--text-muted)' }}>
+                      {liveMktcap ? (
+                        <>{liveMktcap}<span className="mktcap-live-dot" title="실시간 데이터">●</span></>
+                      ) : c.mktcap}
                     </div>
-                    {sm && (
-                      <div className="stock-metrics-row">
-                        <span style={{ color: rsiStyle.color, fontSize: '0.72rem' }}>
-                          RSI {rsiStyle.label}
-                          {rsiStyle.badge && <span className="rsi-badge" style={{ background: rsiStyle.color }}>{rsiStyle.badge}</span>}
-                        </span>
-                        {sm.pe !== null && sm.pe !== undefined && <span className="pe-badge">P/E {sm.pe}</span>}
-                        {sm.volume > 0 && <span className="vol-badge">Vol {volStr}</span>}
-                      </div>
-                    )}
                     <div className="company-detail">{c.detail}</div>
                     <div className="company-links">
-                      <a href={c.ir} target="_blank" rel="noopener noreferrer">IR</a>
-                      <a href={c.news} target="_blank" rel="noopener noreferrer">뉴스</a>
-                      <a href={c.x} target="_blank" rel="noopener noreferrer">X</a>
+                      <a href={c.ir}   target="_blank" rel="noopener noreferrer" className="link-btn">📊 IR</a>
+                      <a href={c.news} target="_blank" rel="noopener noreferrer" className="link-btn">📰 뉴스</a>
+                      <a href={c.x}    target="_blank" rel="noopener noreferrer" className="link-btn">𝕏 X</a>
                     </div>
                   </div>
                 );

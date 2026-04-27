@@ -15,6 +15,10 @@ import BiotechDashboard from './BiotechDashboard';
 import BiotechNewsSection from './BiotechNewsSection';
 import FintechDashboard from './FintechDashboard';
 import FintechNewsSection from './FintechNewsSection';
+import HealthcareDashboard from './HealthcareDashboard';
+import HealthcareNewsSection from './HealthcareNewsSection';
+import QuantumDashboard from './QuantumDashboard';
+import QuantumNewsSection from './QuantumNewsSection';
 import EtfPanel from './EtfPanel';
 import SectorOverview from './SectorOverview';
 import TodayHeadline from './TodayHeadline';
@@ -29,6 +33,8 @@ const SECTORS = [
   { id: 'energy',  label: '에너지',         icon: '⚡' },
   { id: 'biotech', label: '바이오테크',     icon: '🧬' },
   { id: 'fintech', label: '핀테크',         icon: '💳' },
+  { id: 'healthcare', label: '헬스케어',    icon: '🏥' },
+  { id: 'quantum', label: '양자컴퓨터',     icon: '⚛️' },
 ];
 
 /* ── 데이터센터 탭 ── */
@@ -73,36 +79,57 @@ const FINTECH_TABS = [
   { id: 'news',  label: '📰 뉴스 & 리포트' },
 ];
 
+/* ── 헬스케어 탭 ── */
+const HEALTHCARE_TABS = [
+  { id: 'chain', label: '🏥 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 리포트' },
+];
+
+/* ── 양자컴퓨터 탭 ── */
+const QUANTUM_TABS = [
+  { id: 'chain', label: '⚛️ 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 리포트' },
+];
+
 export default function Dashboard() {
-  const [sector,     setSector]     = useState('overview');
-  const [dcTab,      setDcTab]      = useState('illust');
-  const [semiTab,    setSemiTab]    = useState('chain');
-  const [spaceTab,   setSpaceTab]   = useState('chain');
-  const [rawTab,     setRawTab]     = useState('map');
-  const [energyTab,  setEnergyTab]  = useState('chart');
-  const [biotechTab, setBiotechTab] = useState('chain');
+  const [sector,        setSector]        = useState('overview');
+  const [dcTab,         setDcTab]         = useState('illust');
+  const [semiTab,       setSemiTab]       = useState('chain');
+  const [spaceTab,      setSpaceTab]      = useState('chain');
+  const [rawTab,        setRawTab]        = useState('map');
+  const [energyTab,     setEnergyTab]     = useState('chart');
+  const [biotechTab,    setBiotechTab]    = useState('chain');
+  const [fintechTab,    setFintechTab]    = useState('chain');
+  const [healthcareTab, setHealthcareTab] = useState('chain');
+  const [quantumTab,    setQuantumTab]    = useState('chain');
 
   const now = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric', month: 'long', day: 'numeric',
   });
 
   const headerTitle =
-    sector === 'overview' ? <>🌐 섹터 <span>전망</span></> :
-    sector === 'ai-dc'   ? <>🏢 AI 데이터센터 <span>인프라</span></> :
-    sector === 'semi'    ? <>🔬 반도체 <span>밸류체인</span></> :
-    sector === 'space'   ? <>🚀 우주 섹터 <span>밸류체인</span></> :
-    sector === 'energy'  ? <>⚡ 에너지 <span>섹터</span></> :
-    sector === 'biotech' ? <>🧬 바이오테크 <span>AI 신약개발</span></> :
-                           <>⛏️ 원자재 <span>매장량 분포</span></>;
+    sector === 'overview'   ? <>🌐 섹터 <span>전망</span></> :
+    sector === 'ai-dc'      ? <>🏢 AI 데이터센터 <span>인프라</span></> :
+    sector === 'semi'       ? <>🔬 반도체 <span>밸류체인</span></> :
+    sector === 'space'      ? <>🚀 우주 섹터 <span>밸류체인</span></> :
+    sector === 'energy'     ? <>⚡ 에너지 <span>섹터</span></> :
+    sector === 'biotech'    ? <>🧬 바이오테크 <span>AI 신약개발</span></> :
+    sector === 'fintech'    ? <>💳 핀테크 <span>금융 인프라</span></> :
+    sector === 'healthcare' ? <>🏥 헬스케어 <span>의료기기</span></> :
+    sector === 'quantum'    ? <>⚛️ 양자컴퓨터 <span>밸류체인</span></> :
+                              <>⛏️ 원자재 <span>매장량 분포</span></>;
 
   const headerDesc =
-    sector === 'overview' ? '7개 섹터 한눈에 비교 — ETF 수익률 · 시총 가중 등락 · 모멘텀 · 밸류에이션 · 거래 활성도 · 변동성 · 기간별 토글' :
-    sector === 'ai-dc'   ? 'AI 데이터센터 레이어별 구성 요소 · 시가총액 Top 10 기업 · 최신 뉴스 & 리포트' :
-    sector === 'semi'    ? '실리콘 원자재 → EDA/IP → 소재 → 장비 → 파운드리 → 팹리스 → 패키징 → 테스트 → 유통 · 각 단계 Top 10 기업' :
-    sector === 'space'   ? '소재·부품·엔진 → 발사체·론치 → 위성 제작·운용 → 우주 데이터·분석 → 국방·응용 · 각 레이어 Top 기업' :
-    sector === 'energy'  ? '화석연료 · 원자력 · 수력 · 풍력 · 태양광 · SMR · 연료전지 · 지열 · 바이오매스 · 조력 — IEA 2024 발전 비중 & 메이저 기업' :
-    sector === 'biotech' ? 'AI 신약설계 플랫폼 → 유전체·데이터 → 치료 모달리티 → CRO → CDMO → 빅파마 → 진단·의료기기 · 각 레이어 Top 기업' :
-                           '희토류 · 구리 · 금&은&백금 · 모래(규사) · 철 — 대륙별 전세계 매장량 비중 시각화 · USGS 2024 기준';
+    sector === 'overview'   ? '10개 섹터 한눈에 비교 — ETF 수익률 · 시총 가중 등락 · 모멘텀 · 밸류에이션 · 거래 활성도 · 변동성 · 기간별 토글' :
+    sector === 'ai-dc'      ? 'AI 데이터센터 레이어별 구성 요소 · 시가총액 Top 10 기업 · 최신 뉴스 & 리포트' :
+    sector === 'semi'       ? '실리콘 원자재 → EDA/IP → 소재 → 장비 → 파운드리 → 팹리스 → 패키징 → 테스트 → 유통 · 각 단계 Top 10 기업' :
+    sector === 'space'      ? '소재·부품·엔진 → 발사체·론치 → 위성 제작·운용 → 우주 데이터·분석 → 국방·응용 · 각 레이어 Top 기업' :
+    sector === 'energy'     ? '화석연료 · 원자력 · 수력 · 풍력 · 태양광 · SMR · 연료전지 · 지열 · 바이오매스 · 조력 — IEA 2024 발전 비중 & 메이저 기업' :
+    sector === 'biotech'    ? 'AI 신약설계 플랫폼 → 유전체·데이터 → 치료 모달리티 → CRO → CDMO → 빅파마 → 진단·의료기기 · 각 레이어 Top 기업' :
+    sector === 'fintech'    ? '결제 인프라 → 은행/신용 → 투자/자산관리 → 블록체인/크립토 → AI 금융/데이터 — 각 레이어 Top 기업' :
+    sector === 'healthcare' ? '의료기기(수술로봇, AI영상진단) → 의료IT(EHR, 웨어러블) → 의료서비스(병원체인) → 헬스케어SaaS(청구자동화) · 각 레이어 Top 기업' :
+    sector === 'quantum'    ? '양자칩 & 게이트 → 큐비트 검증 → 소프트웨어 & 알고리즘 → 응용 소프트웨어 → 산업별 응용 · 각 레이어 Top 기업 & 최신 동향' :
+                              '희토류 · 구리 · 금&은&백금 · 모래(규사) · 철 — 대륙별 전세계 매장량 비중 시각화 · USGS 2024 기준';
 
   return (
     <div className="page-wrap">
@@ -250,6 +277,63 @@ export default function Dashboard() {
           </nav>
           {biotechTab === 'chain' && <BiotechDashboard />}
           {biotechTab === 'news'  && <BiotechNewsSection />}
+        </>
+      )}
+
+      {/* ── 핀테크 섹션 ── */}
+      {sector === 'fintech' && (
+        <>
+          <nav className="tab-nav">
+            {FINTECH_TABS.map(t => (
+              <button
+                key={t.id}
+                className={`tab-btn${fintechTab === t.id ? ' active' : ''}`}
+                onClick={() => setFintechTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {fintechTab === 'chain' && <FintechDashboard />}
+          {fintechTab === 'news'  && <FintechNewsSection />}
+        </>
+      )}
+
+      {/* ── 헬스케어 섹션 ── */}
+      {sector === 'healthcare' && (
+        <>
+          <nav className="tab-nav">
+            {HEALTHCARE_TABS.map(t => (
+              <button
+                key={t.id}
+                className={`tab-btn${healthcareTab === t.id ? ' active' : ''}`}
+                onClick={() => setHealthcareTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {healthcareTab === 'chain' && <HealthcareDashboard />}
+          {healthcareTab === 'news'  && <HealthcareNewsSection />}
+        </>
+      )}
+
+      {/* ── 양자컴퓨터 섹션 ── */}
+      {sector === 'quantum' && (
+        <>
+          <nav className="tab-nav">
+            {QUANTUM_TABS.map(t => (
+              <button
+                key={t.id}
+                className={`tab-btn${quantumTab === t.id ? ' active' : ''}`}
+                onClick={() => setQuantumTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {quantumTab === 'chain' && <QuantumDashboard />}
+          {quantumTab === 'news'  && <QuantumNewsSection />}
         </>
       )}
     </div>
