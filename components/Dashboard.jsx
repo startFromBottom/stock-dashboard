@@ -17,6 +17,7 @@ import FintechDashboard from './FintechDashboard';
 import FintechNewsSection from './FintechNewsSection';
 import EtfPanel from './EtfPanel';
 import SectorOverview from './SectorOverview';
+import TodayHeadline from './TodayHeadline';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
@@ -113,6 +114,9 @@ export default function Dashboard() {
         </div>
         <p className="header-desc">{headerDesc}</p>
       </div>
+
+      {/* ── 오늘의 시장 헤드라인 (모든 섹터 공통) ── */}
+      <TodayHeadline onSelectSector={(id) => setSector(id)} />
 
       {/* ── 섹터 탭 (AI 데이터센터 / 반도체) ── */}
       <div className="sector-nav">
