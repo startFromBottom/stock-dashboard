@@ -1,0 +1,272 @@
+// 임의소비재(Consumer Discretionary) 섹터 뉴스 데이터 (2025~2026년 기준)
+// type: 'news' | 'report'
+
+export const DISCRETIONARY_NEWS_TYPE_LABEL = {
+  news:   { icon: '📰', label: '뉴스' },
+  report: { icon: '📊', label: '리포트' },
+};
+
+export const DISCRETIONARY_CATEGORY_LABEL = {
+  auto_oems:           { icon: '🚗', name: '자동차/EV' },
+  luxury:              { icon: '💎', name: '럭셔리' },
+  apparel:             { icon: '👟', name: '의류·신발' },
+  restaurants:         { icon: '🍔', name: '외식' },
+  travel_hotel:        { icon: '✈️', name: '여행·숙박' },
+  home_retail:         { icon: '🏠', name: '가전·홈' },
+  media_entertainment: { icon: '🎬', name: '미디어·엔터' },
+};
+
+export function countDiscretionaryByCat(items) {
+  const map = {};
+  for (const item of items) {
+    map[item.category] = (map[item.category] ?? 0) + 1;
+  }
+  return map;
+}
+
+export const DISCRETIONARY_NEWS_ITEMS = [
+  // ── 자동차/EV ─────────────────────────────────────
+  {
+    id: 'dc-n-001',
+    category: 'auto_oems',
+    type: 'news',
+    date: '2026-04-28',
+    title: 'Tesla 1Q26 인도량 +12% 회복 — Robotaxi 상업 운영 본격화',
+    summary: 'TSLA가 1분기 인도량 48만 대로 +12% 성장. Cybertruck·Model Y 부진 회복 + Model 2 저가형 출시 효과. Austin·Phoenix Robotaxi 상업 서비스 정식 운영 시작. FSD 매출 비중 5% 돌파 — 소프트웨어 마진 본격화.',
+    tickers: ['TSLA'],
+    source: 'CNBC',
+    url: 'https://www.cnbc.com/2026/04/28/tesla-q1-2026-deliveries.html',
+  },
+  {
+    id: 'dc-n-002',
+    category: 'auto_oems',
+    type: 'news',
+    date: '2026-04-15',
+    title: 'BYD, 2026 글로벌 판매 500만 대 전망 — Tesla 추월 가속',
+    summary: 'BYD가 1분기 판매량 95만 대(YoY +35%)로 Tesla 추월 페이스. 유럽·동남아·라틴아메리카 진출 본격화. 자체 배터리(Blade)·전동기·반도체로 수직통합 마진 안정. 2026 연간 500만 대 가이던스.',
+    tickers: ['BYDDY', 'TSLA'],
+    source: 'Reuters',
+    url: 'https://www.reuters.com/business/autos/byd-2026-targets',
+  },
+  {
+    id: 'dc-n-003',
+    category: 'auto_oems',
+    type: 'report',
+    date: '2026-03-25',
+    title: '[리포트] EV 시장 둔화 vs 하이브리드 부활 — Toyota 전략 재평가',
+    summary: 'BCG 보고서. 미국 EV 침투율 둔화(2025년 9% 정점 후 정체), 하이브리드가 다시 +25% 성장. Toyota의 하이브리드 우선 전략이 재평가받음. Ford·GM의 EV 라인업 축소·EV 캡스 지연도 같은 맥락.',
+    tickers: ['TM', 'F', 'GM'],
+    source: 'Boston Consulting Group',
+    url: 'https://www.bcg.com/publications/2026/ev-hybrid-shift',
+  },
+
+  // ── 럭셔리 ────────────────────────────────────────
+  {
+    id: 'dc-n-010',
+    category: 'luxury',
+    type: 'news',
+    date: '2026-04-22',
+    title: 'LVMH 1Q26, 중국 본토 매출 +8% 회복 신호',
+    summary: 'LVMH 1분기 매출 +5%, 영업이익 +9% 컨센서스 상회. Louis Vuitton·Dior 매출 회복이 핵심, 중국 본토 +8% 반등. 일본 인바운드 매출은 엔저 약화로 -3%. 패션·가죽 부문 마진 회복 명확.',
+    tickers: ['LVMUY'],
+    source: 'Financial Times',
+    url: 'https://www.ft.com/content/lvmh-q1-2026',
+  },
+  {
+    id: 'dc-n-011',
+    category: 'luxury',
+    type: 'news',
+    date: '2026-04-05',
+    title: 'Hermès, Birkin·Kelly 가격 +7% 인상 — 대기시간 5년+',
+    summary: 'Hermès가 4월 1일자로 핵심 백 컬렉션을 평균 +7% 가격 인상. Birkin 25 가격은 $12,000에서 $13,000으로. 대기시간은 평균 5년+ 유지 — 희소성 마케팅의 정점. 2026 매출 +12% 가이던스 유지.',
+    tickers: ['HESAY'],
+    source: 'WWD',
+    url: 'https://wwd.com/business-news/business-features/hermes-price-increase-2026',
+  },
+  {
+    id: 'dc-n-012',
+    category: 'luxury',
+    type: 'report',
+    date: '2026-03-18',
+    title: '[리포트] Kering Gucci 회복 시도 — Sabato De Sarno 디자인 평가',
+    summary: 'Bain & Company. Kering의 Gucci가 새 크리에이티브 디렉터 Sabato De Sarno 체제로 2년차. 미니멀·이태리 헤리티지 방향. 매출 회복 신호는 보이지만 LVMH·Hermès 격차는 더 벌어짐. PPR 가족 구조조정 검토 중.',
+    tickers: ['PPRUY', 'LVMUY'],
+    source: 'Bain & Company',
+    url: 'https://www.bain.com/insights/luxury-2026-update',
+  },
+
+  // ── 의류·신발 ─────────────────────────────────────
+  {
+    id: 'dc-n-020',
+    category: 'apparel',
+    type: 'news',
+    date: '2026-04-25',
+    title: 'On Holding, 1Q26 매출 +35% — Nike 점유 잠식 가속',
+    summary: 'ONON이 1분기 매출 +35%로 컨센서스 크게 상회. Nike·Adidas 압박 속 프리미엄 러닝 카테고리 점유 빠르게 확대. Roger Federer 콜라보·LightSpray 신소재가 차별화 핵심.',
+    tickers: ['ONON', 'NKE'],
+    source: 'CNBC',
+    url: 'https://www.cnbc.com/2026/04/25/on-holding-q1-2026.html',
+  },
+  {
+    id: 'dc-n-021',
+    category: 'apparel',
+    type: 'news',
+    date: '2026-04-10',
+    title: 'Nike, 회복 시도 — 2026 가이던스 하향 + 비용 절감 발표',
+    summary: 'NKE가 1분기 매출 -5%로 컨센서스 미달. 디자인 침체·중국 부진 지속. 신임 CEO Elliott Hill이 비용 절감 $20억 + 디자인 본부 재구성 발표. Air Jordan·Dunk 레트로 라인 회복이 핵심 변수.',
+    tickers: ['NKE'],
+    source: 'Wall Street Journal',
+    url: 'https://www.wsj.com/articles/nike-recovery-plan-2026',
+  },
+  {
+    id: 'dc-n-022',
+    category: 'apparel',
+    type: 'report',
+    date: '2026-03-30',
+    title: '[리포트] Lululemon vs Alo Yoga vs Vuori — 프리미엄 액티브웨어 3강 구도',
+    summary: 'Morgan Stanley. LULU가 프리미엄 요가복 점유 1위지만, Alo Yoga(비공개)·Vuori(비공개) 같은 비상장 신생 브랜드가 빠르게 추격. Z세대 사이에서 Lululemon이 "엄마 옷"으로 인식되는 위험 신호.',
+    tickers: ['LULU'],
+    source: 'Morgan Stanley',
+    url: 'https://www.morganstanley.com/research/activewear-2026',
+  },
+
+  // ── 외식 ─────────────────────────────────────────
+  {
+    id: 'dc-n-030',
+    category: 'restaurants',
+    type: 'news',
+    date: '2026-04-20',
+    title: 'Chipotle, 신임 CEO 효과 — 디지털 주문·매장 효율 개선',
+    summary: 'CMG가 신임 CEO Scott Boatwright(전 COO) 체제로 매장 운영 효율 개선 본격화. 디지털 주문 비중 65% 돌파, 매장당 매출(AUV) 사상 최고치 갱신. 영국·UAE 해외 진출 가속.',
+    tickers: ['CMG'],
+    source: 'Reuters',
+    url: 'https://www.reuters.com/business/retail-consumer/chipotle-q1-2026',
+  },
+  {
+    id: 'dc-n-031',
+    category: 'restaurants',
+    type: 'news',
+    date: '2026-04-08',
+    title: 'Starbucks, Brian Niccol CEO 1년차 — 회복 조짐',
+    summary: 'SBUX가 Niccol(전 Chipotle CEO) 취임 1년차. 미국 동일 매장 매출 -2%(개선세) — 매장 단순화·바리스타 인력 보강·로열티 프로그램 개편이 효과. 중국 시장은 여전히 부진하지만 전략 재검토 중.',
+    tickers: ['SBUX'],
+    source: 'CNBC',
+    url: 'https://www.cnbc.com/2026/04/08/starbucks-q1-2026-earnings.html',
+  },
+  {
+    id: 'dc-n-032',
+    category: 'restaurants',
+    type: 'report',
+    date: '2026-03-15',
+    title: '[리포트] GLP-1이 외식 산업에 미치는 영향 — QSR보다 캐주얼 다이닝 타격',
+    summary: 'Goldman Sachs. GLP-1 사용자의 외식 빈도는 -7% 감소, 그중 캐주얼 다이닝 타격(-15%) 가장 큼. McDonald\'s·Chipotle 같은 QSR은 영향 적음(-3%). Darden(Olive Garden) 같은 풀 서비스 체인이 가장 민감.',
+    tickers: ['DRI', 'CMG', 'MCD'],
+    source: 'Goldman Sachs',
+    url: 'https://www.gs.com/research/glp1-restaurant-impact-2026',
+  },
+
+  // ── 여행·숙박 ─────────────────────────────────────
+  {
+    id: 'dc-n-040',
+    category: 'travel_hotel',
+    type: 'news',
+    date: '2026-04-22',
+    title: 'Booking Holdings, AI 여행 어시스턴트 정식 출시',
+    summary: 'BKNG이 GenAI 기반 여행 플래너 "Smart Filter Trips" 정식 출시. 호텔·항공·체험을 자연어로 추천하는 AI 어시스턴트 — Expedia·Airbnb 직접 위협. 1분기 야간 숙박 +9% 성장 동력.',
+    tickers: ['BKNG', 'EXPE', 'ABNB'],
+    source: 'Skift',
+    url: 'https://skift.com/2026/04/booking-ai-trip-planner',
+  },
+  {
+    id: 'dc-n-041',
+    category: 'travel_hotel',
+    type: 'news',
+    date: '2026-04-12',
+    title: 'Royal Caribbean, Icon of the Seas 효과 — 크루즈 수요 사상 최대',
+    summary: 'RCL이 1분기 매출 +18%로 사상 최대 분기. Icon of the Seas(세계 최대 크루즈선) 풀가동 + 럭셔리 수요 회복. 2026 연간 가이던스 상향. Carnival도 동반 회복 — 크루즈 산업 부채 부담 일단락.',
+    tickers: ['RCL', 'CCL'],
+    source: 'Bloomberg',
+    url: 'https://www.bloomberg.com/news/articles/royal-caribbean-q1-2026',
+  },
+  {
+    id: 'dc-n-042',
+    category: 'travel_hotel',
+    type: 'report',
+    date: '2026-03-22',
+    title: '[리포트] 럭셔리 여행 트렌드 — Marriott·Hilton 럭셔리 비중 30%+ 돌파',
+    summary: 'PwC. 코로나 후 럭셔리 여행 트렌드 정착. Marriott의 럭셔리 브랜드(Ritz·St. Regis·W) 매출 비중 35%, Hilton(Waldorf·Conrad) 30% 돌파. 가족 단위 럭셔리 리조트·프라이빗 클럽 수요 폭증.',
+    tickers: ['MAR', 'HLT', 'H'],
+    source: 'PwC',
+    url: 'https://www.pwc.com/us/en/industries/hospitality-leisure/luxury-travel-2026',
+  },
+
+  // ── 가전·홈 ───────────────────────────────────────
+  {
+    id: 'dc-n-050',
+    category: 'home_retail',
+    type: 'news',
+    date: '2026-04-15',
+    title: 'Home Depot, 1Q26 매출 회복 — 주택 시장 안정 신호',
+    summary: 'HD가 1분기 매출 +3%(YoY)로 6분기 만에 플러스 전환. Pro 고객(건설업자) 부문 매출 +6% 회복. 모기지 금리 안정 + 주택 거래 증가가 DIY 시장에 긍정 신호. SRS Distribution 인수 시너지도 가속.',
+    tickers: ['HD', 'LOW'],
+    source: 'CNBC',
+    url: 'https://www.cnbc.com/2026/04/15/home-depot-q1-2026.html',
+  },
+  {
+    id: 'dc-n-051',
+    category: 'home_retail',
+    type: 'news',
+    date: '2026-04-01',
+    title: 'Carrier, 데이터센터 냉각 수요로 매출 +15%',
+    summary: 'CARR이 AI 데이터센터 액침냉각·HVAC 수요 폭증으로 데이터센터 부문 매출 +45%. 1분기 전체 매출 +15%. NVDA·MSFT·AMZN 하이퍼스케일러 직접 공급 — AI 인프라 간접 수혜주로 재평가.',
+    tickers: ['CARR', 'NVDA'],
+    source: 'Wall Street Journal',
+    url: 'https://www.wsj.com/articles/carrier-data-center-2026',
+  },
+  {
+    id: 'dc-n-052',
+    category: 'home_retail',
+    type: 'report',
+    date: '2026-03-08',
+    title: '[리포트] Wayfair·RH 위기 vs Williams-Sonoma 회복 — 홈 인테리어 양극화',
+    summary: 'Bloomberg Intelligence. 주택 시장 둔화로 가구·홈데코 양극화. 매스 시장(W·BBBY)은 적자 지속, 럭셔리(WSM·RH)는 회복. 럭셔리 부동산 트렌드 + 베이비부머 다운사이징이 프리미엄 가구 수혜.',
+    tickers: ['WSM', 'RH', 'W'],
+    source: 'Bloomberg Intelligence',
+    url: 'https://www.bloomberg.com/intelligence/home-furnishings-2026',
+  },
+
+  // ── 미디어·엔터 ───────────────────────────────────
+  {
+    id: 'dc-n-060',
+    category: 'media_entertainment',
+    type: 'news',
+    date: '2026-04-25',
+    title: 'Netflix 1Q26, 광고 요금제 가입자 1억 돌파 — ARPU 상승',
+    summary: 'NFLX가 광고 요금제 가입자 1억 명 돌파(2024 출시 후 2년 만). 가입자 증가 + 광고 매출 두 자릿수 성장. 라이브 스포츠(NFL·WWE Raw) 진입으로 ARPU(가입자당 평균 매출) 본격 상승.',
+    tickers: ['NFLX', 'DIS'],
+    source: 'Bloomberg',
+    url: 'https://www.bloomberg.com/news/articles/netflix-q1-2026',
+  },
+  {
+    id: 'dc-n-061',
+    category: 'media_entertainment',
+    type: 'news',
+    date: '2026-04-10',
+    title: 'Take-Two Interactive, GTA VI 출시 임박 — 사상 최대 게임 마케팅',
+    summary: 'TTWO가 GTA VI 2026 가을 출시 확정. 게임 사상 최대 마케팅 예산($5억+). 트레일러 1편이 24시간 만에 1억 뷰 — 게임 산업 전례 없는 기대감. 출시 첫 주 매출 $20억+ 추정.',
+    tickers: ['TTWO', 'EA'],
+    source: 'Wall Street Journal',
+    url: 'https://www.wsj.com/articles/gta6-launch-2026',
+  },
+  {
+    id: 'dc-n-062',
+    category: 'media_entertainment',
+    type: 'report',
+    date: '2026-03-12',
+    title: '[리포트] 스트리밍 통합 단계 — Disney·Warner·Paramount 합종연횡',
+    summary: 'Variety Intelligence. 스트리밍 가입자 성장 둔화로 미디어 통합 가속. WBD가 Comcast NBCUniversal과 합병 협상 중. Paramount는 Skydance와 합병 진행. Disney는 ESPN+/Hulu/Disney+ 번들 전략 강화. 시장이 결국 3-4개로 정리될 전망.',
+    tickers: ['DIS', 'WBD', 'CMCSA'],
+    source: 'Variety Intelligence Platform',
+    url: 'https://variety.com/intelligence/streaming-consolidation-2026',
+  },
+];

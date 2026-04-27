@@ -1,0 +1,272 @@
+// 필수소비재(Consumer Staples) 섹터 뉴스 데이터 (2025~2026년 기준)
+// type: 'news' | 'report'
+
+export const STAPLES_NEWS_TYPE_LABEL = {
+  news:   { icon: '📰', label: '뉴스' },
+  report: { icon: '📊', label: '리포트' },
+};
+
+export const STAPLES_CATEGORY_LABEL = {
+  agri_input:      { icon: '🌱', name: '농업/원료' },
+  beverage_brands: { icon: '🥤', name: '음료 브랜드' },
+  food_brands:     { icon: '🍫', name: '식품 브랜드' },
+  tobacco:         { icon: '🚬', name: '담배·니코틴' },
+  spirits_brewers: { icon: '🥃', name: '주류' },
+  household:       { icon: '🧴', name: '생필품·뷰티' },
+  mass_retail:     { icon: '🛒', name: '대형 유통' },
+};
+
+export function countStaplesByCat(items) {
+  const map = {};
+  for (const item of items) {
+    map[item.category] = (map[item.category] ?? 0) + 1;
+  }
+  return map;
+}
+
+export const STAPLES_NEWS_ITEMS = [
+  // ── 농업/원료 ─────────────────────────────────────
+  {
+    id: 'st-n-001',
+    category: 'agri_input',
+    type: 'news',
+    date: '2026-04-22',
+    title: 'Nutrien, 1Q26 칼륨 가격 회복 — 신흥국 비료 수요 견조',
+    summary: 'Nutrien(NTR)이 1분기 칼륨 가격 반등으로 매출이 컨센서스를 상회했다. 인도·브라질의 비료 수요가 견조하게 유지되며 가격 결정력 회복. CEO는 2026 하반기 가격 추가 인상 가능성을 시사했다.',
+    tickers: ['NTR', 'MOS', 'CF'],
+    source: 'Bloomberg Agriculture',
+    url: 'https://www.bloomberg.com/news/articles/nutrien-q1-2026',
+  },
+  {
+    id: 'st-n-002',
+    category: 'agri_input',
+    type: 'report',
+    date: '2026-04-05',
+    title: '[리포트] 정밀농업 시장 2030년 $200억 — Deere·AGCO·CNH 3강 구도',
+    summary: 'McKinsey 보고서에 따르면 자율주행 트랙터·AI 가이드 농기계·드론 정찰을 결합한 정밀농업 시장이 2030년까지 연 12% 성장할 전망이다. Deere(DE)의 Smart Industrial 전략이 시장을 주도하고, AGCO·CNH가 추격 중.',
+    tickers: ['DE', 'AGCO'],
+    source: 'McKinsey & Company',
+    url: 'https://www.mckinsey.com/industries/agriculture/our-insights/precision-farming-2030',
+  },
+  {
+    id: 'st-n-003',
+    category: 'agri_input',
+    type: 'news',
+    date: '2026-03-18',
+    title: 'Bayer, Monsanto 글리포세이트 소송 합의 — 부담 일단락',
+    summary: 'Bayer가 미국 글리포세이트(Roundup) 발암 소송 마지막 라운드에서 $30억 합의로 종결. 소송 부담이 사라지면서 Crop Science 부문 분사 검토가 본격화됐다. 종자·농약 사업 가치 재평가 가능성.',
+    tickers: ['BAYRY'],
+    source: 'Reuters',
+    url: 'https://www.reuters.com/legal/bayer-roundup-settlement-2026',
+  },
+
+  // ── 음료 브랜드 ───────────────────────────────────
+  {
+    id: 'st-n-010',
+    category: 'beverage_brands',
+    type: 'news',
+    date: '2026-04-25',
+    title: 'Coca-Cola 1Q26, 가격 인상 + 신흥국 볼륨 성장으로 어닝 비트',
+    summary: 'KO가 1분기 매출 +6%, 영업이익 +9%로 컨센서스 상회. 가격 결정력으로 인플레이션 흡수, 라틴아메리카·인도 등 신흥국 음용 횟수 증가가 성장 동력. Buffett 보유 핵심주 안정성 재확인.',
+    tickers: ['KO'],
+    source: 'CNBC',
+    url: 'https://www.cnbc.com/2026/04/25/coca-cola-q1-2026-earnings.html',
+  },
+  {
+    id: 'st-n-011',
+    category: 'beverage_brands',
+    type: 'news',
+    date: '2026-04-10',
+    title: 'Celsius Holdings, PepsiCo 유통 파트너십 5년 연장',
+    summary: 'CELH가 PEP와의 미국 유통 계약을 5년 연장. PepsiCo가 Celsius 지분 확대 옵션도 보유. 에너지 드링크 시장에서 Monster·Red Bull과 3강 구도 굳히기 가속.',
+    tickers: ['CELH', 'PEP', 'MNST'],
+    source: 'Beverage Industry',
+    url: 'https://www.bevindustry.com/articles/celsius-pepsi-extension-2026',
+  },
+  {
+    id: 'st-n-012',
+    category: 'beverage_brands',
+    type: 'report',
+    date: '2026-03-28',
+    title: '[리포트] GLP-1 약물이 탄산음료 매출에 미치는 영향 — 영향 제한적',
+    summary: 'Goldman Sachs 분석. GLP-1 사용자의 탄산음료 음용은 비사용자 대비 8% 낮지만, 무설탕·기능성 음료로 빠르게 전환. KO·PEP의 무설탕·헬시 라인업이 GLP-1 트렌드의 헷지 역할. 전체 매출 영향은 제한적 결론.',
+    tickers: ['KO', 'PEP', 'KDP'],
+    source: 'Goldman Sachs',
+    url: 'https://www.gs.com/research/glp1-beverage-impact-2026',
+  },
+
+  // ── 식품 브랜드 ───────────────────────────────────
+  {
+    id: 'st-n-020',
+    category: 'food_brands',
+    type: 'news',
+    date: '2026-04-18',
+    title: 'Mars, Kellanova 인수 마무리 — 글로벌 스낵 1위 등극',
+    summary: 'Mars(비공개)가 Kellanova(K) $360억 인수를 정식 마무리했다. Pringles·Cheez-It·M&M\'s·Snickers를 통합 운영하며 PepsiCo Frito-Lay와 글로벌 스낵 양강 구도 형성. 직원 통합·시너지 효과 2027 본격화 예상.',
+    tickers: ['K'],
+    source: 'Wall Street Journal',
+    url: 'https://www.wsj.com/articles/mars-kellanova-deal-closes-2026',
+  },
+  {
+    id: 'st-n-021',
+    category: 'food_brands',
+    type: 'news',
+    date: '2026-04-02',
+    title: 'Hershey, 코코아 가격 폭등으로 마진 압박 — 가격 인상 단행',
+    summary: 'HSY가 글로벌 코코아 가격이 톤당 $10,000을 돌파한 영향으로 1분기 영업이익 -22%. 미국 시장에서 Hershey\'s·Reese\'s 가격을 평균 8% 인상 발표. 동남아 코코아 산지 다변화 가속.',
+    tickers: ['HSY', 'MDLZ'],
+    source: 'Reuters',
+    url: 'https://www.reuters.com/business/hershey-cocoa-2026',
+  },
+  {
+    id: 'st-n-022',
+    category: 'food_brands',
+    type: 'report',
+    date: '2026-03-15',
+    title: '[리포트] 식물성 단백질 시장 둔화 — Beyond Meat·Impossible 위기 지속',
+    summary: 'Bloomberg Intelligence. 식물성 대체육 시장이 2024년부터 침체기 진입. 가격 프리미엄·맛 한계로 소비자 이탈. Tyson·Hormel·Conagra의 자체 식물성 라인 확장은 지속되지만 시장 성장률 둔화 명백.',
+    tickers: ['TSN', 'HRL', 'CAG'],
+    source: 'Bloomberg Intelligence',
+    url: 'https://www.bloomberg.com/intelligence/plant-based-2026',
+  },
+
+  // ── 담배·니코틴 ───────────────────────────────────
+  {
+    id: 'st-n-030',
+    category: 'tobacco',
+    type: 'news',
+    date: '2026-04-20',
+    title: 'Philip Morris IQOS, 미국 출시 6개월 만에 시장 점유 5% 달성',
+    summary: 'PM의 가열식 담배 IQOS가 미국 출시 6개월 만에 도시 지역에서 시장 점유 5%를 돌파. 일본 모델(점유 30%+)을 미국에 빠르게 복제 중. ZYN 니코틴 파우치와 함께 차세대 니코틴 매출 비중 50% 임박.',
+    tickers: ['PM', 'MO'],
+    source: 'Tobacco Reporter',
+    url: 'https://www.tobaccoreporter.com/2026/04/iqos-us-six-months',
+  },
+  {
+    id: 'st-n-031',
+    category: 'tobacco',
+    type: 'news',
+    date: '2026-03-22',
+    title: 'Altria, NJOY 전자담배 FDA PMTA 승인 확대',
+    summary: 'MO 자회사 NJOY가 멘솔 전자담배 4종에 대한 FDA PMTA(시장유통전 사전 신청) 추가 승인을 받았다. JUUL 손실 후 NJOY 인수($28억)로 미국 전자담배 시장 회복 시도 — 2026 매출 +30% 가이던스.',
+    tickers: ['MO'],
+    source: 'CNBC',
+    url: 'https://www.cnbc.com/2026/03/22/altria-njoy-fda-pmta.html',
+  },
+  {
+    id: 'st-n-032',
+    category: 'tobacco',
+    type: 'report',
+    date: '2026-02-28',
+    title: '[리포트] 니코틴 파우치 시장 2030년 $200억 — ZYN 독점 깨질 수 있나',
+    summary: 'Euromonitor 보고서. PM 자회사 Swedish Match의 ZYN이 미국 시장 점유 70%+로 절대 강자. BTI Velo·MO on! 추격 중. Z세대·여성 흡연자 진입으로 시장 폭발 성장. 2030년 $200억 시장 전망.',
+    tickers: ['PM', 'BTI', 'MO'],
+    source: 'Euromonitor International',
+    url: 'https://www.euromonitor.com/nicotine-pouches-2030',
+  },
+
+  // ── 주류 ─────────────────────────────────────────
+  {
+    id: 'st-n-040',
+    category: 'spirits_brewers',
+    type: 'news',
+    date: '2026-04-12',
+    title: 'Diageo 1Q26, 데킬라·위스키 매출 회복 — 미국 시장 안정',
+    summary: 'DEO가 데킬라(Don Julio·Casamigos)·위스키(Johnnie Walker) 부문 매출 +12%로 분기 어닝 비트. 미국 럭셔리 음용 회복이 핵심. 신흥국 위스키 수요(인도·중국)도 견조.',
+    tickers: ['DEO'],
+    source: 'Financial Times',
+    url: 'https://www.ft.com/content/diageo-q1-2026',
+  },
+  {
+    id: 'st-n-041',
+    category: 'spirits_brewers',
+    type: 'news',
+    date: '2026-03-30',
+    title: 'Constellation Brands, Modelo Especial 미국 맥주 시장 1위 굳히기',
+    summary: 'STZ의 Modelo Especial이 Bud Light를 제치고 미국 맥주 매출 1위 자리를 1년 째 유지. 멕시코 맥주 트렌드 + 라틴계 인구 증가 수혜. Corona Premier·Modelo Oro 신제품도 호조.',
+    tickers: ['STZ', 'BUD', 'TAP'],
+    source: 'Beer Business Daily',
+    url: 'https://www.beerbusinessdaily.com/modelo-no1-2026',
+  },
+  {
+    id: 'st-n-042',
+    category: 'spirits_brewers',
+    type: 'report',
+    date: '2026-03-08',
+    title: '[리포트] GLP-1이 알코올 소비에 미치는 영향 — 위스키·럭셔리 와인 영향 적음',
+    summary: 'Morgan Stanley 분석. GLP-1 사용자의 알코올 소비는 -15% 감소하지만 프리미엄 위스키·와인은 영향 미미. 매스 맥주(Bud·Coors)는 -8% 영향. Diageo·Brown-Forman 같은 프리미엄 증류주 메이저는 헷지 효과.',
+    tickers: ['DEO', 'BF.B', 'BUD'],
+    source: 'Morgan Stanley',
+    url: 'https://www.morganstanley.com/research/glp1-alcohol-impact-2026',
+  },
+
+  // ── 생필품·뷰티 ───────────────────────────────────
+  {
+    id: 'st-n-050',
+    category: 'household',
+    type: 'news',
+    date: '2026-04-28',
+    title: 'Procter & Gamble 1Q26, 가격 인상 효과 + 볼륨 회복 — 어닝 서프라이즈',
+    summary: 'PG가 1분기 매출 +5%, 영업이익 +12%로 컨센서스 상회. 미국·유럽 볼륨 회복 + 신흥국 가격 인상 효과 동시 작용. CEO는 2027 가이던스 상향 조정 — 가장 안정적인 생필품 메이저 입증.',
+    tickers: ['PG'],
+    source: 'CNBC',
+    url: 'https://www.cnbc.com/2026/04/28/procter-gamble-q1-earnings.html',
+  },
+  {
+    id: 'st-n-051',
+    category: 'household',
+    type: 'news',
+    date: '2026-04-08',
+    title: 'Estée Lauder, 중국 시장 회복 신호 — 면세점 매출 +18%',
+    summary: 'EL이 1분기 중국 본토 매출 +12%, 한국·하이난 면세점 +18%로 회복 가속. La Mer·Tom Ford 럭셔리 라인이 회복 견인. 신임 CEO Stéphane de La Faverie 취임 후 첫 어닝 서프라이즈.',
+    tickers: ['EL', 'LRLCY', 'COTY'],
+    source: 'WWD',
+    url: 'https://wwd.com/business-news/financial/estee-lauder-q1-2026',
+  },
+  {
+    id: 'st-n-052',
+    category: 'household',
+    type: 'report',
+    date: '2026-03-12',
+    title: '[리포트] e.l.f. Beauty 폭발 성장의 비밀 — Z세대 SNS 마케팅 사례 연구',
+    summary: 'Harvard Business Review. ELF가 5년 만에 매출 8배 성장, 시총 100배 성장. TikTok 인플루언서·dupe(저가 럭셔리 카피) 마케팅으로 Z세대 사로잡기. 비건·동물실험 반대 포지셔닝.',
+    tickers: ['ELF', 'EL', 'COTY'],
+    source: 'Harvard Business Review',
+    url: 'https://hbr.org/2026/03/elf-beauty-z-generation-2026',
+  },
+
+  // ── 대형 유통 ─────────────────────────────────────
+  {
+    id: 'st-n-060',
+    category: 'mass_retail',
+    type: 'news',
+    date: '2026-04-30',
+    title: 'Walmart 1Q26, 식료품 + 디지털 광고 매출 두 자릿수 성장',
+    summary: 'WMT가 1분기 매출 +6%, 영업이익 +14%로 어닝 비트. 미국 식료품 시장점유 회복 + Walmart Connect 디지털 광고 매출 +35%가 핵심. AMZN 직접 위협에도 옴니채널 디지털 전환이 효과 발휘.',
+    tickers: ['WMT', 'AMZN'],
+    source: 'Wall Street Journal',
+    url: 'https://www.wsj.com/articles/walmart-q1-2026-earnings',
+  },
+  {
+    id: 'st-n-061',
+    category: 'mass_retail',
+    type: 'news',
+    date: '2026-04-14',
+    title: 'Costco, 회원비 첫 인상 — 1년 단위 회원료 $65 → $75',
+    summary: 'COST가 7년 만에 회원비를 인상. 골드스타 회원 $65→$75, 이그제큐티브 $130→$150. 회원 갱신율 90%+ 견고함이 가격 결정력 입증. 회원비 매출 비중 70%+ — 영업이익 직접 기여.',
+    tickers: ['COST'],
+    source: 'CNBC',
+    url: 'https://www.cnbc.com/2026/04/14/costco-membership-fee-hike.html',
+  },
+  {
+    id: 'st-n-062',
+    category: 'mass_retail',
+    type: 'report',
+    date: '2026-02-20',
+    title: '[리포트] 약국 체인 위기 — Walgreens·CVS 약국 폐쇄 가속',
+    summary: 'Bloomberg. WBA·CVS가 처방 마진 압박·온라인 처방 경쟁(Amazon Pharmacy)으로 미국 매장 폐쇄 진행. WBA는 1,200개, CVS는 900개 매장 폐쇄 계획. 의료서비스(MinuteClinic·Aetna) 전환이 생존 핵심.',
+    tickers: ['WBA', 'CVS'],
+    source: 'Bloomberg',
+    url: 'https://www.bloomberg.com/news/articles/pharmacy-closures-2026',
+  },
+];

@@ -14,7 +14,7 @@ import { useState, useEffect, useRef } from 'react';
  * }}
  */
 
-const DEFAULT_ORDER = ['ai-dc', 'semi', 'space', 'energy', 'biotech', 'fintech', 'raw'];
+const DEFAULT_ORDER = ['ai-dc', 'semi', 'space', 'energy', 'biotech', 'fintech', 'healthcare', 'quantum', 'staples', 'discretionary', 'raw'];
 const CHUNK_SIZE = 2; // 한 번에 2섹터씩 호출
 
 // 클라이언트 메모리 캐시

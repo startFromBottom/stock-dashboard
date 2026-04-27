@@ -19,6 +19,10 @@ import HealthcareDashboard from './HealthcareDashboard';
 import HealthcareNewsSection from './HealthcareNewsSection';
 import QuantumDashboard from './QuantumDashboard';
 import QuantumNewsSection from './QuantumNewsSection';
+import StaplesDashboard from './StaplesDashboard';
+import StaplesNewsSection from './StaplesNewsSection';
+import DiscretionaryDashboard from './DiscretionaryDashboard';
+import DiscretionaryNewsSection from './DiscretionaryNewsSection';
 import EtfPanel from './EtfPanel';
 import SectorOverview from './SectorOverview';
 import TodayHeadline from './TodayHeadline';
@@ -35,6 +39,8 @@ const SECTORS = [
   { id: 'fintech', label: '핀테크',         icon: '💳' },
   { id: 'healthcare', label: '헬스케어',    icon: '🏥' },
   { id: 'quantum', label: '양자컴퓨터',     icon: '⚛️' },
+  { id: 'staples', label: '필수소비재',     icon: '🥫' },
+  { id: 'discretionary', label: '임의소비재', icon: '🛍️' },
 ];
 
 /* ── 데이터센터 탭 ── */
@@ -91,6 +97,18 @@ const QUANTUM_TABS = [
   { id: 'news',  label: '📰 뉴스 & 리포트' },
 ];
 
+/* ── 필수소비재 탭 ── */
+const STAPLES_TABS = [
+  { id: 'chain', label: '🥫 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 리포트' },
+];
+
+/* ── 임의소비재 탭 ── */
+const DISCRETIONARY_TABS = [
+  { id: 'chain', label: '🛍️ 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 리포트' },
+];
+
 export default function Dashboard() {
   const [sector,        setSector]        = useState('overview');
   const [dcTab,         setDcTab]         = useState('illust');
@@ -100,8 +118,10 @@ export default function Dashboard() {
   const [energyTab,     setEnergyTab]     = useState('chart');
   const [biotechTab,    setBiotechTab]    = useState('chain');
   const [fintechTab,    setFintechTab]    = useState('chain');
-  const [healthcareTab, setHealthcareTab] = useState('chain');
-  const [quantumTab,    setQuantumTab]    = useState('chain');
+  const [healthcareTab,   setHealthcareTab]   = useState('chain');
+  const [quantumTab,      setQuantumTab]      = useState('chain');
+  const [staplesTab,      setStaplesTab]      = useState('chain');
+  const [discretionaryTab, setDiscretionaryTab] = useState('chain');
 
   const now = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric', month: 'long', day: 'numeric',
@@ -117,6 +137,8 @@ export default function Dashboard() {
     sector === 'fintech'    ? <>💳 핀테크 <span>금융 인프라</span></> :
     sector === 'healthcare' ? <>🏥 헬스케어 <span>의료기기</span></> :
     sector === 'quantum'    ? <>⚛️ 양자컴퓨터 <span>밸류체인</span></> :
+    sector === 'staples'       ? <>🥫 필수소비재 <span>밸류체인</span></> :
+    sector === 'discretionary' ? <>🛍️ 임의소비재 <span>밸류체인</span></> :
                               <>⛏️ 원자재 <span>매장량 분포</span></>;
 
   const headerDesc =
@@ -129,6 +151,8 @@ export default function Dashboard() {
     sector === 'fintech'    ? '결제 인프라 → 은행/신용 → 투자/자산관리 → 블록체인/크립토 → AI 금융/데이터 — 각 레이어 Top 기업' :
     sector === 'healthcare' ? '의료기기(수술로봇, AI영상진단) → 의료IT(EHR, 웨어러블) → 의료서비스(병원체인) → 헬스케어SaaS(청구자동화) · 각 레이어 Top 기업' :
     sector === 'quantum'    ? '양자칩 & 게이트 → 큐비트 검증 → 소프트웨어 & 알고리즘 → 응용 소프트웨어 → 산업별 응용 · 각 레이어 Top 기업 & 최신 동향' :
+    sector === 'staples'       ? '농업/원료 → 식품/음료 → 담배/주류 → 생필품/유통 — 경기 방어주의 핵심, 글로벌 브랜드 메이저' :
+    sector === 'discretionary' ? '자동차/EV → 럭셔리/패션 → 외식/여행 → 가전/홈 → 미디어/엔터 — 경기 사이클 민감, 라이프스타일 트렌드 직접 반영' :
                               '희토류 · 구리 · 금&은&백금 · 모래(규사) · 철 — 대륙별 전세계 매장량 비중 시각화 · USGS 2024 기준';
 
   return (
@@ -334,6 +358,44 @@ export default function Dashboard() {
           </nav>
           {quantumTab === 'chain' && <QuantumDashboard />}
           {quantumTab === 'news'  && <QuantumNewsSection />}
+        </>
+      )}
+
+      {/* ── 필수소비재 섹션 ── */}
+      {sector === 'staples' && (
+        <>
+          <nav className="tab-nav">
+            {STAPLES_TABS.map(t => (
+              <button
+                key={t.id}
+                className={`tab-btn${staplesTab === t.id ? ' active' : ''}`}
+                onClick={() => setStaplesTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {staplesTab === 'chain' && <StaplesDashboard />}
+          {staplesTab === 'news'  && <StaplesNewsSection />}
+        </>
+      )}
+
+      {/* ── 임의소비재 섹션 ── */}
+      {sector === 'discretionary' && (
+        <>
+          <nav className="tab-nav">
+            {DISCRETIONARY_TABS.map(t => (
+              <button
+                key={t.id}
+                className={`tab-btn${discretionaryTab === t.id ? ' active' : ''}`}
+                onClick={() => setDiscretionaryTab(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {discretionaryTab === 'chain' && <DiscretionaryDashboard />}
+          {discretionaryTab === 'news'  && <DiscretionaryNewsSection />}
         </>
       )}
     </div>

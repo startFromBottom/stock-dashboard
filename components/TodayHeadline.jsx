@@ -2,32 +2,42 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import useSectorOverview from '@/hooks/useSectorOverview';
-import { NEWS_ITEMS }         from '@/data/news';
-import { SEMI_NEWS_ITEMS }    from '@/data/semi-news';
-import { SPACE_NEWS_ITEMS }   from '@/data/space-news';
-import { ENERGY_NEWS_ITEMS }  from '@/data/energy-news';
-import { BIOTECH_NEWS_ITEMS } from '@/data/biotech-news';
-import { FINTECH_NEWS_ITEMS } from '@/data/fintech-news';
-import { RAW_NEWS_ITEMS }     from '@/data/rawNews';
+import { NEWS_ITEMS }                 from '@/data/news';
+import { SEMI_NEWS_ITEMS }            from '@/data/semi-news';
+import { SPACE_NEWS_ITEMS }           from '@/data/space-news';
+import { ENERGY_NEWS_ITEMS }          from '@/data/energy-news';
+import { BIOTECH_NEWS_ITEMS }         from '@/data/biotech-news';
+import { FINTECH_NEWS_ITEMS }         from '@/data/fintech-news';
+import { RAW_NEWS_ITEMS }             from '@/data/rawNews';
+import { HEALTHCARE_NEWS_ITEMS }      from '@/data/healthcare-news';
+import { STAPLES_NEWS_ITEMS }         from '@/data/staples-news';
+import { DISCRETIONARY_NEWS_ITEMS }   from '@/data/discretionary-news';
 
 const SECTOR_META = {
-  'ai-dc':   { label: 'AI 데이터센터', icon: '🏢' },
-  'semi':    { label: '반도체',         icon: '🔬' },
-  'space':   { label: '우주',           icon: '🚀' },
-  'raw':     { label: '원자재',         icon: '⛏️' },
-  'energy':  { label: '에너지',         icon: '⚡' },
-  'biotech': { label: '바이오테크',     icon: '🧬' },
-  'fintech': { label: '핀테크',         icon: '💳' },
+  'ai-dc':         { label: 'AI 데이터센터', icon: '🏢' },
+  'semi':          { label: '반도체',         icon: '🔬' },
+  'space':         { label: '우주',           icon: '🚀' },
+  'raw':           { label: '원자재',         icon: '⛏️' },
+  'energy':        { label: '에너지',         icon: '⚡' },
+  'biotech':       { label: '바이오테크',     icon: '🧬' },
+  'fintech':       { label: '핀테크',         icon: '💳' },
+  'healthcare':    { label: '헬스케어',       icon: '🏥' },
+  'quantum':       { label: '양자컴퓨터',     icon: '⚛️' },
+  'staples':       { label: '필수소비재',     icon: '🥫' },
+  'discretionary': { label: '임의소비재',     icon: '🛍️' },
 };
 
 const ALL_NEWS = [
-  ...(NEWS_ITEMS         ?? []).map(n => ({ ...n, _sector: 'ai-dc' })),
-  ...(SEMI_NEWS_ITEMS    ?? []).map(n => ({ ...n, _sector: 'semi' })),
-  ...(SPACE_NEWS_ITEMS   ?? []).map(n => ({ ...n, _sector: 'space' })),
-  ...(ENERGY_NEWS_ITEMS  ?? []).map(n => ({ ...n, _sector: 'energy' })),
-  ...(BIOTECH_NEWS_ITEMS ?? []).map(n => ({ ...n, _sector: 'biotech' })),
-  ...(FINTECH_NEWS_ITEMS ?? []).map(n => ({ ...n, _sector: 'fintech' })),
-  ...(RAW_NEWS_ITEMS     ?? []).map(n => ({ ...n, _sector: 'raw' })),
+  ...(NEWS_ITEMS               ?? []).map(n => ({ ...n, _sector: 'ai-dc' })),
+  ...(SEMI_NEWS_ITEMS          ?? []).map(n => ({ ...n, _sector: 'semi' })),
+  ...(SPACE_NEWS_ITEMS         ?? []).map(n => ({ ...n, _sector: 'space' })),
+  ...(ENERGY_NEWS_ITEMS        ?? []).map(n => ({ ...n, _sector: 'energy' })),
+  ...(BIOTECH_NEWS_ITEMS       ?? []).map(n => ({ ...n, _sector: 'biotech' })),
+  ...(FINTECH_NEWS_ITEMS       ?? []).map(n => ({ ...n, _sector: 'fintech' })),
+  ...(RAW_NEWS_ITEMS           ?? []).map(n => ({ ...n, _sector: 'raw' })),
+  ...(HEALTHCARE_NEWS_ITEMS    ?? []).map(n => ({ ...n, _sector: 'healthcare' })),
+  ...(STAPLES_NEWS_ITEMS       ?? []).map(n => ({ ...n, _sector: 'staples' })),
+  ...(DISCRETIONARY_NEWS_ITEMS ?? []).map(n => ({ ...n, _sector: 'discretionary' })),
 ];
 
 const SLIDE_INTERVAL = 6000;

@@ -832,6 +832,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 ════════════════════════════════════════ */
 .sector-nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 20px;
 }
@@ -847,6 +848,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   cursor: pointer;
   transition: all 0.15s;
   letter-spacing: 0.2px;
+  white-space: nowrap;
 }
 
 .sector-btn:hover {

@@ -5,6 +5,10 @@ import { SPACE_LAYERS } from '@/data/spaceCompanies';
 import { ENERGY_TYPES } from '@/data/energyCompanies';
 import { BIOTECH_LAYERS } from '@/data/biotechCompanies';
 import { FINTECH_LAYERS } from '@/data/fintechCompanies';
+import { HEALTHCARE_LAYERS } from '@/data/healthcareCompanies';
+import { QUANTUM_LAYERS } from '@/data/quantumCompanies';
+import { STAPLES_LAYERS } from '@/data/staplesCompanies';
+import { DISCRETIONARY_LAYERS } from '@/data/discretionaryCompanies';
 import { fetchQuotesAndMetrics } from '@/lib/finnhub-cache';
 
 /**
@@ -47,13 +51,17 @@ function takeTopUsWithMeta(layersOrComponents, key, max = 12) {
 }
 
 const SECTOR_POOLS = {
-  'ai-dc':   () => takeTopUsWithMeta(AI_LAYERS,      'candidates', 12),
-  'semi':    () => takeTopUsWithMeta(SEMI_CHAIN,     'candidates', 12),
-  'space':   () => takeTopUsWithMeta(SPACE_LAYERS,   'candidates', 12),
-  'energy':  () => takeTopUsWithMeta(ENERGY_TYPES,   'companies',  12),
-  'biotech': () => takeTopUsWithMeta(BIOTECH_LAYERS, 'candidates', 12),
-  'fintech': () => takeTopUsWithMeta(FINTECH_LAYERS, 'candidates', 12),
-  'raw':     () => [], // 데이터 구조가 달라서 비움
+  'ai-dc':         () => takeTopUsWithMeta(AI_LAYERS,            'candidates', 12),
+  'semi':          () => takeTopUsWithMeta(SEMI_CHAIN,           'candidates', 12),
+  'space':         () => takeTopUsWithMeta(SPACE_LAYERS,         'candidates', 12),
+  'energy':        () => takeTopUsWithMeta(ENERGY_TYPES,         'companies',  12),
+  'biotech':       () => takeTopUsWithMeta(BIOTECH_LAYERS,       'candidates', 12),
+  'fintech':       () => takeTopUsWithMeta(FINTECH_LAYERS,       'candidates', 12),
+  'healthcare':    () => takeTopUsWithMeta(HEALTHCARE_LAYERS,    'candidates', 12),
+  'quantum':       () => takeTopUsWithMeta(QUANTUM_LAYERS,       'candidates', 12),
+  'staples':       () => takeTopUsWithMeta(STAPLES_LAYERS,       'candidates', 12),
+  'discretionary': () => takeTopUsWithMeta(DISCRETIONARY_LAYERS, 'candidates', 12),
+  'raw':           () => [], // 데이터 구조가 달라서 비움
 };
 
 /* ───────────── 메인 핸들러 ───────────── */
@@ -65,7 +73,7 @@ export async function GET(request) {
   }
 
   const { searchParams } = new URL(request.url);
-  const requested = (searchParams.get('sectors') ?? 'ai-dc,semi,space,raw,energy,biotech,fintech')
+  const requested = (searchParams.get('sectors') ?? 'ai-dc,semi,space,raw,energy,biotech,fintech,healthcare,quantum,staples,discretionary')
     .split(',')
     .map(s => s.trim())
     .filter(s => s in SECTOR_POOLS);

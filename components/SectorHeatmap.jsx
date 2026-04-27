@@ -4,13 +4,17 @@ import { useMemo, useState } from 'react';
 import useSectorHeatmap from '@/hooks/useSectorHeatmap';
 
 const SECTORS = [
-  { id: 'ai-dc',   label: 'AI 데이터센터', icon: '🏢' },
-  { id: 'semi',    label: '반도체',         icon: '🔬' },
-  { id: 'space',   label: '우주',           icon: '🚀' },
-  { id: 'raw',     label: '원자재',         icon: '⛏️' },
-  { id: 'energy',  label: '에너지',         icon: '⚡' },
-  { id: 'biotech', label: '바이오테크',     icon: '🧬' },
-  { id: 'fintech', label: '핀테크',         icon: '💳' },
+  { id: 'ai-dc',         label: 'AI 데이터센터', icon: '🏢' },
+  { id: 'semi',          label: '반도체',         icon: '🔬' },
+  { id: 'space',         label: '우주',           icon: '🚀' },
+  { id: 'raw',           label: '원자재',         icon: '⛏️' },
+  { id: 'energy',        label: '에너지',         icon: '⚡' },
+  { id: 'biotech',       label: '바이오테크',     icon: '🧬' },
+  { id: 'fintech',       label: '핀테크',         icon: '💳' },
+  { id: 'healthcare',    label: '헬스케어',       icon: '🏥' },
+  { id: 'quantum',       label: '양자컴퓨터',     icon: '⚛️' },
+  { id: 'staples',       label: '필수소비재',     icon: '🥫' },
+  { id: 'discretionary', label: '임의소비재',     icon: '🛍️' },
 ];
 
 /* ══════════════════════════════════════════════════

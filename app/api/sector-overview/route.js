@@ -6,6 +6,10 @@ import { SPACE_LAYERS } from '@/data/spaceCompanies';
 import { ENERGY_TYPES } from '@/data/energyCompanies';
 import { BIOTECH_LAYERS } from '@/data/biotechCompanies';
 import { FINTECH_LAYERS } from '@/data/fintechCompanies';
+import { HEALTHCARE_LAYERS } from '@/data/healthcareCompanies';
+import { QUANTUM_LAYERS } from '@/data/quantumCompanies';
+import { STAPLES_LAYERS } from '@/data/staplesCompanies';
+import { DISCRETIONARY_LAYERS } from '@/data/discretionaryCompanies';
 import { fetchQuotesAndMetrics } from '@/lib/finnhub-cache';
 
 /**
@@ -62,13 +66,17 @@ function getSectorTickerPools() {
   // 섹터당 5개 — 시총 가중 평균은 상위 1~3개가 거의 모든 영향력 차지하므로 5개면 충분.
   // Finnhub 무료 60 req/min 한도 안전권 유지용.
   return {
-    'ai-dc':   takeTopUs(AI_LAYERS,        'candidates', 5),
-    'semi':    takeTopUs(SEMI_CHAIN,       'candidates', 5),
-    'space':   takeTopUs(SPACE_LAYERS,     'candidates', 5),
-    'energy':  takeTopUs(ENERGY_TYPES,     'companies',  5),
-    'biotech': takeTopUs(BIOTECH_LAYERS,   'candidates', 5),
-    'fintech': takeTopUs(FINTECH_LAYERS,   'candidates', 5),
-    'raw':     [],
+    'ai-dc':         takeTopUs(AI_LAYERS,            'candidates', 5),
+    'semi':          takeTopUs(SEMI_CHAIN,           'candidates', 5),
+    'space':         takeTopUs(SPACE_LAYERS,         'candidates', 5),
+    'energy':        takeTopUs(ENERGY_TYPES,         'companies',  5),
+    'biotech':       takeTopUs(BIOTECH_LAYERS,       'candidates', 5),
+    'fintech':       takeTopUs(FINTECH_LAYERS,       'candidates', 5),
+    'healthcare':    takeTopUs(HEALTHCARE_LAYERS,    'candidates', 5),
+    'quantum':       takeTopUs(QUANTUM_LAYERS,       'candidates', 5),
+    'staples':       takeTopUs(STAPLES_LAYERS,       'candidates', 5),
+    'discretionary': takeTopUs(DISCRETIONARY_LAYERS, 'candidates', 5),
+    'raw':           [],
   };
 }
 
@@ -150,7 +158,7 @@ export async function GET() {
     return NextResponse.json(responseCache.data, { headers: { 'X-Cache': 'HIT' } });
   }
 
-  const sectorIds = ['ai-dc', 'semi', 'space', 'raw', 'energy', 'biotech', 'fintech'];
+  const sectorIds = ['ai-dc', 'semi', 'space', 'raw', 'energy', 'biotech', 'fintech', 'healthcare', 'quantum', 'staples', 'discretionary'];
   const tickerPools = getSectorTickerPools();
 
   // 1. 각 섹터 대표 ETF
