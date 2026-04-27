@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { BIOTECH_LAYERS, BIOTECH_FLAG_BY_NAME } from '@/data/biotechCompanies';
 import useMarketCaps from '@/hooks/useMarketCaps';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
+import StarButton from './StarButton';
 
 /* ═══════════════════════════════════════════════════════
    바이오텍 밸류체인 SVG 다이어그램 (7개 레이어 수직)
@@ -320,6 +321,7 @@ function BiotechCompanyPanel({ layer }) {
           const displayRank = idx + 1;
           return (
             <div key={`top-${company.rank}-${company.name}`} className="company-card">
+              <StarButton ticker={company.ticker} name={company.name} sector="biotech" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1]}
                 {fresh && displayRank !== company.rank && (
@@ -364,6 +366,7 @@ function BiotechCompanyPanel({ layer }) {
                 const liveMktcap = company.liveCap ? formatMktcap(company.liveCap) : null;
                 return (
                   <div key={`more-${company.rank}-${company.name}`} className="company-card more-card">
+                    <StarButton ticker={company.ticker} name={company.name} sector="biotech" />
                     <span className="rank-badge rank-more">{idx + 11}위</span>
                     <div className="company-name">
                       <span className="company-flag">{flag}</span>

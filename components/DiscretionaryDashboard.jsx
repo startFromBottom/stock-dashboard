@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { DISCRETIONARY_LAYERS, DISCRETIONARY_FLAG_BY_NAME } from '@/data/discretionaryCompanies';
 import useMarketCaps from '@/hooks/useMarketCaps';
 import { normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
+import StarButton from './StarButton';
 
 /* ═══════════════════════════════════════════════════════
    임의소비재 밸류체인 SVG 다이어그램
@@ -242,6 +243,7 @@ function DiscretionaryCompanyPanel({ layer }) {
           const displayRank = idx + 1;
           return (
             <div key={`top-${company.rank}-${company.name}`} className="company-card">
+              <StarButton ticker={company.ticker} name={company.name} sector="discretionary" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1]}
                 {fresh && displayRank !== company.rank && (
@@ -285,6 +287,7 @@ function DiscretionaryCompanyPanel({ layer }) {
                 const liveMktcap = company.liveCap ? formatMktcap(company.liveCap) : null;
                 return (
                   <div key={`more-${company.rank}-${company.name}`} className="company-card more-card">
+                    <StarButton ticker={company.ticker} name={company.name} sector="discretionary" />
                     <span className="rank-badge rank-more">{idx + 11}위</span>
                     <div className="company-name">
                       <span className="company-flag">{flag}</span>

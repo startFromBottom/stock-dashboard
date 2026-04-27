@@ -6,6 +6,7 @@ import { RAW_COMPANIES } from '@/data/rawMaterialCompanies';
 import useMarketCaps from '@/hooks/useMarketCaps';
 import useStockMetrics from '@/hooks/useStockMetrics';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
+import StarButton from './StarButton';
 
 function getRsiStyle(rsi) {
   if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
@@ -431,6 +432,7 @@ function CompanySection({ matId, mat }) {
               onMouseEnter={() => setHoveredRank(co.rank)}
               onMouseLeave={() => setHoveredRank(null)}
             >
+              <StarButton ticker={co.ticker} name={co.name} sector="raw" />
               <span className={`rank-badge rank-${Math.min(rank, 10)}`}>
                 {RANK_LABELS[rank - 1] ?? `${rank}위`}
               </span>
@@ -588,6 +590,7 @@ function MapAndCompanies({ mat, matId }) {
                   onMouseEnter={() => setHoveredCompany(co.rank)}
                   onMouseLeave={() => setHoveredCompany(null)}
                 >
+                  <StarButton ticker={co.ticker} name={co.name} sector="raw" />
                   {/* 순위 배지 */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 7 }}>
                     <span className={`rank-badge rank-${Math.min(rank,10)}`}>

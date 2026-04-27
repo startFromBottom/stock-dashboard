@@ -6,6 +6,7 @@ import useMarketCaps from '@/hooks/useMarketCaps';
 import useStockMetrics from '@/hooks/useStockMetrics';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
 import { DC_GLOSSARY_ITEMS } from '@/data/dc-glossary';
+import StarButton from './StarButton';
 
 const RANK_LABELS = ['🥇 1위', '🥈 2위', '🥉 3위', '4위', '5위', '6위', '7위', '8위', '9위', '10위'];
 
@@ -218,6 +219,7 @@ function PanelInner({ comp }) {
 
           return (
             <div key={`top-${c.rank}-${c.name}`} className="company-card">
+              <StarButton ticker={c.ticker} name={c.name} sector="ai-dc" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1]}
                 {/* 원래 rank와 달라졌으면 변동 표시 */}
@@ -300,6 +302,7 @@ function PanelInner({ comp }) {
 
                 return (
                   <div key={`more-${c.rank}-${c.name}`} className="company-card more-card">
+                    <StarButton ticker={c.ticker} name={c.name} sector="ai-dc" />
                     <span className="rank-badge rank-more">{displayRank}위</span>
                     <div className="company-name">
                       <span className="company-flag">{flag}</span>

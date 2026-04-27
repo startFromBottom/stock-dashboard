@@ -26,6 +26,7 @@ import DiscretionaryNewsSection from './DiscretionaryNewsSection';
 import EtfPanel from './EtfPanel';
 import SectorOverview from './SectorOverview';
 import TodayHeadline from './TodayHeadline';
+import WatchlistDashboard from './WatchlistDashboard';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
@@ -41,6 +42,7 @@ const SECTORS = [
   { id: 'quantum', label: '양자컴퓨터',     icon: '⚛️' },
   { id: 'staples', label: '필수소비재',     icon: '🥫' },
   { id: 'discretionary', label: '임의소비재', icon: '🛍️' },
+  { id: 'watchlist', label: '워치리스트',    icon: '⭐' },
 ];
 
 /* ── 데이터센터 탭 ── */
@@ -139,6 +141,7 @@ export default function Dashboard() {
     sector === 'quantum'    ? <>⚛️ 양자컴퓨터 <span>밸류체인</span></> :
     sector === 'staples'       ? <>🥫 필수소비재 <span>밸류체인</span></> :
     sector === 'discretionary' ? <>🛍️ 임의소비재 <span>밸류체인</span></> :
+    sector === 'watchlist'     ? <>⭐ 나의 <span>워치리스트</span></> :
                               <>⛏️ 원자재 <span>매장량 분포</span></>;
 
   const headerDesc =
@@ -153,6 +156,7 @@ export default function Dashboard() {
     sector === 'quantum'    ? '양자칩 & 게이트 → 큐비트 검증 → 소프트웨어 & 알고리즘 → 응용 소프트웨어 → 산업별 응용 · 각 레이어 Top 기업 & 최신 동향' :
     sector === 'staples'       ? '농업/원료 → 식품/음료 → 담배/주류 → 생필품/유통 — 경기 방어주의 핵심, 글로벌 브랜드 메이저' :
     sector === 'discretionary' ? '자동차/EV → 럭셔리/패션 → 외식/여행 → 가전/홈 → 미디어/엔터 — 경기 사이클 민감, 라이프스타일 트렌드 직접 반영' :
+    sector === 'watchlist'     ? '내가 점찍은 종목들 — 관심 시작 후 수익률 · 매수가 · 메모를 한 화면에서 추적' :
                               '희토류 · 구리 · 금&은&백금 · 모래(규사) · 철 — 대륙별 전세계 매장량 비중 시각화 · USGS 2024 기준';
 
   return (
@@ -182,8 +186,8 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* ── ETF 패널 (overview 제외 섹터 공통) ── */}
-      {sector !== 'overview' && <EtfPanel sectorId={sector} />}
+      {/* ── ETF 패널 (overview/watchlist 제외 섹터 공통) ── */}
+      {sector !== 'overview' && sector !== 'watchlist' && <EtfPanel sectorId={sector} />}
 
       {/* ── 전체 전망 (Overview) ── */}
       {sector === 'overview' && (
@@ -397,6 +401,11 @@ export default function Dashboard() {
           {discretionaryTab === 'chain' && <DiscretionaryDashboard />}
           {discretionaryTab === 'news'  && <DiscretionaryNewsSection />}
         </>
+      )}
+
+      {/* ── 워치리스트 섹션 ── */}
+      {sector === 'watchlist' && (
+        <WatchlistDashboard onSelectSector={(id) => setSector(id)} />
       )}
     </div>
   );

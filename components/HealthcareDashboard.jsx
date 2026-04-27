@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { HEALTHCARE_LAYERS, HEALTHCARE_FLAG_BY_NAME } from '@/data/healthcareCompanies';
 import useMarketCaps from '@/hooks/useMarketCaps';
 import { normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
+import StarButton from './StarButton';
 
 /* ═══════════════════════════════════════════════════════
    헬스케어 · 의료기기 밸류체인 SVG 다이어그램
@@ -246,6 +247,7 @@ function HealthcareCompanyPanel({ layer }) {
           const displayRank = idx + 1;
           return (
             <div key={`top-${company.rank}-${company.name}`} className="company-card">
+              <StarButton ticker={company.ticker} name={company.name} sector="healthcare" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1]}
                 {fresh && displayRank !== company.rank && (
@@ -290,6 +292,7 @@ function HealthcareCompanyPanel({ layer }) {
                 const liveMktcap = company.liveCap ? formatMktcap(company.liveCap) : null;
                 return (
                   <div key={`more-${company.rank}-${company.name}`} className="company-card more-card">
+                    <StarButton ticker={company.ticker} name={company.name} sector="healthcare" />
                     <span className="rank-badge rank-more">{idx + 11}위</span>
                     <div className="company-name">
                       <span className="company-flag">{flag}</span>

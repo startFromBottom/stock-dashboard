@@ -21,6 +21,7 @@ import { FLAG_BY_NAME } from '@/data/companies';
 import useMarketCaps from '@/hooks/useMarketCaps';
 import useStockMetrics from '@/hooks/useStockMetrics';
 import { normalizeTicker, formatMktcap, extractPublicTickers } from '@/lib/ticker-utils';
+import StarButton from './StarButton';
 
 function getRsiStyle(rsi) {
   if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
@@ -829,6 +830,7 @@ function SemiCompanyPanel({ step }) {
           const volStr     = formatVolume(sm?.volume ?? null);
           return (
             <div key={`${comp.name}-${idx}`} className="company-card">
+              <StarButton ticker={comp.ticker} name={comp.name} sector="semi" />
               <span className={`rank-badge rank-${rank}`}>
                 {RANK_LABELS[rank - 1]}
                 {fresh && rank !== comp.rank && (
@@ -894,6 +896,7 @@ function SemiCompanyPanel({ step }) {
                 const liveMktcap = comp.liveCap ? formatMktcap(comp.liveCap) : null;
                 return (
                   <div key={`more-${comp.name}-${idx}`} className="company-card more-card">
+                    <StarButton ticker={comp.ticker} name={comp.name} sector="semi" />
                     <span className="rank-badge rank-more">{idx + 11}위</span>
                     <div className="company-name">
                       <span className="company-flag">{flag}</span>{comp.name}

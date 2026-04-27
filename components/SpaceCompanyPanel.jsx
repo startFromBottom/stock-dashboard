@@ -5,6 +5,7 @@ import { SPACE_FLAG_BY_NAME } from '@/data/spaceCompanies';
 import useMarketCaps from '@/hooks/useMarketCaps';
 import useStockMetrics from '@/hooks/useStockMetrics';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
+import StarButton from './StarButton';
 
 function getRsiStyle(rsi) {
   if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
@@ -99,6 +100,7 @@ function PanelInner({ comp }) {
 
           return (
             <div key={`top-${c.rank}-${c.name}`} className="company-card">
+              <StarButton ticker={c.ticker} name={c.name} sector="space" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1]}
                 {fresh && displayRank !== c.rank && (
@@ -177,6 +179,7 @@ function PanelInner({ comp }) {
 
                 return (
                   <div key={`more-${c.rank}-${c.name}`} className="company-card more-card">
+                    <StarButton ticker={c.ticker} name={c.name} sector="space" />
                     <span className="rank-badge rank-more">{displayRank}위</span>
                     <div className="company-name">
                       <span className="company-flag">{flag}</span>
