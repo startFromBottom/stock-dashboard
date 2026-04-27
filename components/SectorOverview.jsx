@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import useSectorOverview from '@/hooks/useSectorOverview';
 import { SECTOR_ETFS } from '@/data/etfs';
+import SectorHeatmap from './SectorHeatmap';
 
 /* ── 섹터 메타 ── */
 const SECTORS = [
@@ -106,6 +107,16 @@ function pctTone(pct) {
 export default function SectorOverview({ onSelectSector }) {
   const [tf, setTf] = useState('3M');
   const { data, loading, error, generatedAt } = useSectorOverview();
+
+  // 히트맵 호출 우선순위 — 카드의 3M 수익률 내림차순 (모멘텀 핫한 섹터 먼저)
+  const priorityOrder = useMemo(() => {
+    if (!data) return null;
+    const ranked = SECTORS
+      .map(s => ({ id: s.id, ret3M: data[s.id]?.etfMetrics?.returns?.['3M'] ?? -Infinity }))
+      .sort((a, b) => b.ret3M - a.ret3M)
+      .map(s => s.id);
+    return ranked;
+  }, [data]);
 
   const updatedAt = generatedAt
     ? new Date(generatedAt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
@@ -249,6 +260,8 @@ export default function SectorOverview({ onSelectSector }) {
         52주 위치는 (현재가 − 52주 저점) / (52주 고점 − 52주 저점)
       </p>
 
+      {/* ── 히트맵 (점진 로딩) ── */}
+      <SectorHeatmap priorityOrder={priorityOrder} onSelectSector={onSelectSector} />
     </div>
   );
 }

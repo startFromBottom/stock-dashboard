@@ -2169,3 +2169,177 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .ov-sparkline { width: 60px; }
   .ov-tf-btn { padding: 4px 9px; font-size: 11px; }
 }
+
+/* ════════════════════════════════════════
+   🗺️ Sector Heatmap (트리맵)
+════════════════════════════════════════ */
+.sector-heatmap {
+  margin-top: 24px;
+}
+
+.hm-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.hm-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.hm-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  flex: 1;
+  min-width: 200px;
+}
+.hm-progress {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: monospace;
+  display: flex;
+  align-items: center;
+}
+
+/* 섹터 그리드 */
+.hm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+/* 한 섹터 블록 */
+.hm-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.hm-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+}
+.hm-block-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color .15s;
+}
+.hm-block-title:hover { color: var(--accent-light); }
+
+.hm-loading-tag, .hm-empty-tag, .hm-count-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-family: monospace;
+}
+.hm-loading-tag {
+  color: var(--accent-light);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+}
+.hm-empty-tag {
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px dashed var(--border);
+}
+.hm-count-tag {
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.hm-block-body {
+  position: relative;
+  background: #0f172a;
+  aspect-ratio: 360 / 220;
+  width: 100%;
+}
+.hm-tree, .hm-skeleton svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hm-cell {
+  cursor: pointer;
+}
+.hm-cell:hover rect {
+  filter: brightness(1.25);
+}
+
+.hm-empty-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+  padding: 12px;
+}
+
+/* 스켈레톤 펄스 */
+@keyframes hm-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+.hm-skeleton {
+  width: 100%;
+  height: 100%;
+  animation: hm-pulse 1.4s ease-in-out infinite;
+}
+
+/* 색 범례 */
+.hm-legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.hm-legend-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.hm-legend-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  max-width: 280px;
+}
+.hm-legend-tick {
+  font-family: monospace;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+.hm-legend-gradient {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #dc2626 0%, #334155 50%, #16a34a 100%);
+}
+
+/* ════════════════════════════════════════
