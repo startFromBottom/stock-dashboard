@@ -2530,6 +2530,71 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ════════════════════════════════════════
+   ⭐ Header Watchlist Button (헤더 우상단)
+════════════════════════════════════════ */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.header-wl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: 0.2px;
+}
+.header-wl-btn:hover {
+  border-color: #fbbf24;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.08);
+}
+.header-wl-btn.active {
+  border-color: #fbbf24;
+  background: #1a1200;
+  color: #fbbf24;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+}
+.header-wl-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+.header-wl-label {
+  font-size: 12px;
+}
+.header-wl-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #fbbf24;
+  color: #1a1200;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: monospace;
+}
+.header-wl-btn.active .header-wl-badge {
+  background: #fcd34d;
+  color: #1a1200;
+}
+
+@media (max-width: 600px) {
+  .header-wl-label { display: none; }
+}
+
+/* ════════════════════════════════════════
    ⭐ Watchlist Dashboard
 ════════════════════════════════════════ */
 .wl-wrap { margin-top: 4px; }

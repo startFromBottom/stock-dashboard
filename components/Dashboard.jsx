@@ -27,6 +27,7 @@ import EtfPanel from './EtfPanel';
 import SectorOverview from './SectorOverview';
 import TodayHeadline from './TodayHeadline';
 import WatchlistDashboard from './WatchlistDashboard';
+import HeaderWatchlistButton from './HeaderWatchlistButton';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
@@ -42,7 +43,6 @@ const SECTORS = [
   { id: 'quantum', label: '양자컴퓨터',     icon: '⚛️' },
   { id: 'staples', label: '필수소비재',     icon: '🥫' },
   { id: 'discretionary', label: '임의소비재', icon: '🛍️' },
-  { id: 'watchlist', label: '워치리스트',    icon: '⭐' },
 ];
 
 /* ── 데이터센터 탭 ── */
@@ -165,7 +165,13 @@ export default function Dashboard() {
       <div className="header">
         <div className="header-top">
           <h1>{headerTitle}</h1>
-          <span className="header-meta">마지막 업데이트: {now}</span>
+          <div className="header-right">
+            <HeaderWatchlistButton
+              active={sector === 'watchlist'}
+              onSelect={setSector}
+            />
+            <span className="header-meta">마지막 업데이트: {now}</span>
+          </div>
         </div>
         <p className="header-desc">{headerDesc}</p>
       </div>
