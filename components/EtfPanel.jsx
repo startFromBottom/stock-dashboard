@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { SECTOR_ETFS } from '@/data/etfs';
 import useEtfQuotes from '@/hooks/useEtfQuotes';
 import useStockMetrics from '@/hooks/useStockMetrics';
@@ -28,6 +28,7 @@ function formatVolume(vol) {
 }
 
 export default function EtfPanel({ sectorId }) {
+  const [expanded, setExpanded] = useState(false);  // 기본 접힘
   const etfs = SECTOR_ETFS[sectorId] ?? [];
   const tickers = useMemo(() => etfs.map(e => e.ticker), [sectorId]); // eslint-disable-line
   const { quotes,  loading,        error   } = useEtfQuotes(tickers);
@@ -35,22 +36,60 @@ export default function EtfPanel({ sectorId }) {
 
   if (!etfs.length) return null;
 
-  return (
-    <div className="etf-panel">
-      {/* 헤더 */}
-      <div className="etf-panel-header">
-        <span className="etf-panel-title">📈 대표 ETF</span>
-        <span className="etf-panel-meta">
-          {loading && <span className="live-badge loading-badge">⟳ 시세 로딩…</span>}
-          {error   && <span className="live-badge error-badge" title={error}>⚠ 정적 데이터</span>}
-          {!loading && !error && Object.keys(quotes).length > 0 && (
-            <span className="live-badge">● LIVE</span>
-          )}
-          <span className="etf-panel-note">Finnhub · 5분 캐시</span>
-        </span>
-      </div>
+  // 헤더 요약 — 상위 2개 ETF의 ticker + 1D 등락
+  const summary = etfs.slice(0, 2).map(etf => {
+    const q = quotes[etf.ticker];
+    return { ticker: etf.ticker, pct: q?.changePct };
+  });
 
-      {/* ETF 카드 리스트 */}
+  return (
+    <div className={`etf-panel${expanded ? ' etf-panel-expanded' : ' etf-panel-collapsed'}`}>
+      {/* 헤더 (클릭으로 토글) */}
+      <button
+        className="etf-panel-header etf-panel-toggle"
+        onClick={() => setExpanded(v => !v)}
+        type="button"
+        aria-expanded={expanded}
+      >
+        <span className="etf-panel-title">📈 대표 ETF ({etfs.length})</span>
+
+        {/* 헤더 요약 (접힌 상태에서 정보 노출) */}
+        <span className="etf-panel-summary">
+          {summary.map((s, i) => {
+            const isUp = s.pct > 0;
+            const isDown = s.pct < 0;
+            const color = isUp ? '#4ade80' : isDown ? '#f87171' : 'var(--text-muted)';
+            const sign = isUp ? '+' : '';
+            return (
+              <span key={s.ticker} className="etf-summary-chip">
+                <span className="etf-summary-ticker">{s.ticker}</span>
+                {s.pct !== undefined && s.pct !== null ? (
+                  <span style={{ color }} className="etf-summary-pct">
+                    {sign}{fmt(s.pct)}%
+                  </span>
+                ) : (
+                  <span className="etf-summary-pct" style={{ color: 'var(--text-muted)' }}>—</span>
+                )}
+              </span>
+            );
+          })}
+          {etfs.length > 2 && (
+            <span className="etf-summary-more">+{etfs.length - 2}</span>
+          )}
+        </span>
+
+        <span className="etf-panel-meta">
+          {loading && <span className="live-badge loading-badge">⟳</span>}
+          {error   && <span className="live-badge error-badge" title={error}>⚠</span>}
+          {!loading && !error && Object.keys(quotes).length > 0 && (
+            <span className="live-badge">●</span>
+          )}
+          <span className="etf-panel-chevron">{expanded ? '▲' : '▼'}</span>
+        </span>
+      </button>
+
+      {/* ETF 카드 리스트 (펼친 상태에서만) */}
+      {expanded && (
       <div className="etf-grid">
         {etfs.map(etf => {
           const q = quotes[etf.ticker];
@@ -149,6 +188,7 @@ export default function EtfPanel({ sectorId }) {
           );
         })}
       </div>
+      )}
     </div>
   );
 }

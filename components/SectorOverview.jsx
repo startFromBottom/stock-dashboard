@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import useSectorOverview from '@/hooks/useSectorOverview';
 import { SECTOR_ETFS } from '@/data/etfs';
 import SectorHeatmap from './SectorHeatmap';
+import MarketContext from './MarketContext';
 
 /* ── 섹터 메타 ── */
 const SECTORS = [
@@ -154,6 +155,9 @@ export default function SectorOverview({ onSelectSector }) {
           </button>
         ))}
       </div>
+
+      {/* 시장 컨텍스트 (거시 지표) */}
+      <MarketContext />
 
       {/* 섹터 카드 그리드 */}
       <div className="ov-grid">
