@@ -2901,9 +2901,19 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: #ffffff;
   border: 1.5px solid #444c56;
 }
-.wl-locked-btn-github:hover {
+.wl-locked-btn-github:hover:not(:disabled) {
   background: #32373e;
   border-color: #6e7681;
+}
+.wl-locked-btn-google {
+  background: #ffffff;
+  color: #1f1f1f;
+  border: 1.5px solid #dadce0;
+}
+.wl-locked-btn-google:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #c4c8cc;
+  box-shadow: 0 1px 3px rgba(60,64,67,0.16);
 }
 .wl-locked-soon {
   font-size: 11px;

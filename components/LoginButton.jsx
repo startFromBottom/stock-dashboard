@@ -18,6 +18,7 @@ export default function LoginButton() {
     isConfigured,
     initialized,
     signInWithGitHub,
+    signInWithGoogle,
     signOut,
   } = useAuth();
 
@@ -67,6 +68,7 @@ export default function LoginButton() {
           <div className="login-dropdown">
             <button
               className="login-provider-btn"
+              disabled={busy}
               onClick={async () => {
                 setBusy(true);
                 const { error } = await signInWithGitHub();
@@ -80,11 +82,21 @@ export default function LoginButton() {
               <span className="login-provider-icon">🐙</span>
               GitHub로 로그인
             </button>
-            <div className="login-provider-soon">
+            <button
+              className="login-provider-btn"
+              disabled={busy}
+              onClick={async () => {
+                setBusy(true);
+                const { error } = await signInWithGoogle();
+                if (error) {
+                  alert('Google 로그인 실패: ' + (error.message ?? error));
+                  setBusy(false);
+                }
+              }}
+            >
               <span className="login-provider-icon">🟢</span>
               Google로 로그인
-              <span className="login-soon-tag">곧 지원</span>
-            </div>
+            </button>
           </div>
         )}
       </div>

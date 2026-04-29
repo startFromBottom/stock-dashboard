@@ -66,7 +66,7 @@ function useLivePrices(tickers) {
 /* ══════════════════════════════════════════════════ */
 export default function WatchlistDashboard({ onSelectSector }) {
   const { items, remove, update, loading, error, loaded, requiresAuth } = useWatchlist();
-  const { isLoggedIn, initialized, signInWithGitHub, isConfigured } = useAuth();
+  const { isLoggedIn, initialized, signInWithGitHub, signInWithGoogle, isConfigured } = useAuth();
   const [authBusy, setAuthBusy] = useState(false);
 
   const [view, setView]   = useState('table');     // 'table' | 'cards'
@@ -177,9 +177,23 @@ export default function WatchlistDashboard({ onSelectSector }) {
               }}
             >
               <span>🐙</span>
-              {authBusy ? 'GitHub로 이동 중…' : 'GitHub로 로그인'}
+              {authBusy ? '이동 중…' : 'GitHub로 로그인'}
             </button>
-            <span className="wl-locked-soon">Google 로그인은 곧 추가됩니다</span>
+            <button
+              className="wl-locked-btn wl-locked-btn-google"
+              disabled={authBusy}
+              onClick={async () => {
+                setAuthBusy(true);
+                const { error } = await signInWithGoogle();
+                if (error) {
+                  alert('Google 로그인 실패: ' + (error.message ?? error));
+                  setAuthBusy(false);
+                }
+              }}
+            >
+              <span>🟢</span>
+              {authBusy ? '이동 중…' : 'Google로 로그인'}
+            </button>
           </div>
         )}
       </div>
