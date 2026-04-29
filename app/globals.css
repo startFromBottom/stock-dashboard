@@ -2665,6 +2665,297 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ════════════════════════════════════════
+   🔑 Login / Auth Button (헤더 우상단)
+════════════════════════════════════════ */
+.login-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: 0.2px;
+}
+.login-btn:hover {
+  border-color: #60a5fa;
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.08);
+}
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.login-btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.login-btn-skel {
+  display: inline-flex;
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+/* 아바타 (로그인 후 표시) */
+.avatar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-card);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition: all .15s;
+}
+.avatar-btn:hover,
+.avatar-btn.active {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.25);
+}
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.avatar-initial {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+/* 드롭다운 (provider 선택 / 사용자 정보) */
+.login-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 220px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  padding: 6px;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.login-dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+.login-userinfo {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+  gap: 2px;
+}
+.login-userinfo-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary, #f1f5f9);
+}
+.login-userinfo-email {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+.login-provider-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s;
+}
+.login-provider-btn:hover {
+  background: rgba(96, 165, 250, 0.1);
+  color: #60a5fa;
+}
+.login-provider-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.login-provider-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+.login-provider-soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.login-soon-tag {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--text-secondary);
+  letter-spacing: 0.4px;
+}
+
+/* ════════════════════════════════════════
+   🔒 Watchlist Locked Screen (비로그인)
+════════════════════════════════════════ */
+.wl-locked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  background: var(--bg-card);
+  border: 1.5px dashed var(--border);
+  border-radius: 12px;
+  margin: 20px 0;
+}
+.wl-locked-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+.wl-locked-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary, #f1f5f9);
+  margin: 0 0 10px;
+}
+.wl-locked-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.6;
+  margin: 0 0 22px;
+}
+.wl-locked-hint {
+  font-size: 12px;
+  color: #f87171;
+  margin-top: 8px;
+}
+.wl-locked-hint code {
+  font-family: monospace;
+  background: rgba(248, 113, 113, 0.12);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.wl-locked-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.wl-locked-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s;
+}
+.wl-locked-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.wl-locked-btn-github {
+  background: #24292f;
+  color: #ffffff;
+  border: 1.5px solid #444c56;
+}
+.wl-locked-btn-github:hover {
+  background: #32373e;
+  border-color: #6e7681;
+}
+.wl-locked-soon {
+  font-size: 11px;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* ════════════════════════════════════════
+   ⭐ Star Button — auth hint
+════════════════════════════════════════ */
+.star-btn-wrap {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+}
+/* star-btn 자체는 기존 스타일 유지하되 wrap 안에 들어가면 absolute 해제 */
+.star-btn-wrap > .star-btn {
+  position: static;
+  top: auto;
+  right: auto;
+}
+.star-btn.star-btn-locked {
+  opacity: 0.55;
+}
+.star-btn.star-btn-locked:hover {
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.1);
+}
+.star-auth-hint {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  white-space: nowrap;
+  background: #1e293b;
+  color: #f1f5f9;
+  border: 1px solid #475569;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  animation: star-hint-fade 0.2s ease-out;
+  z-index: 10;
+}
+@keyframes star-hint-fade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════════════
    📊 Market Context (거시 지표)
 ════════════════════════════════════════ */
 .mc-wrap {

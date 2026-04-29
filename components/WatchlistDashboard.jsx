@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import useWatchlist from '@/hooks/useWatchlist';
+import useAuth from '@/hooks/useAuth';
 
 const SECTOR_META = {
   'ai-dc':         { label: 'AI 데이터센터', icon: '🏢' },
@@ -64,7 +65,9 @@ function useLivePrices(tickers) {
 
 /* ══════════════════════════════════════════════════ */
 export default function WatchlistDashboard({ onSelectSector }) {
-  const { items, remove, update, loading, error, loaded } = useWatchlist();
+  const { items, remove, update, loading, error, loaded, requiresAuth } = useWatchlist();
+  const { isLoggedIn, initialized, signInWithGitHub, isConfigured } = useAuth();
+  const [authBusy, setAuthBusy] = useState(false);
 
   const [view, setView]   = useState('table');     // 'table' | 'cards'
   const [sortBy, setSort] = useState('added_desc');
@@ -145,6 +148,43 @@ export default function WatchlistDashboard({ onSelectSector }) {
     }
     return map;
   }, [items]);
+
+  // ── 비로그인 잠금화면 ──
+  if (initialized && !isLoggedIn) {
+    return (
+      <div className="wl-locked">
+        <div className="wl-locked-icon">🔒</div>
+        <h3 className="wl-locked-title">워치리스트는 로그인 후에 사용할 수 있어요</h3>
+        <p className="wl-locked-desc">
+          내 종목·메모·매수가는 계정에 묶여 저장됩니다. 다른 기기에서도 동일한 워치리스트를 보려면 로그인하세요.
+        </p>
+        {!isConfigured ? (
+          <p className="wl-locked-hint">
+            ⚠️ Supabase 인증이 설정되지 않았어요 — <code>.env.local</code> 확인이 필요합니다.
+          </p>
+        ) : (
+          <div className="wl-locked-actions">
+            <button
+              className="wl-locked-btn wl-locked-btn-github"
+              disabled={authBusy}
+              onClick={async () => {
+                setAuthBusy(true);
+                const { error } = await signInWithGitHub();
+                if (error) {
+                  alert('GitHub 로그인 실패: ' + (error.message ?? error));
+                  setAuthBusy(false);
+                }
+              }}
+            >
+              <span>🐙</span>
+              {authBusy ? 'GitHub로 이동 중…' : 'GitHub로 로그인'}
+            </button>
+            <span className="wl-locked-soon">Google 로그인은 곧 추가됩니다</span>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   if (loading) {
     return (
