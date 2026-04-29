@@ -66,12 +66,6 @@ function HealthcareChainDiagram({ activeId, onSelect }) {
             <feGaussianBlur stdDeviation="3.5" result="blur" />
             <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
-          <marker id="hcarrow" markerWidth="7" markerHeight="7" refX="4" refY="3.5" orient="auto">
-            <path d="M0,0 L7,3.5 L0,7 z" fill="#0f2a22" />
-          </marker>
-          <marker id="hcarrow-a" markerWidth="7" markerHeight="7" refX="4" refY="3.5" orient="auto">
-            <path d="M0,0 L7,3.5 L0,7 z" fill="#34d399" />
-          </marker>
         </defs>
 
         <rect width={SVG_W} height={TOTAL_H} fill="url(#hcgrid)" />
@@ -85,17 +79,6 @@ function HealthcareChainDiagram({ activeId, onSelect }) {
           return (
             <g key={layer.id} onClick={() => onSelect(layer.id)} style={{ cursor: 'pointer' }}>
               {/* 연결선 */}
-              {li > 0 && (
-                <line
-                  x1={centerX} y1={y - LAYER_GAP}
-                  x2={centerX} y2={y}
-                  stroke={isActive || activeId === CHAIN_LAYERS[li - 1].id ? '#34d399' : '#0f2a22'}
-                  strokeWidth={isActive ? 2 : 1.4}
-                  strokeDasharray={isActive ? 'none' : '4 3'}
-                  markerEnd={isActive ? 'url(#hcarrow-a)' : 'url(#hcarrow)'}
-                  style={{ transition: 'stroke 0.2s' }}
-                />
-              )}
 
               {/* 글로우 */}
               {isActive && (
