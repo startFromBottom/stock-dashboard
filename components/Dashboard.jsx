@@ -23,11 +23,16 @@ import StaplesDashboard from './StaplesDashboard';
 import StaplesNewsSection from './StaplesNewsSection';
 import DiscretionaryDashboard from './DiscretionaryDashboard';
 import DiscretionaryNewsSection from './DiscretionaryNewsSection';
+import FinancialDashboard from './FinancialDashboard';
+import FinancialNewsSection from './FinancialNewsSection';
+import IndustrialsDashboard from './IndustrialsDashboard';
+import IndustrialsNewsSection from './IndustrialsNewsSection';
 import EtfPanel from './EtfPanel';
 import SectorOverview from './SectorOverview';
 import TodayHeadline from './TodayHeadline';
 import WatchlistDashboard from './WatchlistDashboard';
 import HeaderWatchlistButton from './HeaderWatchlistButton';
+import LoginButton from './LoginButton';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
@@ -43,6 +48,8 @@ const SECTORS = [
   { id: 'quantum', label: '양자컴퓨터',     icon: '⚛️' },
   { id: 'staples', label: '필수소비재',     icon: '🥫' },
   { id: 'discretionary', label: '임의소비재', icon: '🛍️' },
+  { id: 'financials', label: '금융',         icon: '🏦' },
+  { id: 'industrials', label: '산업재',       icon: '🏭' },
 ];
 
 /* ── 데이터센터 탭 ── */
@@ -111,6 +118,18 @@ const DISCRETIONARY_TABS = [
   { id: 'news',  label: '📰 뉴스 & 리포트' },
 ];
 
+/* ── 금융 탭 ── */
+const FINANCIALS_TABS = [
+  { id: 'chain', label: '🏦 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 리포트' },
+];
+
+/* ── 산업재 탭 ── */
+const INDUSTRIALS_TABS = [
+  { id: 'chain', label: '🏭 밸류체인' },
+  { id: 'news',  label: '📰 뉴스 & 리포트' },
+];
+
 export default function Dashboard() {
   const [sector,        setSector]        = useState('overview');
   const [dcTab,         setDcTab]         = useState('illust');
@@ -124,6 +143,8 @@ export default function Dashboard() {
   const [quantumTab,      setQuantumTab]      = useState('chain');
   const [staplesTab,      setStaplesTab]      = useState('chain');
   const [discretionaryTab, setDiscretionaryTab] = useState('chain');
+  const [financialsTab,   setFinancialsTab]   = useState('chain');
+  const [industrialsTab,  setIndustrialsTab]  = useState('chain');
 
   const now = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric', month: 'long', day: 'numeric',
@@ -141,6 +162,8 @@ export default function Dashboard() {
     sector === 'quantum'    ? <>⚛️ 양자컴퓨터 <span>밸류체인</span></> :
     sector === 'staples'       ? <>🥫 필수소비재 <span>밸류체인</span></> :
     sector === 'discretionary' ? <>🛍️ 임의소비재 <span>밸류체인</span></> :
+    sector === 'financials'    ? <>🏦 금융 <span>밸류체인</span></> :
+    sector === 'industrials'   ? <>🏭 산업재 <span>밸류체인</span></> :
     sector === 'watchlist'     ? <>⭐ 나의 <span>워치리스트</span></> :
                               <>⛏️ 원자재 <span>매장량 분포</span></>;
 
@@ -156,6 +179,8 @@ export default function Dashboard() {
     sector === 'quantum'    ? '양자칩 & 게이트 → 큐비트 검증 → 소프트웨어 & 알고리즘 → 응용 소프트웨어 → 산업별 응용 · 각 레이어 Top 기업 & 최신 동향' :
     sector === 'staples'       ? '농업/원료 → 식품/음료 → 담배/주류 → 생필품/유통 — 경기 방어주의 핵심, 글로벌 브랜드 메이저' :
     sector === 'discretionary' ? '자동차/EV → 럭셔리/패션 → 외식/여행 → 가전/홈 → 미디어/엔터 — 경기 사이클 민감, 라이프스타일 트렌드 직접 반영' :
+    sector === 'financials'    ? '대형 은행 → 자산운용/증권 → 보험 → 결제 네트워크 → 거래소·인프라 — 금리·경기 민감도 가장 큼, 시장 거시 흐름의 바로미터' :
+    sector === 'industrials'   ? '항공우주/방산 → 중장비/기계 → 인프라/HVAC → 운송/물류 → 자동화/산업기술 — 인프라·AI·nearshoring 슈퍼사이클의 직접 수혜' :
     sector === 'watchlist'     ? '내가 점찍은 종목들 — 관심 시작 후 수익률 · 매수가 · 메모를 한 화면에서 추적' :
                               '희토류 · 구리 · 금&은&백금 · 모래(규사) · 철 — 대륙별 전세계 매장량 비중 시각화 · USGS 2024 기준';
 
@@ -170,6 +195,7 @@ export default function Dashboard() {
               active={sector === 'watchlist'}
               onSelect={setSector}
             />
+            <LoginButton />
             <span className="header-meta">마지막 업데이트: {now}</span>
           </div>
         </div>
@@ -406,6 +432,40 @@ export default function Dashboard() {
           </nav>
           {discretionaryTab === 'chain' && <DiscretionaryDashboard />}
           {discretionaryTab === 'news'  && <DiscretionaryNewsSection />}
+        </>
+      )}
+
+      {/* ── 금융 섹션 ── */}
+      {sector === 'financials' && (
+        <>
+          <nav className="tab-nav">
+            {FINANCIALS_TABS.map(t => (
+              <button key={t.id}
+                className={`tab-btn${financialsTab === t.id ? ' active' : ''}`}
+                onClick={() => setFinancialsTab(t.id)}>
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {financialsTab === 'chain' && <FinancialDashboard />}
+          {financialsTab === 'news'  && <FinancialNewsSection />}
+        </>
+      )}
+
+      {/* ── 산업재 섹션 ── */}
+      {sector === 'industrials' && (
+        <>
+          <nav className="tab-nav">
+            {INDUSTRIALS_TABS.map(t => (
+              <button key={t.id}
+                className={`tab-btn${industrialsTab === t.id ? ' active' : ''}`}
+                onClick={() => setIndustrialsTab(t.id)}>
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          {industrialsTab === 'chain' && <IndustrialsDashboard />}
+          {industrialsTab === 'news'  && <IndustrialsNewsSection />}
         </>
       )}
 

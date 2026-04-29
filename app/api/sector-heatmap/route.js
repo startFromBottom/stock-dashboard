@@ -9,6 +9,8 @@ import { HEALTHCARE_LAYERS } from '@/data/healthcareCompanies';
 import { QUANTUM_LAYERS } from '@/data/quantumCompanies';
 import { STAPLES_LAYERS } from '@/data/staplesCompanies';
 import { DISCRETIONARY_LAYERS } from '@/data/discretionaryCompanies';
+import { FINANCIAL_LAYERS } from '@/data/financialCompanies';
+import { INDUSTRIALS_LAYERS } from '@/data/industrialsCompanies';
 import { fetchQuotesAndMetrics } from '@/lib/finnhub-cache';
 
 /**
@@ -61,6 +63,8 @@ const SECTOR_POOLS = {
   'quantum':       () => takeTopUsWithMeta(QUANTUM_LAYERS,       'candidates', 12),
   'staples':       () => takeTopUsWithMeta(STAPLES_LAYERS,       'candidates', 12),
   'discretionary': () => takeTopUsWithMeta(DISCRETIONARY_LAYERS, 'candidates', 12),
+  'financials':    () => takeTopUsWithMeta(FINANCIAL_LAYERS,     'candidates', 12),
+  'industrials':   () => takeTopUsWithMeta(INDUSTRIALS_LAYERS,   'candidates', 12),
   'raw':           () => [], // 데이터 구조가 달라서 비움
 };
 
@@ -73,7 +77,7 @@ export async function GET(request) {
   }
 
   const { searchParams } = new URL(request.url);
-  const requested = (searchParams.get('sectors') ?? 'ai-dc,semi,space,raw,energy,biotech,fintech,healthcare,quantum,staples,discretionary')
+  const requested = (searchParams.get('sectors') ?? 'ai-dc,semi,space,raw,energy,biotech,fintech,healthcare,quantum,staples,discretionary,financials,industrials')
     .split(',')
     .map(s => s.trim())
     .filter(s => s in SECTOR_POOLS);

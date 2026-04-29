@@ -10,6 +10,8 @@ import { HEALTHCARE_LAYERS } from '@/data/healthcareCompanies';
 import { QUANTUM_LAYERS } from '@/data/quantumCompanies';
 import { STAPLES_LAYERS } from '@/data/staplesCompanies';
 import { DISCRETIONARY_LAYERS } from '@/data/discretionaryCompanies';
+import { FINANCIAL_LAYERS } from '@/data/financialCompanies';
+import { INDUSTRIALS_LAYERS } from '@/data/industrialsCompanies';
 import { fetchQuotesAndMetrics } from '@/lib/finnhub-cache';
 
 /**
@@ -76,6 +78,8 @@ function getSectorTickerPools() {
     'quantum':       takeTopUs(QUANTUM_LAYERS,       'candidates', 5),
     'staples':       takeTopUs(STAPLES_LAYERS,       'candidates', 5),
     'discretionary': takeTopUs(DISCRETIONARY_LAYERS, 'candidates', 5),
+    'financials':    takeTopUs(FINANCIAL_LAYERS,     'candidates', 5),
+    'industrials':   takeTopUs(INDUSTRIALS_LAYERS,   'candidates', 5),
     'raw':           [],
   };
 }
@@ -158,7 +162,7 @@ export async function GET() {
     return NextResponse.json(responseCache.data, { headers: { 'X-Cache': 'HIT' } });
   }
 
-  const sectorIds = ['ai-dc', 'semi', 'space', 'raw', 'energy', 'biotech', 'fintech', 'healthcare', 'quantum', 'staples', 'discretionary'];
+  const sectorIds = ['ai-dc', 'semi', 'space', 'raw', 'energy', 'biotech', 'fintech', 'healthcare', 'quantum', 'staples', 'discretionary', 'financials', 'industrials'];
   const tickerPools = getSectorTickerPools();
 
   // 1. 각 섹터 대표 ETF

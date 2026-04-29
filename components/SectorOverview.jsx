@@ -19,6 +19,8 @@ const SECTORS = [
   { id: 'quantum',       label: '양자컴퓨터',     icon: '⚛️' },
   { id: 'staples',       label: '필수소비재',     icon: '🥫' },
   { id: 'discretionary', label: '임의소비재',     icon: '🛍️' },
+  { id: 'financials',    label: '금융',           icon: '🏦' },
+  { id: 'industrials',   label: '산업재',         icon: '🏭' },
 ];
 
 const TIMEFRAMES = [

@@ -12,6 +12,8 @@ import { RAW_NEWS_ITEMS }             from '@/data/rawNews';
 import { HEALTHCARE_NEWS_ITEMS }      from '@/data/healthcare-news';
 import { STAPLES_NEWS_ITEMS }         from '@/data/staples-news';
 import { DISCRETIONARY_NEWS_ITEMS }   from '@/data/discretionary-news';
+import { FINANCIAL_NEWS_ITEMS }       from '@/data/financial-news';
+import { INDUSTRIALS_NEWS_ITEMS }     from '@/data/industrials-news';
 
 const SECTOR_META = {
   'ai-dc':         { label: 'AI 데이터센터', icon: '🏢' },
@@ -25,6 +27,8 @@ const SECTOR_META = {
   'quantum':       { label: '양자컴퓨터',     icon: '⚛️' },
   'staples':       { label: '필수소비재',     icon: '🥫' },
   'discretionary': { label: '임의소비재',     icon: '🛍️' },
+  'financials':    { label: '금융',           icon: '🏦' },
+  'industrials':   { label: '산업재',         icon: '🏭' },
 };
 
 const ALL_NEWS = [
@@ -38,6 +42,8 @@ const ALL_NEWS = [
   ...(HEALTHCARE_NEWS_ITEMS    ?? []).map(n => ({ ...n, _sector: 'healthcare' })),
   ...(STAPLES_NEWS_ITEMS       ?? []).map(n => ({ ...n, _sector: 'staples' })),
   ...(DISCRETIONARY_NEWS_ITEMS ?? []).map(n => ({ ...n, _sector: 'discretionary' })),
+  ...(FINANCIAL_NEWS_ITEMS     ?? []).map(n => ({ ...n, _sector: 'financials' })),
+  ...(INDUSTRIALS_NEWS_ITEMS   ?? []).map(n => ({ ...n, _sector: 'industrials' })),
 ];
 
 const SLIDE_INTERVAL = 6000;
