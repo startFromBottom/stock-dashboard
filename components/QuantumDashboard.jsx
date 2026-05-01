@@ -5,6 +5,7 @@ import { QUANTUM_LAYERS, QUANTUM_FLAG_BY_NAME } from '@/data/quantumCompanies';
 import useMarketCaps from '@/hooks/useMarketCaps';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
 import StarButton from './StarButton';
+import { cardClickHandler } from '@/lib/company-card-click';
 
 /* ═══════════════════════════════════════════════════════
    양자컴퓨터 밸류체인 SVG 다이어그램 (5개 레이어 수직)
@@ -327,7 +328,7 @@ function QuantumCompanyPanel({ layer }) {
           const liveMktcap = company.liveCap ? formatMktcap(company.liveCap) : null;
           const displayRank = idx + 1;
           return (
-            <div key={`top-${company.rank}-${company.name}`} className="company-card">
+            <div key={`top-${company.rank}-${company.name}`} className="company-card clickable" onClick={cardClickHandler({ ticker: company.ticker, name: company.name, sector: 'quantum' })}>
               <StarButton ticker={company.ticker} name={company.name} sector="quantum" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1]}
@@ -372,7 +373,7 @@ function QuantumCompanyPanel({ layer }) {
                 const flag = QUANTUM_FLAG_BY_NAME[company.name] ?? '🌐';
                 const liveMktcap = company.liveCap ? formatMktcap(company.liveCap) : null;
                 return (
-                  <div key={`more-${company.rank}-${company.name}`} className="company-card more-card">
+                  <div key={`more-${company.rank}-${company.name}`} className="company-card more-card clickable" onClick={cardClickHandler({ ticker: company.ticker, name: company.name, sector: 'quantum' })}>
                     <StarButton ticker={company.ticker} name={company.name} sector="quantum" />
                     <span className="rank-badge rank-more">{idx + 11}위</span>
                     <div className="company-name">

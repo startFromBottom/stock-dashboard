@@ -33,6 +33,7 @@ import TodayHeadline from './TodayHeadline';
 import WatchlistDashboard from './WatchlistDashboard';
 import HeaderWatchlistButton from './HeaderWatchlistButton';
 import LoginButton from './LoginButton';
+import CompanyDetailModal from './CompanyDetailModal';
 
 /* ── 섹터 선택 ── */
 const SECTORS = [
@@ -186,6 +187,9 @@ export default function Dashboard() {
 
   return (
     <div className="page-wrap">
+      {/* ── 글로벌 회사 상세 모달 — 어떤 카드에서든 열 수 있음 ── */}
+      <CompanyDetailModal />
+
       {/* ── Header ── */}
       <div className="header">
         <div className="header-top">

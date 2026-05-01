@@ -5,6 +5,7 @@ import { INDUSTRIALS_LAYERS, INDUSTRIALS_FLAG_BY_NAME } from '@/data/industrials
 import useMarketCaps from '@/hooks/useMarketCaps';
 import { normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
 import StarButton from './StarButton';
+import { cardClickHandler } from '@/lib/company-card-click';
 
 const CHAIN_LAYERS = [
   { id: 'aerospace_defense', label: '항공우주 / 방산',  icon: '✈️',
@@ -175,7 +176,7 @@ function IndustrialsCompanyPanel({ layer }) {
           const liveMktcap = company.liveCap ? formatMktcap(company.liveCap) : null;
           const displayRank = idx + 1;
           return (
-            <div key={`top-${company.rank}-${company.name}`} className="company-card">
+            <div key={`top-${company.rank}-${company.name}`} className="company-card clickable" onClick={cardClickHandler({ ticker: company.ticker, name: company.name, sector: 'industrials' })}>
               <StarButton ticker={company.ticker} name={company.name} sector="industrials" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1]}
@@ -214,7 +215,7 @@ function IndustrialsCompanyPanel({ layer }) {
                 const flag = INDUSTRIALS_FLAG_BY_NAME[company.name] ?? '🌐';
                 const liveMktcap = company.liveCap ? formatMktcap(company.liveCap) : null;
                 return (
-                  <div key={`more-${company.rank}-${company.name}`} className="company-card more-card">
+                  <div key={`more-${company.rank}-${company.name}`} className="company-card more-card clickable" onClick={cardClickHandler({ ticker: company.ticker, name: company.name, sector: 'industrials' })}>
                     <StarButton ticker={company.ticker} name={company.name} sector="industrials" />
                     <span className="rank-badge rank-more">{idx + 11}위</span>
                     <div className="company-name">

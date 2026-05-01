@@ -7,6 +7,7 @@ import useStockMetrics from '@/hooks/useStockMetrics';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
 import { DC_GLOSSARY_ITEMS } from '@/data/dc-glossary';
 import StarButton from './StarButton';
+import { cardClickHandler } from '@/lib/company-card-click';
 
 const RANK_LABELS = ['🥇 1위', '🥈 2위', '🥉 3위', '4위', '5위', '6위', '7위', '8위', '9위', '10위'];
 
@@ -218,7 +219,7 @@ function PanelInner({ comp }) {
           const volStr   = formatVolume(sm?.volume ?? null);
 
           return (
-            <div key={`top-${c.rank}-${c.name}`} className="company-card">
+            <div key={`top-${c.rank}-${c.name}`} className="company-card clickable" onClick={cardClickHandler({ ticker: c.ticker, name: c.name, sector: 'ai-dc' })}>
               <StarButton ticker={c.ticker} name={c.name} sector="ai-dc" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1]}
@@ -301,7 +302,7 @@ function PanelInner({ comp }) {
                 const displayRank = idx + 11;
 
                 return (
-                  <div key={`more-${c.rank}-${c.name}`} className="company-card more-card">
+                  <div key={`more-${c.rank}-${c.name}`} className="company-card more-card clickable" onClick={cardClickHandler({ ticker: c.ticker, name: c.name, sector: 'ai-dc' })}>
                     <StarButton ticker={c.ticker} name={c.name} sector="ai-dc" />
                     <span className="rank-badge rank-more">{displayRank}위</span>
                     <div className="company-name">

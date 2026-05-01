@@ -22,6 +22,7 @@ import useMarketCaps from '@/hooks/useMarketCaps';
 import useStockMetrics from '@/hooks/useStockMetrics';
 import { normalizeTicker, formatMktcap, extractPublicTickers } from '@/lib/ticker-utils';
 import StarButton from './StarButton';
+import { cardClickHandler } from '@/lib/company-card-click';
 
 function getRsiStyle(rsi) {
   if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
@@ -829,7 +830,7 @@ function SemiCompanyPanel({ step }) {
           const rsiStyle   = getRsiStyle(sm?.rsi ?? null);
           const volStr     = formatVolume(sm?.volume ?? null);
           return (
-            <div key={`${comp.name}-${idx}`} className="company-card">
+            <div key={`${comp.name}-${idx}`} className="company-card clickable" onClick={cardClickHandler({ ticker: comp.ticker, name: comp.name, sector: 'semi' })}>
               <StarButton ticker={comp.ticker} name={comp.name} sector="semi" />
               <span className={`rank-badge rank-${rank}`}>
                 {RANK_LABELS[rank - 1]}
@@ -895,7 +896,7 @@ function SemiCompanyPanel({ step }) {
                 const flag = getFlag(comp.name);
                 const liveMktcap = comp.liveCap ? formatMktcap(comp.liveCap) : null;
                 return (
-                  <div key={`more-${comp.name}-${idx}`} className="company-card more-card">
+                  <div key={`more-${comp.name}-${idx}`} className="company-card more-card clickable" onClick={cardClickHandler({ ticker: comp.ticker, name: comp.name, sector: 'semi' })}>
                     <StarButton ticker={comp.ticker} name={comp.name} sector="semi" />
                     <span className="rank-badge rank-more">{idx + 11}위</span>
                     <div className="company-name">

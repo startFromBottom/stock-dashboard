@@ -5,6 +5,7 @@ import { FINANCIAL_LAYERS, FINANCIAL_FLAG_BY_NAME } from '@/data/financialCompan
 import useMarketCaps from '@/hooks/useMarketCaps';
 import { normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
 import StarButton from './StarButton';
+import { cardClickHandler } from '@/lib/company-card-click';
 
 const CHAIN_LAYERS = [
   { id: 'banks',            label: '대형 은행',         icon: '🏦',
@@ -175,7 +176,7 @@ function FinancialCompanyPanel({ layer }) {
           const liveMktcap = company.liveCap ? formatMktcap(company.liveCap) : null;
           const displayRank = idx + 1;
           return (
-            <div key={`top-${company.rank}-${company.name}`} className="company-card">
+            <div key={`top-${company.rank}-${company.name}`} className="company-card clickable" onClick={cardClickHandler({ ticker: company.ticker, name: company.name, sector: 'financials' })}>
               <StarButton ticker={company.ticker} name={company.name} sector="financials" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1]}
@@ -214,7 +215,7 @@ function FinancialCompanyPanel({ layer }) {
                 const flag = FINANCIAL_FLAG_BY_NAME[company.name] ?? '🌐';
                 const liveMktcap = company.liveCap ? formatMktcap(company.liveCap) : null;
                 return (
-                  <div key={`more-${company.rank}-${company.name}`} className="company-card more-card">
+                  <div key={`more-${company.rank}-${company.name}`} className="company-card more-card clickable" onClick={cardClickHandler({ ticker: company.ticker, name: company.name, sector: 'financials' })}>
                     <StarButton ticker={company.ticker} name={company.name} sector="financials" />
                     <span className="rank-badge rank-more">{idx + 11}위</span>
                     <div className="company-name">

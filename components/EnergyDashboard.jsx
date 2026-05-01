@@ -7,6 +7,7 @@ import useMarketCaps from '@/hooks/useMarketCaps';
 import useStockMetrics from '@/hooks/useStockMetrics';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
 import StarButton from './StarButton';
+import { cardClickHandler } from '@/lib/company-card-click';
 
 function getRsiStyle(rsi) {
   if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
@@ -244,7 +245,7 @@ function EnergyCompanyPanel({ energyType }) {
           const rsiStyle = getRsiStyle(sm?.rsi ?? null);
           const volStr   = formatVolume(sm?.volume ?? null);
           return (
-            <div key={`${co.name}-${idx}`} className="company-card">
+            <div key={`${co.name}-${idx}`} className="company-card clickable" onClick={cardClickHandler({ ticker: co.ticker, name: co.name, sector: 'energy' })}>
               <StarButton ticker={co.ticker} name={co.name} sector="energy" />
               <span className={`rank-badge rank-${displayRank}`}>
                 {RANK_LABELS[displayRank - 1] ?? `${displayRank}위`}
@@ -306,7 +307,7 @@ function EnergyCompanyPanel({ energyType }) {
               {rest.map((co, idx) => {
                 const liveMktcap = co.liveCap ? formatMktcap(co.liveCap) : null;
                 return (
-                  <div key={`more-${co.name}-${idx}`} className="company-card more-card">
+                  <div key={`more-${co.name}-${idx}`} className="company-card more-card clickable" onClick={cardClickHandler({ ticker: co.ticker, name: co.name, sector: 'energy' })}>
                     <StarButton ticker={co.ticker} name={co.name} sector="energy" />
                     <span className="rank-badge rank-more">{idx + 11}위</span>
                     <div className="company-name">🌐 {co.name}</div>
