@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import useWatchlist from '@/hooks/useWatchlist';
 import useAuth from '@/hooks/useAuth';
+import PortfolioPanel from './PortfolioPanel';
 
 const SECTOR_META = {
   'ai-dc':         { label: 'AI 데이터센터', icon: '🏢' },
@@ -80,6 +81,12 @@ export default function WatchlistDashboard({ onSelectSector }) {
     [items.length, items.map(i => i.ticker).join(',')] // eslint-disable-line
   );
   const livePrices = useLivePrices(tickers);
+
+  /* ── PortfolioPanel용: livePrice enrich한 전체 items (필터·정렬 무관) ── */
+  const enriched = useMemo(() => items.map(it => {
+    const live = livePrices[it.ticker];
+    return { ...it, livePrice: live?.price ?? null };
+  }), [items, livePrices]);
 
   /* ── 필터 + 정렬 ── */
   const display = useMemo(() => {
@@ -234,11 +241,14 @@ export default function WatchlistDashboard({ onSelectSector }) {
 
   return (
     <div className="wl-wrap">
-      {/* ── KPI 요약 ── */}
+      {/* ── 포트폴리오 분석 (매수가/수량 입력된 종목 기반) ── */}
+      <PortfolioPanel items={enriched} />
+
+      {/* ── 워치리스트 보조 KPI (간단) ── */}
       <div className="wl-kpi-row">
         <div className="wl-kpi-card">
-          <span className="wl-kpi-label">종목 수</span>
-          <span className="wl-kpi-val">{totals.count}</span>
+          <span className="wl-kpi-label">전체 워치리스트</span>
+          <span className="wl-kpi-val">{totals.count}<span className="wl-kpi-sub"> 종목</span></span>
         </div>
         <div className="wl-kpi-card">
           <span className="wl-kpi-label">관심 시점부터 평균</span>
@@ -246,21 +256,6 @@ export default function WatchlistDashboard({ onSelectSector }) {
             {fmtPct(totals.avgGainSinceAdded)}
           </span>
         </div>
-        {totals.withPnlCount > 0 && (
-          <>
-            <div className="wl-kpi-card">
-              <span className="wl-kpi-label">매수 비용 합계 ({totals.withPnlCount}종목)</span>
-              <span className="wl-kpi-val">${fmt(totals.totalCost, 0)}</span>
-            </div>
-            <div className="wl-kpi-card">
-              <span className="wl-kpi-label">미실현 손익</span>
-              <span className={`wl-kpi-val ${totals.totalPnl > 0 ? 'wl-pos' : totals.totalPnl < 0 ? 'wl-neg' : ''}`}>
-                ${fmt(totals.totalPnl, 0)}
-                {totals.pnlPct !== null && <span className="wl-kpi-sub"> ({fmtPct(totals.pnlPct)})</span>}
-              </span>
-            </div>
-          </>
-        )}
       </div>
 
       {/* ── 컨트롤 바 ── */}
