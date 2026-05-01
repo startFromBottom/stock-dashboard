@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import useCompanyModal from '@/hooks/useCompanyModal';
 import useWatchlist from '@/hooks/useWatchlist';
 import useAuth from '@/hooks/useAuth';
+import { pickMetric, pickMetricWithKey, METRIC_KEYS } from '@/lib/finnhub-metric-keys';
 
 /**
  * 전역 회사 상세 모달.
@@ -50,11 +51,37 @@ export default function CompanyDetailModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState(null);
 
-  // 열릴 때 fetch
+  // URL에 ?debugMetrics=1 있으면 어떤 키가 적중했는지 표시
+  const [debugMode, setDebugMode] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    setDebugMode(params.get('debugMetrics') === '1');
+  }, []);
+
+  // 열릴 때 fetch — LocalStorage 캐시 우선
   useEffect(() => {
     if (!isOpen || !ticker) return;
     let aborted = false;
 
+    const cacheKey = `cdm-${ticker}`;
+    const CACHE_TTL = 24 * 60 * 60 * 1000; // 24h
+
+    // 1) LocalStorage 캐시 hit이면 즉시 표시
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem(cacheKey) : null;
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.ts && Date.now() - parsed.ts < CACHE_TTL && parsed.data) {
+          setData(parsed.data);
+          setLoading(false);
+          setError(null);
+          return; // 서버 호출 스킵
+        }
+      }
+    } catch { /* parse 실패는 무시 */ }
+
+    // 2) 캐시 miss → 서버에 요청
     setLoading(true);
     setError(null);
     setData(null);
@@ -67,7 +94,14 @@ export default function CompanyDetailModal() {
         }
         return r.json();
       })
-      .then(j => { if (!aborted) setData(j); })
+      .then(j => {
+        if (aborted) return;
+        setData(j);
+        // LocalStorage에 저장
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: j }));
+        } catch { /* quota 초과는 무시 */ }
+      })
       .catch(e => { if (!aborted) setError(e.message); })
       .finally(() => { if (!aborted) setLoading(false); });
 
@@ -101,8 +135,8 @@ export default function CompanyDetailModal() {
   const watched = ticker ? isWatched(ticker) : false;
 
   // ── 52주 위치 게이지용 ──
-  const w52high = metric?.['52WeekHigh'];
-  const w52low  = metric?.['52WeekLow'];
+  const w52high = pickMetric(metric, METRIC_KEYS.high52w);
+  const w52low  = pickMetric(metric, METRIC_KEYS.low52w);
   const curPrice = quote?.price;
   const w52pct = (w52high && w52low && curPrice && w52high > w52low)
     ? ((curPrice - w52low) / (w52high - w52low)) * 100
@@ -224,48 +258,50 @@ export default function CompanyDetailModal() {
               </div>
             )}
 
-            {/* ── 메트릭 그리드: 밸류에이션 / 수익성 / 성장 / 건전성 ── */}
+            {/* ── 메트릭 그리드: 밸류에이션 / 수익성 / 성장 / 건전성 ──
+                각 항목은 lib/finnhub-metric-keys.js의 우선순위로 fallback ── */}
             <div className="cdm-grid">
               <MetricBlock
                 title="📊 밸류에이션"
                 rows={[
-                  ['P/E (TTM)',   fmtNum(metric?.peNormalizedAnnual ?? metric?.peTTM ?? metric?.peBasicExclExtraTTM)],
-                  ['P/B',         fmtNum(metric?.pbAnnual ?? metric?.pbQuarterly)],
-                  ['P/S (TTM)',   fmtNum(metric?.psTTM)],
-                  ['EV/EBITDA',   fmtNum(metric?.['enterpriseValueOverEBITDATTM'] ?? metric?.['currentEv/freeCashFlowTTM'])],
-                  ['배당수익률',   fmtPct(metric?.dividendYieldIndicatedAnnual ?? metric?.currentDividendYieldTTM, 2)],
+                  ['P/E',         fmtNum(pickMetric(metric, METRIC_KEYS.pe))],
+                  ['P/B',         fmtNum(pickMetric(metric, METRIC_KEYS.pb))],
+                  ['P/S',         fmtNum(pickMetric(metric, METRIC_KEYS.ps))],
+                  ['EV/EBITDA',   fmtNum(pickMetric(metric, METRIC_KEYS.evEbitda))],
+                  ['배당수익률',   fmtPct(pickMetric(metric, METRIC_KEYS.divYield), 2)],
                 ]}
               />
               <MetricBlock
                 title="💰 수익성"
                 rows={[
-                  ['ROE (TTM)',     fmtPct(metric?.roeTTM ?? metric?.roeRfy, 1)],
-                  ['ROA (TTM)',     fmtPct(metric?.roaTTM ?? metric?.roaRfy, 1)],
-                  ['영업이익률',     fmtPct(metric?.operatingMarginTTM, 1)],
-                  ['순이익률',       fmtPct(metric?.netProfitMarginTTM, 1)],
-                  ['총이익률',       fmtPct(metric?.grossMarginTTM, 1)],
+                  ['ROE',         fmtPct(pickMetric(metric, METRIC_KEYS.roe), 1)],
+                  ['ROA',         fmtPct(pickMetric(metric, METRIC_KEYS.roa), 1)],
+                  ['영업이익률',   fmtPct(pickMetric(metric, METRIC_KEYS.operatingMargin), 1)],
+                  ['순이익률',     fmtPct(pickMetric(metric, METRIC_KEYS.netMargin), 1)],
+                  ['총이익률',     fmtPct(pickMetric(metric, METRIC_KEYS.grossMargin), 1)],
                 ]}
               />
               <MetricBlock
                 title="📈 성장"
                 rows={[
-                  ['매출 5Y CAGR',   fmtPct(metric?.revenueGrowth5Y, 1)],
-                  ['매출 YoY (분기)', fmtPct(metric?.revenueGrowthQuarterlyYoy ?? metric?.revenueGrowthTTMYoy, 1)],
-                  ['EPS 5Y CAGR',    fmtPct(metric?.epsGrowth5Y, 1)],
-                  ['EPS YoY (분기)',  fmtPct(metric?.epsGrowthQuarterlyYoy ?? metric?.epsGrowthTTMYoy, 1)],
-                  ['BPS 5Y CAGR',    fmtPct(metric?.bookValueShareGrowth5Y, 1)],
+                  ['매출 5Y CAGR',   fmtPct(pickMetric(metric, METRIC_KEYS.revenueGrowth5Y), 1)],
+                  ['매출 YoY',       fmtPct(pickMetric(metric, METRIC_KEYS.revenueGrowthYoy), 1)],
+                  ['EPS 5Y CAGR',    fmtPct(pickMetric(metric, METRIC_KEYS.epsGrowth5Y), 1)],
+                  ['EPS YoY',        fmtPct(pickMetric(metric, METRIC_KEYS.epsGrowthYoy), 1)],
+                  ['BPS 5Y CAGR',    fmtPct(pickMetric(metric, METRIC_KEYS.bookValueGrowth5Y), 1)],
                 ]}
               />
               <MetricBlock
                 title="🛡️ 재무건전성"
                 rows={[
-                  ['부채/자기자본',  fmtNum(metric?.['totalDebt/totalEquityAnnual'] ?? metric?.['totalDebt/totalEquityQuarterly'])],
-                  ['유동비율',       fmtNum(metric?.currentRatioAnnual ?? metric?.currentRatioQuarterly)],
-                  ['이자보상배율',   fmtNum(metric?.['netInterestCoverageAnnual'])],
-                  ['베타',           fmtNum(metric?.beta)],
-                  ['일평균 거래량',   metric?.['10DayAverageTradingVolume']
-                                       ? `${(metric['10DayAverageTradingVolume']).toFixed(2)}M`
-                                       : '—'],
+                  ['부채/자기자본',  fmtNum(pickMetric(metric, METRIC_KEYS.debtToEquity))],
+                  ['유동비율',       fmtNum(pickMetric(metric, METRIC_KEYS.currentRatio))],
+                  ['이자보상배율',   fmtNum(pickMetric(metric, METRIC_KEYS.interestCoverage))],
+                  ['베타',           fmtNum(pickMetric(metric, METRIC_KEYS.beta))],
+                  ['일평균 거래량',   (() => {
+                    const v = pickMetric(metric, METRIC_KEYS.avgVolume);
+                    return v !== null ? `${v.toFixed(2)}M` : '—';
+                  })()],
                 ]}
               />
             </div>
@@ -318,6 +354,11 @@ export default function CompanyDetailModal() {
               </button>
             </div>
 
+            {/* ── 디버그 패널 (URL ?debugMetrics=1 일 때만) ── */}
+            {debugMode && metric && (
+              <DebugPanel metric={metric} />
+            )}
+
             {/* ── 푸터 ── */}
             <div className="cdm-foot">
               <span>데이터: Finnhub · 캐시 30분</span>
@@ -327,6 +368,71 @@ export default function CompanyDetailModal() {
         )}
       </div>
     </div>
+  );
+}
+
+/* ── 디버그 패널: 어느 fallback 키가 적중했는지 / 비었는지 ── */
+function DebugPanel({ metric }) {
+  const labels = {
+    pe: 'P/E',
+    pb: 'P/B',
+    ps: 'P/S',
+    evEbitda: 'EV/EBITDA',
+    divYield: '배당수익률',
+    roe: 'ROE',
+    roa: 'ROA',
+    operatingMargin: '영업이익률',
+    netMargin: '순이익률',
+    grossMargin: '총이익률',
+    revenueGrowth5Y: '매출 5Y',
+    revenueGrowthYoy: '매출 YoY',
+    epsGrowth5Y: 'EPS 5Y',
+    epsGrowthYoy: 'EPS YoY',
+    bookValueGrowth5Y: 'BPS 5Y',
+    debtToEquity: '부채/자기자본',
+    currentRatio: '유동비율',
+    interestCoverage: '이자보상',
+    beta: '베타',
+    avgVolume: '평균 거래량',
+    high52w: '52w high',
+    low52w: '52w low',
+  };
+
+  const rows = Object.entries(METRIC_KEYS).map(([metricName, keys]) => {
+    const { value, key } = pickMetricWithKey(metric, keys);
+    return { metricName, label: labels[metricName] ?? metricName, hitKey: key, value, tried: keys.length };
+  });
+
+  const hits = rows.filter(r => r.hitKey).length;
+  const total = rows.length;
+  const totalKeys = Object.keys(metric).length;
+
+  return (
+    <details className="cdm-debug">
+      <summary className="cdm-debug-head">
+        🔧 디버그 — {hits}/{total} 메트릭 적중 (Finnhub 응답 총 키 수: {totalKeys})
+      </summary>
+      <table className="cdm-debug-table">
+        <thead>
+          <tr>
+            <th>지표</th>
+            <th>적중 키</th>
+            <th className="num">값</th>
+            <th className="num">시도수</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(r => (
+            <tr key={r.metricName} className={r.hitKey ? '' : 'cdm-debug-miss'}>
+              <td>{r.label}</td>
+              <td className="cdm-debug-key">{r.hitKey ?? '— (없음)'}</td>
+              <td className="num">{r.value !== null ? r.value.toFixed(3) : '—'}</td>
+              <td className="num">{r.tried}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </details>
   );
 }
 
