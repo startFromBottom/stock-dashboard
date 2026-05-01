@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { getRsiStyle } from '@/lib/rsi-style';
 import { SECTOR_ETFS } from '@/data/etfs';
 import useEtfQuotes from '@/hooks/useEtfQuotes';
 import useStockMetrics from '@/hooks/useStockMetrics';
@@ -12,12 +13,6 @@ function fmt(num, digits = 2) {
 function fmtPrice(p) {
   if (!p) return '—';
   return `$${p.toFixed(2)}`;
-}
-function getRsiStyle(rsi) {
-  if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
-  if (rsi >= 70) return { color: '#f87171', label: `${rsi}`, badge: '과매수' };
-  if (rsi <= 30) return { color: '#60a5fa', label: `${rsi}`, badge: '과매도' };
-  return { color: '#4ade80', label: `${rsi}`, badge: '중립' };
 }
 function formatVolume(vol) {
   if (!vol || vol <= 0) return '—';
@@ -100,7 +95,6 @@ export default function EtfPanel({ sectorId }) {
           const pctSign  = isUp ? '+' : '';
 
           const sm       = metrics[etf.ticker];
-          const rsiStyle = getRsiStyle(sm?.rsi ?? null);
           const volStr   = formatVolume(sm?.volume ?? null);
 
           return (
@@ -149,18 +143,19 @@ export default function EtfPanel({ sectorId }) {
                 </div>
                 <div className="stock-metric-item">
                   <span className="stock-metric-label">RSI(14)</span>
-                  {mLoading ? (
-                    <span className="stock-metric-value metrics-loading">…</span>
-                  ) : (
-                    <span className="stock-metric-value" style={{ color: rsiStyle.color }}>
-                      {rsiStyle.label}
-                      {rsiStyle.badge && (
-                        <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
-                          {rsiStyle.badge}
-                        </span>
-                      )}
-                    </span>
-                  )}
+                  {(() => {
+                    const rsiStyle = getRsiStyle(sm?.rsi ?? null);
+                    return (
+                      <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
+                        {rsiStyle.label}
+                        {rsiStyle.badge && (
+                          <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
+                            {rsiStyle.badge}
+                          </span>
+                        )}
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
 

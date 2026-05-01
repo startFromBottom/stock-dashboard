@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getAlphaVantageOverview, overviewToMetricFallback } from '@/lib/alpha-vantage';
 
 /**
  * /api/company-detail?ticker=NVDA
@@ -20,7 +21,9 @@ import { NextResponse } from 'next/server';
  */
 
 const detailCache = new Map(); // ticker → { data, ts }
-const TTL = 30 * 60 * 1000;    // 30분
+const TTL = 24 * 60 * 60 * 1000; // 24시간 — Finnhub free tier 한도(60회/분, 월 호출량) 절약
+                                 // profile/metric/earnings 모두 자주 바뀌지 않음
+                                 // 가격(quote)만 약간 stale해지지만 모달 헤더의 가격이라 큰 문제 X
 
 async function safeFetch(url) {
   try {
@@ -105,7 +108,7 @@ export async function GET(request) {
   }
 
   // 4개 endpoint 병렬 호출
-  const [profile, quote, metric, nextEarnings] = await Promise.all([
+  const [profile, quote, metricRaw, nextEarnings] = await Promise.all([
     fetchProfile(ticker, token),
     fetchQuote(ticker, token),
     fetchMetric(ticker, token),
@@ -113,11 +116,34 @@ export async function GET(request) {
   ]);
 
   // 다 null이면 보통 ticker 인식 못 함
-  if (!profile && !quote && !metric) {
+  if (!profile && !quote && !metricRaw) {
     return NextResponse.json(
       { error: 'no data — ticker가 올바른지, Finnhub free tier 한도가 안 찼는지 확인' },
       { status: 404 }
     );
+  }
+
+  // ── Alpha Vantage OVERVIEW fallback ──
+  // Finnhub metric에서 핵심 메트릭이 너무 많이 비었으면 AV로 보강
+  // (AV는 분당 5회 한도라 모든 모달 열기마다 호출하면 안 됨 → 빈 메트릭 4개 이상일 때만)
+  let metric = metricRaw;
+  let avSource = false;
+  const coreMetrics = ['peNormalizedAnnual', 'peTTM', 'pbAnnual', 'roeTTM', 'operatingMarginTTM'];
+  const missing = coreMetrics.filter(k => {
+    const v = metricRaw?.[k];
+    return typeof v !== 'number' || isNaN(v);
+  }).length;
+
+  if (missing >= 3) {
+    // 3개 이상 비었을 때만 AV 호출 (한도 절약)
+    const ov = await getAlphaVantageOverview(ticker);
+    if (ov) {
+      const fallback = overviewToMetricFallback(ov);
+      // Finnhub 값이 있으면 우선, 없을 때만 AV로 채움
+      metric = { ...fallback, ...(metricRaw ?? {}) };
+      // Finnhub에 진짜 없는 키는 fallback이 채움 (그래서 spread 순서: AV 먼저)
+      avSource = true;
+    }
   }
 
   const data = {
@@ -127,6 +153,7 @@ export async function GET(request) {
     metric,
     nextEarnings,
     fetchedAt: new Date().toISOString(),
+    avFallback: avSource, // 디버그용
   };
 
   detailCache.set(ticker, { data, ts: now });

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { getRsiStyle } from '@/lib/rsi-style';
 import { MATERIALS, CONTINENTS, GROUPS } from '@/data/rawMaterials';
 import { RAW_COMPANIES } from '@/data/rawMaterialCompanies';
 import useMarketCaps from '@/hooks/useMarketCaps';
@@ -8,12 +9,6 @@ import useStockMetrics from '@/hooks/useStockMetrics';
 import { extractPublicTickers, normalizeTicker, formatMktcap } from '@/lib/ticker-utils';
 import StarButton from './StarButton';
 
-function getRsiStyle(rsi) {
-  if (rsi === null || rsi === undefined) return { color: 'var(--text-muted)', label: '—', badge: '' };
-  if (rsi >= 70) return { color: '#f87171', label: `${rsi}`, badge: '과매수' };
-  if (rsi <= 30) return { color: '#60a5fa', label: `${rsi}`, badge: '과매도' };
-  return { color: '#4ade80', label: `${rsi}`, badge: '중립' };
-}
 function formatVolume(vol) {
   if (!vol || vol <= 0) return '—';
   if (vol >= 1_000_000_000) return `${(vol / 1_000_000_000).toFixed(2)}B`;
@@ -423,7 +418,6 @@ function CompanySection({ matId, mat }) {
           const isHov = hoveredRank === co.rank;
           const fmpTicker = normalizeTicker(co.ticker);
           const sm = fmpTicker ? stockMetrics[fmpTicker] : null;
-          const rsiStyle = getRsiStyle(sm?.rsi ?? null);
           const volStr   = formatVolume(sm?.volume ?? null);
           return (
             <div key={co.rank}
@@ -453,18 +447,19 @@ function CompanySection({ matId, mat }) {
                 </div>
                 <div className="stock-metric-item">
                   <span className="stock-metric-label">RSI(14)</span>
-                  {metricsLoading ? (
-                    <span className="stock-metric-value metrics-loading">…</span>
-                  ) : (
-                    <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
-                      {rsiStyle.label}
-                      {rsiStyle.badge && (
-                        <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
-                          {rsiStyle.badge}
-                        </span>
-                      )}
-                    </span>
-                  )}
+                  {(() => {
+                    const rsiStyle = getRsiStyle(sm?.rsi ?? null);
+                    return (
+                      <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
+                        {rsiStyle.label}
+                        {rsiStyle.badge && (
+                          <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
+                            {rsiStyle.badge}
+                          </span>
+                        )}
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
               <div className="company-detail">{co.detail}</div>
@@ -621,7 +616,6 @@ function MapAndCompanies({ mat, matId }) {
                   {(() => {
                     const fmpTicker = normalizeTicker(co.ticker);
                     const sm = fmpTicker ? stockMetrics[fmpTicker] : null;
-                    const rsiStyle = getRsiStyle(sm?.rsi ?? null);
                     const volStr   = formatVolume(sm?.volume ?? null);
                     return (
                       <div className="stock-metrics-row">
@@ -631,22 +625,23 @@ function MapAndCompanies({ mat, matId }) {
                             {metricsLoading ? <span className="metrics-loading">…</span> : volStr}
                           </span>
                         </div>
-                        <div className="stock-metric-item">
-                          <span className="stock-metric-label">RSI(14)</span>
-                          {metricsLoading ? (
-                            <span className="stock-metric-value metrics-loading">…</span>
-                          ) : (
-                            <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
-                              {rsiStyle.label}
-                              {rsiStyle.badge && (
-                                <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
-                                  {rsiStyle.badge}
-                                </span>
-                              )}
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                <div className="stock-metric-item">
+                  <span className="stock-metric-label">RSI(14)</span>
+                  {(() => {
+                    const rsiStyle = getRsiStyle(sm?.rsi ?? null);
+                    return (
+                      <span className="stock-metric-value rsi-value" style={{ color: rsiStyle.color }}>
+                        {rsiStyle.label}
+                        {rsiStyle.badge && (
+                          <span className="rsi-badge" style={{ borderColor: rsiStyle.color, color: rsiStyle.color }}>
+                            {rsiStyle.badge}
+                          </span>
+                        )}
+                      </span>
+                    );
+                  })()}
+                </div>
+              </div>
                     );
                   })()}
                   <div className="company-detail">{co.detail}</div>

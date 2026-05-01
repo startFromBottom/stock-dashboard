@@ -1,68 +1,34 @@
 import { NextResponse } from 'next/server';
 
-// ── 캐시 (15분 TTL) ──────────────────────────────────────────
-const metricsCache = new Map();
-const METRICS_TTL  = 15 * 60 * 1000; // 15분
-
 /**
- * Finnhub /stock/candle (일봉) → 최신 거래량 조회
- * /quote의 v 필드보다 안정적
+ * /api/stock-metrics?tickers=NVDA,AMD,...
+ *
+ * 카드용 보조 메트릭 (거래량 등) 반환.
+ *
+ * 이전 버전은 /stock/candle (거래량) + /indicator (RSI)을 썼지만
+ * 둘 다 Finnhub free tier에서 막혀(403) 항상 null.
+ *
+ * 새 버전: /stock/metric?metric=all 한 번 호출하고 거기서:
+ *   - volume:    10DayAverageTradingVolume (백만 주 단위 → 정수 주로 환산)
+ *   - rsi:       null (free tier에서 못 가져옴)
+ *
+ * 응답: { TICKER: { volume, rsi }, ... }
+ *
+ * 캐시: 6시간 (10일 평균이라 거의 안 바뀌고, free tier 호출 절약)
  */
-async function fetchVolume(ticker, token) {
+
+const cache = new Map();
+const TTL = 6 * 60 * 60 * 1000; // 6시간
+
+async function fetchMetric(ticker, token) {
   try {
-    const to   = Math.floor(Date.now() / 1000);
-    const from = to - 60 * 60 * 24 * 5; // 최근 5일치 (주말 고려)
-    const url  = `https://finnhub.io/api/v1/stock/candle?symbol=${encodeURIComponent(ticker)}&resolution=D&from=${from}&to=${to}&token=${token}`;
-    const res  = await fetch(url);
+    const url = `https://finnhub.io/api/v1/stock/metric?symbol=${encodeURIComponent(ticker)}&metric=all&token=${token}`;
+    const res = await fetch(url);
     if (!res.ok) return null;
     const json = await res.json();
-
-    // s: "ok" 여부 확인, v: volume 배열
-    if (json?.s !== 'ok' || !Array.isArray(json?.v) || json.v.length === 0) return null;
-
-    // 마지막(최신) 거래일 거래량
-    const lastVol = json.v[json.v.length - 1];
-    return typeof lastVol === 'number' && lastVol > 0 ? lastVol : null;
+    return json?.metric ?? null;
   } catch (e) {
-    console.warn(`[stock-metrics] volume fetch 실패 (${ticker}):`, e.message);
-    return null;
-  }
-}
-
-/**
- * Finnhub /indicator → RSI(14) 조회
- */
-async function fetchRSI(ticker, token) {
-  try {
-    const to   = Math.floor(Date.now() / 1000);
-    const from = to - 60 * 60 * 24 * 90; // 90일치 (RSI 계산 충분히 확보)
-    const url  = `https://finnhub.io/api/v1/indicator?symbol=${encodeURIComponent(ticker)}&resolution=D&from=${from}&to=${to}&indicator=rsi&timeperiod=14&token=${token}`;
-    const res  = await fetch(url);
-    if (!res.ok) {
-      console.warn(`[stock-metrics] RSI HTTP ${res.status} (${ticker})`);
-      return null;
-    }
-    const json = await res.json();
-
-    // 응답 구조: { rsi: [...], t: [...], s: "ok" }
-    if (json?.s !== 'ok') {
-      console.warn(`[stock-metrics] RSI s != ok (${ticker}):`, json?.s);
-      return null;
-    }
-
-    const rsiArr = json?.rsi;
-    if (!Array.isArray(rsiArr) || rsiArr.length === 0) return null;
-
-    // 뒤에서부터 유효한 숫자 찾기
-    for (let i = rsiArr.length - 1; i >= 0; i--) {
-      const v = rsiArr[i];
-      if (typeof v === 'number' && !isNaN(v) && v > 0) {
-        return parseFloat(v.toFixed(2));
-      }
-    }
-    return null;
-  } catch (e) {
-    console.warn(`[stock-metrics] RSI fetch 실패 (${ticker}):`, e.message);
+    console.warn(`[stock-metrics] metric fetch 실패 (${ticker}):`, e.message);
     return null;
   }
 }
@@ -83,12 +49,12 @@ export async function GET(request) {
   }
 
   const now = Date.now();
-  const hit  = {};
+  const hit = {};
   const miss = [];
 
   for (const t of tickers) {
-    const cached = metricsCache.get(t);
-    if (cached && now - cached.ts < METRICS_TTL) {
+    const cached = cache.get(t);
+    if (cached && now - cached.ts < TTL) {
       hit[t] = cached.data;
     } else {
       miss.push(t);
@@ -99,7 +65,7 @@ export async function GET(request) {
     return NextResponse.json(hit, { headers: { 'X-Cache': 'HIT' } });
   }
 
-  // 배치 처리 (Finnhub 무료 플랜: 30 req/s, 넉넉히 배치당 250ms 간격)
+  // 배치: 4개씩 동시, 300ms 간격 (free tier 60/min 안에 안전)
   const fresh = {};
   const BATCH = 4;
   const DELAY = 300;
@@ -109,11 +75,16 @@ export async function GET(request) {
 
     const results = await Promise.allSettled(
       batch.map(async (ticker) => {
-        const [volume, rsi] = await Promise.all([
-          fetchVolume(ticker, token),
-          fetchRSI(ticker, token),
-        ]);
-        return { ticker, volume, rsi };
+        const m = await fetchMetric(ticker, token);
+        // 10DayAverageTradingVolume은 단위가 백만 주 → 실제 주 수로 환산
+        const vol10d = (typeof m?.['10DayAverageTradingVolume'] === 'number')
+          ? m['10DayAverageTradingVolume'] * 1_000_000
+          : null;
+        return {
+          ticker,
+          volume: vol10d,
+          rsi: null, // free tier에선 가져올 수 없음
+        };
       })
     );
 
@@ -122,7 +93,7 @@ export async function GET(request) {
         const { ticker, volume, rsi } = r.value;
         const data = { volume, rsi };
         fresh[ticker] = data;
-        metricsCache.set(ticker, { data, ts: now });
+        cache.set(ticker, { data, ts: now });
       }
     }
 
@@ -132,10 +103,9 @@ export async function GET(request) {
   const merged = { ...hit, ...fresh };
 
   const gotVol = Object.values(fresh).filter(d => d.volume !== null).length;
-  const gotRsi = Object.values(fresh).filter(d => d.rsi !== null).length;
   console.log(
-    `[stock-metrics] 완료: ${Object.keys(fresh).length}/${miss.length}개` +
-    ` | volume: ${gotVol}개, RSI: ${gotRsi}개` +
+    `[stock-metrics] 완료: ${Object.keys(fresh).length}/${miss.length}개 신규` +
+    ` | volume: ${gotVol}개` +
     (Object.keys(hit).length ? ` | 캐시 히트: ${Object.keys(hit).length}개` : '')
   );
 
