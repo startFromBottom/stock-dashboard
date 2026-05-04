@@ -135,7 +135,7 @@ export default function SectorOverview({ onSelectSector }) {
       <div className="ov-header">
         <div className="ov-header-left">
           <span className="ov-title">🌐 섹터 전망</span>
-          <span className="ov-subtitle">7개 섹터 한눈에 비교 · 카드 클릭 시 상세 진입</span>
+          <span className="ov-subtitle">{SECTORS.length}개 섹터 한눈에 비교 · 카드 클릭 시 상세 진입</span>
         </div>
         <div className="ov-header-right">
           {loading && <span className="live-badge loading-badge">⟳ 로딩 중…</span>}

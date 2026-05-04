@@ -169,7 +169,7 @@ export default function Dashboard() {
                               <>⛏️ 원자재 <span>매장량 분포</span></>;
 
   const headerDesc =
-    sector === 'overview'   ? '10개 섹터 한눈에 비교 — ETF 수익률 · 시총 가중 등락 · 모멘텀 · 밸류에이션 · 거래 활성도 · 변동성 · 기간별 토글' :
+    sector === 'overview'   ? `${SECTORS.length - 1}개 섹터 한눈에 비교 — ETF 수익률 · 시총 가중 등락 · 모멘텀 · 밸류에이션 · 거래 활성도 · 변동성 · 기간별 토글` :
     sector === 'ai-dc'      ? 'AI 데이터센터 레이어별 구성 요소 · 시가총액 Top 10 기업 · 최신 뉴스 & 리포트' :
     sector === 'semi'       ? '실리콘 원자재 → EDA/IP → 소재 → 장비 → 파운드리 → 팹리스 → 패키징 → 테스트 → 유통 · 각 단계 Top 10 기업' :
     sector === 'space'      ? '소재·부품·엔진 → 발사체·론치 → 위성 제작·운용 → 우주 데이터·분석 → 국방·응용 · 각 레이어 Top 기업' :
