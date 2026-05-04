@@ -120,12 +120,20 @@ export default function MarketContext() {
                 </div>
                 <span className="mc-fg-value">{cryptoFearGreed.value}</span>
               </div>
+              <div className="mc-fg-scale">
+                <span className="mc-fg-scale-end mc-fg-scale-fear">← 공포</span>
+                <span className="mc-fg-scale-mid">중립</span>
+                <span className="mc-fg-scale-end mc-fg-scale-greed">탐욕 →</span>
+              </div>
               <div className="mc-card-foot">
                 <span className="mc-fg-label">{fgLabel(cryptoFearGreed.classification)}</span>
                 {cryptoFearGreed.change !== null && (
                   <span className={`mc-change ${changeTone(cryptoFearGreed.change)}`}>
                     {cryptoFearGreed.change > 0 ? '↑' : cryptoFearGreed.change < 0 ? '↓' : '→'}
                     {' '}{Math.abs(cryptoFearGreed.change)}
+                    <span className="mc-fg-change-note">
+                      {' '}(어제 대비)
+                    </span>
                   </span>
                 )}
               </div>
@@ -158,15 +166,35 @@ export default function MarketContext() {
           const tone = changeTone(ind.changePct);
           const isVix = id === 'vix';
           const vTone = isVix ? vixTone(ind.price) : null;
+          const isEmpty = ind.price === null || ind.price === undefined;
+          // is10y: 빈값일 때 사유 표시
+          const is10y = id === 'us10y';
+
+          // 라벨에 fallback 명시: "달러 (DXY → UUP 대체)" 식
+          // 정규식으로 (DXY) 같은 괄호 분리
+          let primaryName = ind.label;
+          let parenSuffix = null;
+          const m = ind.label.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+          if (m) { primaryName = m[1]; parenSuffix = m[2]; }
+
           return (
             <div
               key={id}
-              className={`mc-card${isVix ? ` mc-vix-${vTone}` : ''}`}
-              title={ind.isFallback ? `대체 ticker: ${ind.ticker}` : ind.ticker}
+              className={`mc-card${isVix ? ` mc-vix-${vTone}` : ''}${ind.isFallback ? ' mc-card-fallback' : ''}${isEmpty ? ' mc-card-empty' : ''}`}
+              title={ind.isFallback ? `${parenSuffix ?? ind.label} → ${ind.ticker} (대체)` : ind.ticker}
             >
               <div className="mc-card-label">
                 <span className="mc-icon">{ind.icon}</span>
-                {ind.label}
+                {primaryName}
+                {parenSuffix && (
+                  ind.isFallback ? (
+                    <span className="mc-card-paren mc-card-fallback-tag">
+                      {parenSuffix} → {ind.ticker} 대체
+                    </span>
+                  ) : (
+                    <span className="mc-card-paren">{parenSuffix}</span>
+                  )
+                )}
               </div>
               <div className="mc-card-value">
                 {fmtPrice(ind.price, ind.kind)}
@@ -177,11 +205,18 @@ export default function MarketContext() {
                 )}
               </div>
               <div className="mc-card-foot">
-                <span className={`mc-change ${tone}`}>
-                  {tone === 'up' ? '↑' : tone === 'down' ? '↓' : '→'}
-                  {' '}{fmtChange(ind.changePct)}
-                </span>
-                {ind.isFallback && <span className="mc-sub">{ind.ticker}</span>}
+                {!isEmpty ? (
+                  <span className={`mc-change ${tone}`}>
+                    {tone === 'up' ? '↑' : tone === 'down' ? '↓' : '→'}
+                    {' '}{fmtChange(ind.changePct)}
+                  </span>
+                ) : is10y ? (
+                  <span className="mc-sub mc-empty-reason">
+                    Finnhub 무료 한도 — ^TNX 차단
+                  </span>
+                ) : (
+                  <span className="mc-sub">데이터 없음</span>
+                )}
               </div>
             </div>
           );
@@ -194,7 +229,8 @@ export default function MarketContext() {
         DXY는 달러 인덱스 ·
         Gold/BTC는 안전자산·디지털금 헷지 ·
         유가는 WTI(미국 셰일 기준 USO) + Brent(글로벌 벤치마크 BNO) ·
-        F&G는 CNN Business 시장 심리, 막혔을 땐 크립토(alternative.me)로 대체
+        F&G는 CNN Business 시장 심리, 막혔을 땐 크립토(alternative.me)로 대체 ·
+        <strong>변동률은 주식 ETF는 어제 대비, 비트코인은 24시간 기준</strong>
       </p>
     </div>
   );
@@ -207,6 +243,7 @@ function OilRow({ name, data }) {
       <div className="mc-oil-row">
         <span className="mc-oil-name">{name}</span>
         <span className="mc-oil-price">—</span>
+        <span /> {/* spacer */}
         <span className="mc-oil-change">—</span>
       </div>
     );
@@ -216,6 +253,7 @@ function OilRow({ name, data }) {
     <div className="mc-oil-row" title={data.ticker}>
       <span className="mc-oil-name">{name}</span>
       <span className="mc-oil-price">{fmtPrice(data.price, 'price')}</span>
+      <span /> {/* spacer */}
       <span className={`mc-oil-change ${tone}`}>
         {tone === 'up' ? '↑' : tone === 'down' ? '↓' : '→'}
         {' '}{fmtChange(data.changePct)}

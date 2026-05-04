@@ -3089,51 +3089,45 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .mc-card.mc-vix-elevated { border-left: 3px solid #fb923c; }
 .mc-card.mc-vix-panic    { border-left: 3px solid #f87171; }
 
-/* 유가 카드 — WTI / Brent 두 줄 */
+/* 유가 카드 — WTI / Brent 두 줄 (2칸 차지: F&G 카드와 동일 패턴) */
 .mc-card-oil {
-  /* 기본 .mc-card 스타일 그대로 + value/foot 대신 oil-rows로 채움 */
+  grid-column: span 2;
 }
 .mc-oil-rows {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-top: 6px;
+  gap: 4px;
+  margin-top: 8px;
 }
 .mc-oil-row {
   display: grid;
-  /* name(36) + 가격(가변, 우측정렬) + 변동률(가변) — wrap 막기 */
-  grid-template-columns: 36px 1fr auto;
+  /* name(48) + 가격(가변, 좌측에 붙음) + 변동률(우측 끝) */
+  grid-template-columns: 48px auto 1fr auto;
   align-items: baseline;
-  gap: 6px;
-  padding: 3px 0;
+  gap: 8px;
+  padding: 4px 0;
   border-bottom: 1px dashed rgba(148, 163, 184, 0.15);
   white-space: nowrap;
-  overflow: hidden;
 }
 .mc-oil-row:last-child {
   border-bottom: none;
 }
 .mc-oil-name {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  letter-spacing: 0.5px;
 }
 .mc-oil-price {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 800;
   color: var(--text-primary, #f1f5f9);
   font-feature-settings: "tnum";
   font-family: monospace;
-  text-align: right;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .mc-oil-change {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   font-feature-settings: "tnum";
   text-align: right;
@@ -3153,6 +3147,80 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .mc-card-fg.mc-fg-greed          { border-left: 3px solid #84cc16; }
 .mc-card-fg.mc-fg-extreme-greed  { border-left: 3px solid #22c55e; }
 .mc-card-fg.mc-fg-neutral        { border-left: 3px solid #94a3b8; }
+
+/* 카드 라벨의 보조 부분 — "(DXY)" 같은 괄호 안 부제 */
+.mc-card-paren {
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0.75;
+  letter-spacing: 0.2px;
+}
+
+/* fallback ticker일 때 라벨에 명시 */
+.mc-card-fallback-tag {
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border-radius: 3px;
+  background: rgba(251, 146, 60, 0.15);
+  color: #fed7aa;
+  white-space: nowrap;
+}
+
+/* fallback 카드 자체 외곽 살짝 표시 (선택적) */
+.mc-card-fallback {
+  /* 별도 차별화 안 두고 라벨 태그로만 시그널 — 미니멀 */
+}
+
+/* 데이터 없는 빈 카드 약간 흐리게 */
+.mc-card-empty {
+  opacity: 0.78;
+}
+.mc-card-empty .mc-card-value {
+  color: var(--text-secondary);
+}
+
+/* 빈 카드의 사유 텍스트 (예: "Finnhub 무료 한도") */
+.mc-empty-reason {
+  font-size: 10px;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* F&G "어제 대비" 작은 안내 텍스트 */
+.mc-fg-change-note {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* F&G 스케일 라벨 (← 공포  중립  탐욕 →) */
+.mc-fg-scale {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+.mc-fg-scale-end { white-space: nowrap; }
+.mc-fg-scale-fear  { color: #ef4444; text-align: left;  }
+.mc-fg-scale-greed { color: #22c55e; text-align: right; }
+.mc-fg-scale-mid {
+  color: var(--text-secondary);
+  text-align: center;
+  font-size: 9px;
+  opacity: 0.7;
+}
 
 /* F&G source 배지 (CNN / 대체) */
 .mc-fg-source {
