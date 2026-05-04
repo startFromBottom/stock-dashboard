@@ -32,7 +32,9 @@ const INDICATORS = [
   { id: 'us10y', label: '10Y 금리', icon: '📈', primary: '^TNX',              fallback: null,   kind: 'level', divisor: 1 }, // ^TNX는 보통 4.21 같은 % 단위 그대로
   { id: 'dxy',  label: '달러 (DXY)', icon: '💵', primary: 'DX-Y.NYB',         fallback: 'UUP',  kind: 'level' },
   { id: 'gold', label: '금 (GLD)',  icon: '🥇', primary: 'GLD',              fallback: null,   kind: 'price' },
-  { id: 'oil',  label: '유가 (USO)', icon: '🛢️', primary: 'USO',             fallback: null,   kind: 'price' },
+  // 유가는 WTI(USO) + Brent(BNO) 둘 다 별도 호출 후 'oil' 카드에 합쳐짐
+  { id: 'oilWti',   label: '유가 WTI',   icon: '🛢️', primary: 'USO', fallback: null, kind: 'price' },
+  { id: 'oilBrent', label: '유가 Brent', icon: '🛢️', primary: 'BNO', fallback: null, kind: 'price' },
   { id: 'btc',  label: '비트코인',   icon: '₿',  primary: 'BINANCE:BTCUSDT', fallback: 'IBIT', kind: 'price' },
 ];
 
@@ -56,8 +58,69 @@ async function fetchQuote(ticker, token) {
   }
 }
 
-/* ───────────── Crypto Fear & Greed (alternative.me) ───────────── */
+/* ───────────── Fear & Greed: CNN 우선, 실패 시 크립토(alternative.me) ───────────── */
 
+/**
+ * CNN Business Fear & Greed Index — 비공식 endpoint
+ * production.dataviz.cnn.io/index/fearandgreed/graphdata
+ *
+ * 응답 구조:
+ *   {
+ *     fear_and_greed: {
+ *       score: 49.83,
+ *       rating: "neutral" | "fear" | "extreme fear" | "greed" | "extreme greed",
+ *       timestamp: "...",
+ *       previous_close: 47.17,
+ *       previous_1_week: 35.4,
+ *       ...
+ *     },
+ *     fear_and_greed_historical: { data: [{x,y,rating}, ...] }
+ *   }
+ *
+ * User-Agent 헤더 없으면 거부되는 경우가 있어 같이 보냄.
+ * alternative.me와 동일한 형식 { value, classification, change } 으로 정규화해서 반환.
+ */
+async function fetchCnnFearGreed() {
+  try {
+    const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+    const url = `https://production.dataviz.cnn.io/index/fearandgreed/graphdata/${today}`;
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+        'Accept': 'application/json',
+      },
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    const fg = json?.fear_and_greed;
+    if (!fg || typeof fg.score !== 'number') return null;
+
+    const value = Math.round(fg.score);
+    const prev = (typeof fg.previous_close === 'number') ? Math.round(fg.previous_close) : null;
+    // CNN rating: "neutral" / "fear" / "extreme fear" / "greed" / "extreme greed"
+    // alternative.me 형식과 맞추기 위해 Title Case로
+    const ratingMap = {
+      'extreme fear':  'Extreme Fear',
+      'fear':          'Fear',
+      'neutral':       'Neutral',
+      'greed':         'Greed',
+      'extreme greed': 'Extreme Greed',
+    };
+    return {
+      source: 'cnn',
+      value,
+      classification: ratingMap[fg.rating?.toLowerCase()] ?? 'Neutral',
+      change: prev !== null ? (value - prev) : null,
+    };
+  } catch (e) {
+    console.warn('[macro] CNN F&G 실패:', e.message);
+    return null;
+  }
+}
+
+/**
+ * Crypto Fear & Greed — alternative.me (CNN 실패 시 fallback)
+ */
 async function fetchCryptoFearGreed() {
   try {
     const res = await fetch('https://api.alternative.me/fng/?limit=2'); // 오늘+어제
@@ -69,6 +132,7 @@ async function fetchCryptoFearGreed() {
     const value = parseInt(today.value, 10);
     const prev = yesterday ? parseInt(yesterday.value, 10) : null;
     return {
+      source: 'crypto',
       value,
       classification: today.value_classification,  // "Fear", "Greed", etc
       change: prev !== null ? value - prev : null,
@@ -77,6 +141,15 @@ async function fetchCryptoFearGreed() {
   } catch {
     return null;
   }
+}
+
+/**
+ * CNN 우선, 실패 시 크립토 사용. 결과에 source 필드로 어느 거 적중했는지 표시.
+ */
+async function fetchFearGreed() {
+  const cnn = await fetchCnnFearGreed();
+  if (cnn) return cnn;
+  return await fetchCryptoFearGreed();
 }
 
 /* ───────────── 메인 핸들러 ───────────── */
@@ -132,8 +205,33 @@ export async function GET() {
     if (i + BATCH < INDICATORS.length) await sleep(DELAY);
   }
 
-  // Crypto F&G (병렬 가능했지만 단순화)
-  const cfg = await fetchCryptoFearGreed();
+  // 유가 WTI + Brent 두 개를 'oil' 카드 하나로 합치기
+  // (이전 호환성: 기존 'oil' 키도 유지하면 클라이언트가 안 깨짐. WTI를 oil의 primary로 둠)
+  const wti   = result.oilWti;
+  const brent = result.oilBrent;
+  if (wti || brent) {
+    result.oil = {
+      label: '유가',
+      icon: '🛢️',
+      kind: 'price',
+      // 기존 호환: WTI를 top-level price/change로 (UI에서 ?.price 직접 접근하던 코드 보호)
+      price:     wti?.price     ?? brent?.price     ?? null,
+      changePct: wti?.changePct ?? brent?.changePct ?? null,
+      change:    wti?.change    ?? brent?.change    ?? null,
+      ticker:    wti?.ticker    ?? brent?.ticker    ?? 'USO',
+      // 새 구조: 두 벤치마크 분리
+      benchmarks: {
+        wti:   wti   ? { ticker: wti.ticker,   price: wti.price,   changePct: wti.changePct,   change: wti.change }   : null,
+        brent: brent ? { ticker: brent.ticker, price: brent.price, changePct: brent.changePct, change: brent.change } : null,
+      },
+    };
+    // sub key 제거 (클라이언트엔 'oil' 한 개만 노출)
+    delete result.oilWti;
+    delete result.oilBrent;
+  }
+
+  // Fear & Greed: CNN 우선 → 크립토 fallback
+  const cfg = await fetchFearGreed();
 
   const payload = {
     generatedAt: now,

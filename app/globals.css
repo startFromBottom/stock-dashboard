@@ -3089,6 +3089,60 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .mc-card.mc-vix-elevated { border-left: 3px solid #fb923c; }
 .mc-card.mc-vix-panic    { border-left: 3px solid #f87171; }
 
+/* 유가 카드 — WTI / Brent 두 줄 */
+.mc-card-oil {
+  /* 기본 .mc-card 스타일 그대로 + value/foot 대신 oil-rows로 채움 */
+}
+.mc-oil-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+}
+.mc-oil-row {
+  display: grid;
+  /* name(36) + 가격(가변, 우측정렬) + 변동률(가변) — wrap 막기 */
+  grid-template-columns: 36px 1fr auto;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 0;
+  border-bottom: 1px dashed rgba(148, 163, 184, 0.15);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.mc-oil-row:last-child {
+  border-bottom: none;
+}
+.mc-oil-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mc-oil-price {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary, #f1f5f9);
+  font-feature-settings: "tnum";
+  font-family: monospace;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mc-oil-change {
+  font-size: 10px;
+  font-weight: 700;
+  font-feature-settings: "tnum";
+  text-align: right;
+}
+.mc-oil-change.up   { color: #22c55e; }
+.mc-oil-change.down { color: #ef4444; }
+.mc-oil-change.flat,
+.mc-oil-change.neutral { color: var(--text-secondary); }
+
 /* Crypto F&G 카드 */
 .mc-card-fg {
   grid-column: span 2;
@@ -3099,6 +3153,23 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .mc-card-fg.mc-fg-greed          { border-left: 3px solid #84cc16; }
 .mc-card-fg.mc-fg-extreme-greed  { border-left: 3px solid #22c55e; }
 .mc-card-fg.mc-fg-neutral        { border-left: 3px solid #94a3b8; }
+
+/* F&G source 배지 (CNN / 대체) */
+.mc-fg-source {
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  border-radius: 3px;
+  background: rgba(96, 165, 250, 0.15);
+  color: #93c5fd;
+  text-transform: uppercase;
+}
+.mc-fg-source-fallback {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--text-secondary);
+}
 
 .mc-fg-bar {
   display: flex;

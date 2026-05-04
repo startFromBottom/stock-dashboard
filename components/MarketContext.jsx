@@ -90,11 +90,24 @@ export default function MarketContext() {
       </div>
 
       <div className="mc-grid">
-        {/* Crypto Fear & Greed (특수 카드) */}
+        {/* Fear & Greed: CNN 우선 → 크립토 fallback. 라벨이 동적으로 바뀜 */}
         <div className={`mc-card mc-card-fg mc-fg-${fgTone(cryptoFearGreed?.value)}`}>
           <div className="mc-card-label">
-            <span className="mc-icon">🐢</span>
-            크립토 공포·탐욕
+            {cryptoFearGreed?.source === 'cnn' ? (
+              <>
+                <span className="mc-icon">📈</span>
+                시장 공포·탐욕
+                <span className="mc-fg-source">CNN</span>
+              </>
+            ) : (
+              <>
+                <span className="mc-icon">🐢</span>
+                크립토 공포·탐욕
+                {cryptoFearGreed?.source === 'crypto' && (
+                  <span className="mc-fg-source mc-fg-source-fallback">대체</span>
+                )}
+              </>
+            )}
           </div>
           {cryptoFearGreed ? (
             <>
@@ -122,8 +135,26 @@ export default function MarketContext() {
           )}
         </div>
 
-        {/* 6개 지표 */}
+        {/* 지표 카드들 */}
         {indicators && Object.entries(indicators).map(([id, ind]) => {
+          // ── oil은 WTI/Brent 두 줄 카드로 특수 렌더링 ──
+          if (id === 'oil' && ind.benchmarks) {
+            const wti = ind.benchmarks.wti;
+            const brent = ind.benchmarks.brent;
+            return (
+              <div key={id} className="mc-card mc-card-oil" title="WTI(USO) + Brent(BNO)">
+                <div className="mc-card-label">
+                  <span className="mc-icon">🛢️</span>
+                  유가
+                </div>
+                <div className="mc-oil-rows">
+                  <OilRow name="WTI"   data={wti}   />
+                  <OilRow name="Brent" data={brent} />
+                </div>
+              </div>
+            );
+          }
+
           const tone = changeTone(ind.changePct);
           const isVix = id === 'vix';
           const vTone = isVix ? vixTone(ind.price) : null;
@@ -161,9 +192,34 @@ export default function MarketContext() {
         💡 VIX는 S&P500 옵션 변동성 (낮으면 평온, 30+ 공포) ·
         10Y는 미국 10년물 국채 금리 ·
         DXY는 달러 인덱스 ·
-        Gold/Oil/BTC는 안전자산·인플레이션·디지털금 헷지 ·
-        크립토 F&G는 비트코인 시장 심리 (alternative.me)
+        Gold/BTC는 안전자산·디지털금 헷지 ·
+        유가는 WTI(미국 셰일 기준 USO) + Brent(글로벌 벤치마크 BNO) ·
+        F&G는 CNN Business 시장 심리, 막혔을 땐 크립토(alternative.me)로 대체
       </p>
+    </div>
+  );
+}
+
+/* ── 유가 카드 한 줄 (WTI 또는 Brent) ── */
+function OilRow({ name, data }) {
+  if (!data) {
+    return (
+      <div className="mc-oil-row">
+        <span className="mc-oil-name">{name}</span>
+        <span className="mc-oil-price">—</span>
+        <span className="mc-oil-change">—</span>
+      </div>
+    );
+  }
+  const tone = changeTone(data.changePct);
+  return (
+    <div className="mc-oil-row" title={data.ticker}>
+      <span className="mc-oil-name">{name}</span>
+      <span className="mc-oil-price">{fmtPrice(data.price, 'price')}</span>
+      <span className={`mc-oil-change ${tone}`}>
+        {tone === 'up' ? '↑' : tone === 'down' ? '↓' : '→'}
+        {' '}{fmtChange(data.changePct)}
+      </span>
     </div>
   );
 }
