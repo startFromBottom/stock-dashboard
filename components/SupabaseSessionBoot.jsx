@@ -17,19 +17,9 @@ import { supabase } from '@/lib/supabase';
  */
 export default function SupabaseSessionBoot() {
   useEffect(() => {
-    // ── 임시 디버그: Vercel에 NEXT_PUBLIC_* 환경변수가 클라이언트 번들에 박혔는지 확인 ──
-    // 진단 끝나면 이 두 줄 제거 예정
-    console.log('[debug] supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log('[debug] supabase KEY prefix:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 30));
-    console.log('[debug] supabase client:', supabase ? 'initialized' : 'NULL');
-
     if (!supabase) return;
     // 페이지 로드 직후 한 번 호출 → URL fragment 토큰 처리 + localStorage 저장
-    supabase.auth.getSession()
-      .then(({ data, error }) => {
-        console.log('[debug] getSession result:', { hasSession: !!data?.session, error });
-      })
-      .catch((e) => console.log('[debug] getSession threw:', e));
+    supabase.auth.getSession().catch(() => { /* 무시 */ });
   }, []);
 
   return null;
