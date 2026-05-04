@@ -1,4 +1,5 @@
 import './globals.css';
+import SupabaseSessionBoot from '@/components/SupabaseSessionBoot';
 
 export const metadata = {
   title: 'Stock Dashboard',
@@ -8,7 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <SupabaseSessionBoot />
+        {children}
+      </body>
     </html>
   );
 }
